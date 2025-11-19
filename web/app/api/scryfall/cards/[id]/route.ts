@@ -6,7 +6,8 @@ import { proxyToBackend } from "~/api/_lib/proxy";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  return proxyToBackend(request, `/api/scryfall/cards/${params.id}`);
+  const { id } = await params;
+  return proxyToBackend(request, `/api/scryfall/cards/${id}`);
 }

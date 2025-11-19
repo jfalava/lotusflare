@@ -6,9 +6,10 @@ import { proxyToBackend } from "~/api/_lib/proxy";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  return proxyToBackend(request, `/api/decks/${params.id}`);
+  const { id } = await params;
+  return proxyToBackend(request, `/api/decks/${id}`);
 }
 
 /**
@@ -16,7 +17,8 @@ export async function GET(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  return proxyToBackend(request, `/api/decks/${params.id}`);
+  const { id } = await params;
+  return proxyToBackend(request, `/api/decks/${id}`);
 }
