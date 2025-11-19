@@ -6,7 +6,7 @@ on:
     paths:
       - "web/**"
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
