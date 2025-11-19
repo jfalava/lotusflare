@@ -6,7 +6,8 @@ import { proxyToBackend } from "~/api/_lib/proxy";
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  return proxyToBackend(request, `/api/v2/inventory/details/${params.id}`);
+  const { id } = await params;
+  return proxyToBackend(request, `/api/v2/inventory/details/${id}`);
 }

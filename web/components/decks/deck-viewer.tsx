@@ -64,11 +64,7 @@ import {
   Download,
 } from "lucide-react";
 
-import type {
-  DeckWithDetails,
-  DeckCardWithDetails,
-  ScryfallApiCard,
-} from "#/backend/src/types";
+import type { DeckWithDetails, DeckCardWithDetails } from "#/backend/src/types";
 import { getPrimaryCardType } from "@/utils/card-utils";
 import { getCardImageUri } from "@/lib/image-utils";
 

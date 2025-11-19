@@ -6,7 +6,6 @@ import { HomeSkeleton } from "@/components/home/home-skeleton";
 import type {
   DeckWithDetails,
   InventoryDetailWithCardDetails,
-  MasterInventoryWithDetails,
 } from "#/backend/src/types";
 import type {
   DashboardAnalytics,
@@ -15,12 +14,6 @@ import type {
 import { getApiBaseUrl, serverFetch } from "@/lib/server-fetch";
 import { EXTENDED_FETCH_TIMEOUT_MS } from "@/lib/constants";
 import { fetchInventoryMeta, fetchDecks } from "@/lib/api-server";
-
-interface InventoryResponse {
-  data: MasterInventoryWithDetails[];
-  totalCount: number;
-  hasMore: boolean;
-}
 
 export const dynamic = "force-dynamic";
 

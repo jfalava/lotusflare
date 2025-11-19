@@ -22,27 +22,15 @@ export async function proxyToBackend(
     if (request.method !== "GET" && request.method !== "HEAD") {
       try {
         body = await request.text();
-      } catch (e) {
-        console.error("[API Proxy] Failed to read request body:", e);
-        // For methods that typically require a body, log a warning
-        if (
-          request.method === "POST" ||
-          request.method === "PUT" ||
-          request.method === "PATCH"
-        ) {
-          console.warn(
-            "[API Proxy] Body consumption failed for method that typically requires a body:",
-            request.method,
-          );
-        }
-        // Fallback to empty body (will be undefined when passed to fetch)
+      } catch {
+        // No body or already consumed
         body = undefined;
       }
     }
 
     // Forward the request to the backend with auth headers
-    const headers: HeadersInit = {
-      ...getAuthHeaders(),
+    const headers: Record<string, string> = {
+      ...(getAuthHeaders() as Record<string, string>),
     };
 
     // Only set Content-Type if the client provided one, or if we have a body and need a default

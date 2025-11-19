@@ -3,10 +3,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import type {
-  ScryfallApiCard,
-  ScryfallListResponse,
-} from "#/backend/src/types";
+import type { ScryfallApiCard } from "#/backend/src/types";
 import { SearchResultsPopover } from "@/components/search/search-results-popover";
 import { Input } from "@/components/ui/input";
 import { Loader2, Search, X } from "lucide-react";
@@ -137,7 +134,7 @@ const ScryfallSearchBar: React.FC<ScryfallSearchBarProps> = ({
     : "Search cards to add...";
 
   return (
-    <div className="relative flex-grow">
+    <div className="relative grow">
       <Input
         ref={scryfallInputRef}
         type="text"

@@ -1,6 +1,5 @@
 // app/decks/page.tsx
 import { Metadata } from "next";
-import packageJson from "@/package.json";
 import { notFound } from "next/navigation";
 import DeckViewClient from "@/components/decks/deck-viewer";
 import type { DeckWithDetails } from "#/backend/src/types";
