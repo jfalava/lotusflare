@@ -508,7 +508,9 @@ export default function NewInventoryClient({
     setExpandedItems(new Set());
   };
 
-  const handleBulkItemsAdded = async (newItems: InventoryDetailWithCardDetails[]) => {
+  const handleBulkItemsAdded = async (
+    newItems: InventoryDetailWithCardDetails[],
+  ) => {
     const newCounts = await fetchInventoryCounts();
     setTabCounts(newCounts);
     const newMap = new Map<string, MasterInventoryWithDetails>();
