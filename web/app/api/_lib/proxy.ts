@@ -29,13 +29,22 @@ export async function proxyToBackend(
     }
 
     // Forward the request to the backend with auth headers
+    const headers: HeadersInit = {
+      ...getAuthHeaders(),
+    };
+
+    // Only set Content-Type if the client provided one, or if we have a body and need a default
+    const clientContentType = request.headers.get("Content-Type");
+    if (clientContentType) {
+      headers["Content-Type"] = clientContentType;
+    } else if (body && body.length > 0) {
+      // Only default to application/json if there's actually a body
+      headers["Content-Type"] = "application/json";
+    }
+
     const response = await fetch(url, {
       method: request.method,
-      headers: {
-        ...getAuthHeaders(),
-        "Content-Type":
-          request.headers.get("Content-Type") || "application/json",
-      },
+      headers,
       body,
       ...options,
     });
@@ -54,8 +63,33 @@ export async function proxyToBackend(
     });
   } catch (error) {
     console.error("[API Proxy] Error proxying request:", error);
+
+    // Provide more specific error responses based on error type
+    if (error instanceof TypeError) {
+      // Network errors (e.g., DNS resolution failure, connection refused)
+      const errorMessage = error.message.toLowerCase();
+      if (
+        errorMessage.includes("fetch") ||
+        errorMessage.includes("network") ||
+        errorMessage.includes("connection")
+      ) {
+        return NextResponse.json(
+          {
+            error: "Backend service unavailable",
+            details:
+              "Unable to connect to the backend service. Please try again later.",
+          },
+          { status: 503 },
+        );
+      }
+    }
+
+    // Generic error fallback
     return NextResponse.json(
-      { error: "Failed to proxy request to backend" },
+      {
+        error: "Failed to proxy request to backend",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 },
     );
   }
