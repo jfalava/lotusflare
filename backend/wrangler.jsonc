@@ -11,11 +11,11 @@
   },
   "routes": [
     {
-      "pattern": "dev-mtgc.jfa.dev/api/*",
+      "pattern": "lotusflare-dev.jfa.dev/api/*",
       "zone_id": "8d3bb209ac51a6e21eee9c0457d06b43",
     },
   ],
-  "vars": { "PROD_APP_URL": "https://dev-mtgc.jfa.dev" },
+  "vars": { "PROD_APP_URL": "https://lotusflare-dev.jfa.dev" },
   "d1_databases": [
     {
       "binding": "DB",
