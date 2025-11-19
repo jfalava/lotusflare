@@ -5,3 +5,4 @@
 *.yaml
 **/*.yaml
 **/.astro/
+worker-configuration.d.ts

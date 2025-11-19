@@ -4,4 +4,4 @@
 **/*.mdx
 *.yaml
 **/*.yaml
-**/.astro/
+cloudflare-env.d.ts
