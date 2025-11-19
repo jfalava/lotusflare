@@ -34,6 +34,9 @@ jobs:
 
       - name: Check & Build
         working-directory: web
+        env:
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          PROD_APP_URL: ${{ vars.PROD_APP_URL }}
         run: |
           bun run cf-typegen
           bun run lint
