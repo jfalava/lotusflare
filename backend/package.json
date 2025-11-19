@@ -1,6 +1,6 @@
 {
   "name": "@lotusflare/backend",
-  "version": "0.4",
+  "version": "0.4.1",
   "private": true,
   "scripts": {
     "deploy": "bun run cf-typegen && pnpx wrangler deploy",

@@ -13,11 +13,11 @@
   },
   "routes": [
     {
-      "pattern": "dev-mtgc.jfa.dev",
+      "pattern": "lotusflare-dev.jfa.dev",
       "custom_domain": true,
     },
   ],
-  "vars": { "PROD_APP_URL": "https://dev-mtgc.jfa.dev" },
+  "vars": { "PROD_APP_URL": "https://lotusflare-dev.jfa.dev" },
   "env": {
     "production": {
       "name": "lotusflare-web-pro",
