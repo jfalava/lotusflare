@@ -95,11 +95,11 @@ export default function AboutClient() {
             </CardHeader>
             <CardContent className="text-sm text-slate-700 dark:text-slate-300">
               <p>
-                This project is licensed under the <strong>MIT License</strong>.
-                You are free to use, modify, and distribute the code as you see
-                fit. The source code is available on{" "}
+                This project is licensed under the{" "}
+                <strong>GPL-2.0 license</strong>. The source code is available
+                on{" "}
                 <a
-                  href="#"
+                  href="https://github.com/jfalava/lotusflare"
                   rel="noopener noreferrer"
                   className="font-medium underline"
                 >
