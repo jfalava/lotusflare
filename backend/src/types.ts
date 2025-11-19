@@ -378,3 +378,12 @@ export interface ScryfallListResponse<T> {
   data: T[];
   warnings?: string[];
 }
+
+// --- Hono Bindings ---
+import type { D1Database } from "@cloudflare/workers-types";
+
+export type Bindings = {
+  DB: D1Database;
+  PROD_APP_URL?: string; // For CORS
+  REFRESH_SECRET?: string; // Secret for admin endpoints
+};
