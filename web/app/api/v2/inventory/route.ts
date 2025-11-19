@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { proxyToBackend } from "../../_lib/proxy";
+import { proxyToBackend } from "~/api/_lib/proxy";
 
 /**
  * POST /api/v2/inventory - Create or find master inventory entry

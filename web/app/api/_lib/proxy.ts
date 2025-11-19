@@ -33,7 +33,8 @@ export async function proxyToBackend(
       method: request.method,
       headers: {
         ...getAuthHeaders(),
-        "Content-Type": request.headers.get("Content-Type") || "application/json",
+        "Content-Type":
+          request.headers.get("Content-Type") || "application/json",
       },
       body,
       ...options,
@@ -47,7 +48,8 @@ export async function proxyToBackend(
       status: response.status,
       statusText: response.statusText,
       headers: {
-        "Content-Type": response.headers.get("Content-Type") || "application/json",
+        "Content-Type":
+          response.headers.get("Content-Type") || "application/json",
       },
     });
   } catch (error) {

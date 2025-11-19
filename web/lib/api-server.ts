@@ -86,9 +86,11 @@ export async function fetchInventoryMeta(
 export async function fetchInventoryCounts(): Promise<Record<string, number>> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    return await serverFetchJsonSafe<Record<string, number>>(
-      `${apiBaseUrl}/api/v2/inventory/counts`,
-    ) || {};
+    return (
+      (await serverFetchJsonSafe<Record<string, number>>(
+        `${apiBaseUrl}/api/v2/inventory/counts`,
+      )) || {}
+    );
   } catch (error) {
     console.error("[Server] Failed to fetch inventory counts:", error);
     return {};
@@ -98,10 +100,13 @@ export async function fetchInventoryCounts(): Promise<Record<string, number>> {
 export async function deleteInventoryDetail(detailId: number): Promise<void> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const response = await fetch(`${apiBaseUrl}/api/v2/inventory/details/${detailId}`, {
-      method: "DELETE",
-      headers: getAuthHeaders(),
-    });
+    const response = await fetch(
+      `${apiBaseUrl}/api/v2/inventory/details/${detailId}`,
+      {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+      },
+    );
 
     if (!response.ok) {
       throw new Error(`Failed to delete inventory detail: ${response.status}`);
@@ -161,7 +166,9 @@ export async function createInventoryDetail(payload: {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Failed to create inventory detail: ${response.status} - ${errorText}`);
+      throw new Error(
+        `Failed to create inventory detail: ${response.status} - ${errorText}`,
+      );
     }
 
     return await response.json();

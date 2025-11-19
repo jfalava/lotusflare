@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { proxyToBackend } from "../../../_lib/proxy";
+import { proxyToBackend } from "~/api/_lib/proxy";
 
 /**
  * GET /api/decks/:id - Fetch deck by ID
