@@ -1,4 +1,6 @@
-// Helper: function to parse Scryfall-like search query
+/**
+ * Interface for parsed inventory search conditions
+ */
 export interface ParsedInventoryCondition {
   field: string; // e.g., "cr.name", "cr.oracle_text"
   value: string; // e.g., "%search term%"
@@ -51,7 +53,11 @@ export function parseInventorySearchQuery(rawQuery: string): {
   };
 }
 
-// Helper function to generate SQL for color group filtering
+/**
+ * Helper function to generate SQL for color group filtering
+ * @param {string} colorGroup - The color group to filter by
+ * @returns {{sql: string, bindings: (string | number)[]}} SQL query and bindings for the color group
+ */
 export function buildColorGroupSubquery(colorGroup: string): {
   sql: string;
   bindings: (string | number)[];

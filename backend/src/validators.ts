@@ -70,7 +70,7 @@ export const updatePlaceSchema = createPlaceSchema
 export type UpdatePlaceInput = z.infer<typeof updatePlaceSchema>;
 
 export const addToInventorySchema = z.object({
-  scryfall_card_id: z.string().uuid("Invalid Scryfall Card ID"),
+  scryfall_card_id: z.uuid("Invalid Scryfall Card ID"),
   place_id: z.number().int().positive().nullable().optional(), // Kept as optional and nullable
   quantity: z.number().int().min(1, "Quantity must be at least 1"),
   condition: z.enum(CARD_CONDITIONS_ARRAY).default("NM"),
@@ -95,7 +95,7 @@ export const deckFormatSchema = z.enum(DECK_FORMATS_ARRAY);
 export type DeckFormat = z.infer<typeof deckFormatSchema>;
 
 const deckCardSchema = z.object({
-  scryfall_id: z.string().uuid("Invalid Scryfall Card ID"),
+  scryfall_id: z.uuid("Invalid Scryfall Card ID"),
   quantity: z.number().int().min(1, "Quantity must be at least 1"),
   is_commander: z.boolean().optional().default(false),
   is_sideboard: z.boolean().optional().default(false),
@@ -126,7 +126,7 @@ export type UpdateDeckInput = z.infer<typeof updateDeckSchema>;
 // --- Master Inventory Schemas ---
 
 export const createMasterInventorySchema = z.object({
-  oracle_id: z.string().uuid("Invalid Oracle ID"),
+  oracle_id: z.uuid("Invalid Oracle ID"),
   name: z.string().min(1, "Name is required"),
   notes: z.string().max(1000).optional().nullable(),
 });
@@ -141,8 +141,8 @@ export const updateMasterInventorySchema = z
   });
 
 export const addInventoryDetailSchema = z.object({
-  master_oracle_id: z.string().uuid("Invalid Master Oracle ID"),
-  scryfall_card_id: z.string().uuid("Invalid Scryfall Card ID"),
+  master_oracle_id: z.uuid("Invalid Master Oracle ID"),
+  scryfall_card_id: z.uuid("Invalid Scryfall Card ID"),
   place_id: z.number().int().positive().nullable().optional(),
   quantity: z.number().int().min(1, "Quantity must be at least 1"),
   condition: z.enum(CARD_CONDITIONS_ARRAY).default("NM"),

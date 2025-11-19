@@ -65,7 +65,11 @@ interface NewInventoryClientProps {
   initialPlaces: PlaceDbo[];
 }
 
-// Utility function to determine card color group
+/**
+ * Utility function to determine card color group
+ * @param {ScryfallApiCard} card - The card to analyze
+ * @returns {InventoryColorGroup} The color group of the card
+ */
 function getCardColorGroup(card: ScryfallApiCard): InventoryColorGroup {
   // Handle double-faced cards - check card_faces if present
   let cardColors = card.colors;
