@@ -1,0 +1,7 @@
+# Local development environment variables for Cloudflare Workers
+# Copy this file to .dev.vars and fill in your values
+# .dev.vars is gitignored and should never be committed
+
+# Bearer token for API authentication
+# Generate a secure random token for local development
+LOTUSFLARE_AUTH=your-secure-token-here

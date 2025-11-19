@@ -19,6 +19,22 @@ export function getApiBaseUrl(): string {
 }
 
 /**
+ * Get authentication headers with bearer token
+ */
+export function getAuthHeaders(): HeadersInit {
+  const token = process.env.LOTUSFLARE_AUTH;
+  if (!token) {
+    console.warn(
+      "[SSR] LOTUSFLARE_AUTH environment variable is not set. API requests may fail.",
+    );
+    return {};
+  }
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+}
+
+/**
  * Common headers for SSR fetch requests
  */
 export function getServerFetchHeaders(apiBaseUrl: string): HeadersInit {
@@ -26,6 +42,7 @@ export function getServerFetchHeaders(apiBaseUrl: string): HeadersInit {
     "User-Agent": `Lotusflare/WEB v${packageJson.version}`,
     Accept: "application/json",
     "X-Requested-With": "SSR",
+    ...getAuthHeaders(),
     ...(process.env.NODE_ENV !== "development" && {
       Host: new URL(apiBaseUrl).host,
     }),

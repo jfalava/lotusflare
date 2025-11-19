@@ -4,6 +4,11 @@
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-03-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // NOTE: Environment variables for Next.js should be set via:
+  // - Local dev: .dev.vars file (see .dev.vars.example)
+  // - Production: wrangler secret put LOTUSFLARE_AUTH
+  // Required environment variables:
+  // - LOTUSFLARE_AUTH: Bearer token for backend API authentication
   "assets": {
     "binding": "ASSETS",
     "directory": ".open-next/assets",

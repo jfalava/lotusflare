@@ -1,0 +1,10 @@
+# Local development environment variables for Next.js
+# Copy this file to .dev.vars and fill in your values
+# .dev.vars is gitignored and should never be committed
+
+# Bearer token for API authentication (must match backend token)
+LOTUSFLARE_AUTH=your-secure-token-here
+
+# Base URL for production
+PROD_APP_URL=http://localhost:3000
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
