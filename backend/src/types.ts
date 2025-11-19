@@ -386,4 +386,5 @@ export type Bindings = {
   DB: D1Database;
   PROD_APP_URL?: string; // For CORS
   REFRESH_SECRET?: string; // Secret for admin endpoints
+  LOTUSFLARE_AUTH?: string; // Bearer token for API authentication
 };

@@ -4,6 +4,9 @@ import { cors } from "hono/cors";
 import { ZodError } from "zod";
 import type { Bindings } from "./types";
 
+// Import middleware
+import { authMiddleware } from "./middlewares/auth";
+
 // Import routes
 import activityRoutes from "./routes/activity";
 import adminRoutes from "./routes/admin";
@@ -41,6 +44,9 @@ app.use(
     credentials: true, // If you use cookies or authorization headers
   }),
 );
+
+// --- Authentication Middleware ---
+app.use("/api/*", authMiddleware);
 
 // --- API Sub-Router ---
 const api = new Hono<{ Bindings: Bindings }>();

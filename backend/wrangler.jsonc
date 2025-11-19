@@ -3,6 +3,11 @@
   "name": "lotusflare-backend-dev",
   "main": "src/lotusflare-api.ts",
   "compatibility_date": "2025-05-15",
+  // NOTE: Secrets are managed via Wrangler CLI and not defined in this file
+  // Required secrets:
+  // - LOTUSFLARE_AUTH: Bearer token for API authentication
+  //   Set with: wrangler secret put LOTUSFLARE_AUTH
+  //   For local dev: Add to .dev.vars file (see .dev.vars.example)
   "observability": {
     "enabled": true,
   },
