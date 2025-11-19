@@ -39,7 +39,6 @@ import {
   LanguageCode,
   PlaceDbo,
   ScryfallApiCard,
-  ScryfallListResponse,
 } from "#/backend/src/types";
 import { ManaCost } from "@/components/ui/mana-cost";
 import { getCardImageUri } from "@/utils/card-utils";

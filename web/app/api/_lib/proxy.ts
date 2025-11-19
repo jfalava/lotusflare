@@ -22,7 +22,7 @@ export async function proxyToBackend(
     if (request.method !== "GET" && request.method !== "HEAD") {
       try {
         body = await request.text();
-      } catch (e) {
+      } catch {
         // No body or already consumed
         body = undefined;
       }

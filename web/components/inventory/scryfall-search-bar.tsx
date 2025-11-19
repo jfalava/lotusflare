@@ -3,10 +3,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import type {
-  ScryfallApiCard,
-  ScryfallListResponse,
-} from "#/backend/src/types";
+import type { ScryfallApiCard } from "#/backend/src/types";
 import { SearchResultsPopover } from "@/components/search/search-results-popover";
 import { Input } from "@/components/ui/input";
 import { Loader2, Search, X } from "lucide-react";

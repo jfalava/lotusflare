@@ -138,7 +138,7 @@ export default function NewInventoryClient({
   const [masterInventory, setMasterInventory] = useState<
     MasterInventoryWithDetails[]
   >(initialInventory.data);
-  const [places, setPlaces] = useState<PlaceDbo[]>(initialPlaces);
+  const [places] = useState<PlaceDbo[]>(initialPlaces);
   const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("White");
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
