@@ -29,8 +29,8 @@ export async function proxyToBackend(
     }
 
     // Forward the request to the backend with auth headers
-    const headers: HeadersInit = {
-      ...getAuthHeaders(),
+    const headers: Record<string, string> = {
+      ...(getAuthHeaders() as Record<string, string>),
     };
 
     // Only set Content-Type if the client provided one, or if we have a body and need a default
