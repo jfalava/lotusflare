@@ -14,6 +14,7 @@ import type {
 } from "@/components/home/shared/home-types";
 import { getApiBaseUrl, serverFetch } from "@/lib/server-fetch";
 import { EXTENDED_FETCH_TIMEOUT_MS } from "@/lib/constants";
+import { fetchInventoryMeta, fetchDecks } from "@/lib/api-server";
 
 interface InventoryResponse {
   data: MasterInventoryWithDetails[];
@@ -27,40 +28,25 @@ async function getHomeData() {
   try {
     const apiBaseUrl = getApiBaseUrl();
 
-    const [
-      analyticsResponse,
-      quickStatsResponse,
-      inventoryResponse,
-      decksResponse,
-    ] = await Promise.all([
-      serverFetch(`${apiBaseUrl}/api/dashboard/analytics`, {
-        timeout: EXTENDED_FETCH_TIMEOUT_MS,
-      }),
-      serverFetch(`${apiBaseUrl}/api/dashboard/quick-stats`, {
-        timeout: EXTENDED_FETCH_TIMEOUT_MS,
-      }),
-      serverFetch(`${apiBaseUrl}/api/v2/inventory?limit=6`, {
-        timeout: EXTENDED_FETCH_TIMEOUT_MS,
-      }),
-      serverFetch(`${apiBaseUrl}/api/decks`, {
-        timeout: EXTENDED_FETCH_TIMEOUT_MS,
-      }),
-    ]);
+    const [analyticsResponse, quickStatsResponse, inventoryData, allDecks] =
+      await Promise.all([
+        serverFetch(`${apiBaseUrl}/api/dashboard/analytics`, {
+          timeout: EXTENDED_FETCH_TIMEOUT_MS,
+        }),
+        serverFetch(`${apiBaseUrl}/api/dashboard/quick-stats`, {
+          timeout: EXTENDED_FETCH_TIMEOUT_MS,
+        }),
+        fetchInventoryMeta(1, 6),
+        fetchDecks(),
+      ]);
 
-    if (
-      !analyticsResponse.ok ||
-      !quickStatsResponse.ok ||
-      !inventoryResponse.ok ||
-      !decksResponse.ok
-    ) {
+    if (!analyticsResponse.ok || !quickStatsResponse.ok) {
       throw new Error("One or more API requests failed");
     }
 
-    const [analytics, quickStats, inventoryData, allDecks] = await Promise.all([
+    const [analytics, quickStats] = await Promise.all([
       analyticsResponse.json() as Promise<DashboardAnalytics>,
       quickStatsResponse.json() as Promise<QuickStats>,
-      inventoryResponse.json() as Promise<InventoryResponse>,
-      decksResponse.json() as Promise<DeckWithDetails[]>,
     ]);
 
     const recentInventory: InventoryDetailWithCardDetails[] =

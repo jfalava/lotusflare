@@ -5,78 +5,13 @@ import { notFound } from "next/navigation";
 import DeckViewClient from "@/components/decks/deck-viewer";
 import type { DeckWithDetails } from "#/backend/src/types";
 import UpdateBreadcrumbSegment from "@/utils/update-breadcrumb-segment";
+import { fetchDeckById } from "@/lib/api-server";
 
 // Force this page to be dynamic since deck data should always be fresh
 export const dynamic = "force-dynamic";
 
 async function getDeckData(deckId: string): Promise<DeckWithDetails | null> {
-  try {
-    let apiBaseUrl: string;
-
-    if (process.env.NODE_ENV === "development") {
-      // In development, hit wrangler dev directly
-      apiBaseUrl = "http://localhost:8787";
-    } else {
-      // In production, use the full domain URL from environment or construct it
-      const prodUrl =
-        process.env.PROD_APP_URL || process.env.NEXT_PUBLIC_BASE_URL;
-      if (!prodUrl) {
-        throw new Error(
-          "PROD_APP_URL or NEXT_PUBLIC_BASE_URL environment variable is not set",
-        );
-      }
-      apiBaseUrl = prodUrl;
-    }
-
-    // console.log(
-    //   `[SSR] Fetching deck data from: ${apiBaseUrl}/api/decks/${deckId}`
-    // );
-
-    // Use AbortController and explicit headers to ensure external request treatment
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
-
-    try {
-      const response = await fetch(`${apiBaseUrl}/api/decks/${deckId}`, {
-        signal: controller.signal,
-        cache: "no-store",
-        headers: {
-          "User-Agent": `Lotusflare/WEB v${packageJson.version}`,
-          Accept: "application/json",
-          "X-Requested-With": "SSR",
-          // Force external request by including host header
-          ...(process.env.NODE_ENV !== "development" && {
-            Host: new URL(apiBaseUrl).host,
-          }),
-        },
-      });
-
-      clearTimeout(timeoutId);
-
-      if (response.status === 404) {
-        console.log(`[SSR] Deck ${deckId} not found`);
-        return null;
-      }
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(
-          `[SSR] Deck fetch failed: ${response.status} ${response.statusText}`,
-          errorText,
-        );
-        return null;
-      }
-
-      const deck = (await response.json()) as DeckWithDetails;
-
-      return deck;
-    } finally {
-      clearTimeout(timeoutId);
-    }
-  } catch (error) {
-    console.error(`[SSR] Failed to fetch deck ${deckId}:`, error);
-    return null;
-  }
+  return await fetchDeckById(deckId);
 }
 
 function getDeckStats(deck: DeckWithDetails) {

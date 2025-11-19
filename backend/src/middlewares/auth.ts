@@ -34,7 +34,7 @@ export async function authMiddleware(
   const token = auth.slice(7);
 
   // Get the expected token from environment/secrets
-  const expectedToken = c.env.LOTUSFLARE_AUTH;
+  const expectedToken = await c.env.LOTUSFLARE_AUTH.get();
 
   // Validate the token
   if (!expectedToken || token !== expectedToken) {

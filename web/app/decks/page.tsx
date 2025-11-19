@@ -5,19 +5,15 @@ import { Suspense } from "react";
 import DecksBrowseClient from "@/components/decks/decks-detailed-view-client";
 import type { DeckWithDetails } from "#/backend/src/types";
 import { DecksBrowseSkeleton } from "@/components/decks/decklists-view-skeleton";
-import { getApiBaseUrl, serverFetchJsonSafe } from "@/lib/server-fetch";
 import { calculateDeckStats } from "@/lib/stats-utils";
 import { pickRepresentativeDeckImage } from "@/lib/image-utils";
 import { generateDecksMetadata } from "@/lib/metadata-utils";
+import { fetchDecks } from "@/lib/api-server";
 
 export const dynamic = "force-dynamic";
 
 async function getDecksData(): Promise<DeckWithDetails[]> {
-  const apiBaseUrl = getApiBaseUrl();
-  const decks = await serverFetchJsonSafe<DeckWithDetails[]>(
-    `${apiBaseUrl}/api/decks`,
-  );
-  return decks || [];
+  return await fetchDecks();
 }
 
 export async function generateMetadata(): Promise<Metadata> {

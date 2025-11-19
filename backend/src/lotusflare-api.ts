@@ -4,9 +4,6 @@ import { cors } from "hono/cors";
 import { ZodError } from "zod";
 import type { Bindings } from "./types";
 
-// Import middleware
-import { authMiddleware } from "./middlewares/auth";
-
 // Import routes
 import activityRoutes from "./routes/activity";
 import adminRoutes from "./routes/admin";
@@ -46,7 +43,37 @@ app.use(
 );
 
 // --- Authentication Middleware ---
-app.use("/api/*", authMiddleware);
+app.use("/api/*", async (c, next) => {
+  // Define public endpoints that don't require authentication
+  const publicEndpoints = ["/api/health"];
+
+  // Check if the current path is a public endpoint
+  if (publicEndpoints.includes(c.req.path)) {
+    return await next();
+  }
+
+  // Get the Authorization header
+  const auth = c.req.header("Authorization");
+
+  // Check if Authorization header is present and properly formatted
+  if (!auth || !auth.startsWith("Bearer ")) {
+    return c.text("Unauthorized", 401);
+  }
+
+  // Extract the token (remove "Bearer " prefix)
+  const token = auth.slice(7);
+
+  // Get the expected token from environment/secrets
+  const expectedToken = await c.env.LOTUSFLARE_AUTH.get();
+
+  // Validate the token
+  if (!expectedToken || token !== expectedToken) {
+    return c.text("Unauthorized", 401);
+  }
+
+  // Token is valid, proceed to the next middleware/handler
+  await next();
+});
 
 // --- API Sub-Router ---
 const api = new Hono<{ Bindings: Bindings }>();

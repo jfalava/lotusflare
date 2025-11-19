@@ -3,16 +3,13 @@ import { Suspense } from "react";
 import PlacesManageClient from "@/components/places/places-manage-client";
 import type { PlaceDbo } from "#/backend/src/types";
 import { PlacesManageSkeleton } from "@/components/places/places-manage-skeleton";
-import { getApiBaseUrl, serverFetchJsonSafe } from "@/lib/server-fetch";
+import { fetchPlaces } from "@/lib/api-server";
 
 // Force this page to be dynamic since places data should always be fresh
 export const dynamic = "force-dynamic";
 
 async function getPlacesData(): Promise<PlaceDbo[]> {
-  const apiBaseUrl = getApiBaseUrl();
-  return (
-    (await serverFetchJsonSafe<PlaceDbo[]>(`${apiBaseUrl}/api/places`)) || []
-  );
+  return await fetchPlaces();
 }
 
 function getPlacesStats(places: PlaceDbo[]) {

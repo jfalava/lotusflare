@@ -5,28 +5,21 @@ import { Suspense } from "react";
 import NewInventoryClient from "@/components/inventory/inventory-edit-client";
 import { InventoryBrowseSkeleton } from "@/components/inventory/inventory-browse-skeleton";
 import type { PaginatedMasterInventoryResponse } from "#/backend/src/types";
-import { getApiBaseUrl, serverFetchJson } from "@/lib/server-fetch";
-import { META_FETCH_LIMIT } from "@/lib/constants";
+import { META_FETCH_LIMIT, INVENTORY_PAGE_SIZE } from "@/lib/constants";
 import { pickRepresentativeInventoryImage } from "@/lib/image-utils";
 import { generateInventoryMetadata } from "@/lib/metadata-utils";
+import { fetchInventoryMeta, fetchPlaces } from "@/lib/api-server";
 
 export const dynamic = "force-dynamic";
 
-async function fetchInventoryMeta(): Promise<PaginatedMasterInventoryResponse> {
-  const apiBaseUrl = getApiBaseUrl();
-  const url = new URL(`${apiBaseUrl}/api/v2/inventory`);
-  url.searchParams.set("page", "1");
-  url.searchParams.set("limit", META_FETCH_LIMIT.toString());
-
-  return await serverFetchJson<PaginatedMasterInventoryResponse>(
-    url.toString(),
-  );
+async function fetchInventoryMetaWrapper(): Promise<PaginatedMasterInventoryResponse> {
+  return await fetchInventoryMeta(1, META_FETCH_LIMIT);
 }
 
 export async function generateMetadata(): Promise<Metadata> {
   let meta: PaginatedMasterInventoryResponse;
   try {
-    meta = await fetchInventoryMeta();
+    meta = await fetchInventoryMetaWrapper();
   } catch (err) {
     console.error("[SSR] Failed to fetch inventory metadata:", err);
     return {
@@ -45,10 +38,31 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function NewInventoryPage() {
+async function getInventoryPageData() {
+  try {
+    const [inventoryData, places] = await Promise.all([
+      fetchInventoryMeta(1, INVENTORY_PAGE_SIZE),
+      fetchPlaces(),
+    ]);
+    return { inventoryData, places };
+  } catch (error) {
+    console.error("[SSR] Failed to fetch inventory page data:", error);
+    return {
+      inventoryData: { data: [], totalCount: 0, hasMore: false },
+      places: [],
+    };
+  }
+}
+
+export default async function NewInventoryPage() {
+  const { inventoryData, places } = await getInventoryPageData();
+
   return (
     <Suspense fallback={<InventoryBrowseSkeleton />}>
-      <NewInventoryClient />
+      <NewInventoryClient
+        initialInventory={inventoryData}
+        initialPlaces={places}
+      />
     </Suspense>
   );
 }

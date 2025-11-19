@@ -48,6 +48,7 @@ import clsx from "clsx";
 import { useViewMode } from "@/components/context/view-mode-context";
 import { useSettings } from "@/components/context/settings-context";
 import { INVENTORY_PAGE_SIZE } from "@/lib/constants";
+import { fetchInventoryMeta, fetchInventoryCounts } from "@/lib/api-server";
 
 const PAGE_SIZE = INVENTORY_PAGE_SIZE;
 const INTERACTIVE_SELECTOR =
@@ -55,12 +56,20 @@ const INTERACTIVE_SELECTOR =
   " [data-radix-dropdown-menu-trigger], [data-radix-dropdown-menu-content]," +
   " [data-radix-popper-content-wrapper], [role='menu'], [role='menuitem']";
 
-export default function ReadOnlyInventoryClient() {
+interface ReadOnlyInventoryClientProps {
+  initialInventory: PaginatedMasterInventoryResponse;
+  initialPlaces: PlaceDbo[];
+}
+
+export default function ReadOnlyInventoryClient({
+  initialInventory,
+  initialPlaces,
+}: ReadOnlyInventoryClientProps) {
   const [masterInventory, setMasterInventory] = useState<
     MasterInventoryWithDetails[]
-  >([]);
-  const [places, setPlaces] = useState<PlaceDbo[]>([]);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  >(initialInventory.data);
+  const [places, setPlaces] = useState<PlaceDbo[]>(initialPlaces);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("White");
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const { viewMode, setViewMode } = useViewMode();
@@ -75,8 +84,8 @@ export default function ReadOnlyInventoryClient() {
   const previousTabRef = useRef<TabKey>("White");
   const { infiniteScroll, setInfiniteScroll } = useSettings();
   const [currentPage, setCurrentPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [totalCount, setTotalCount] = useState(0);
+  const [hasMore, setHasMore] = useState(initialInventory.hasMore);
+  const [totalCount, setTotalCount] = useState(initialInventory.totalCount);
   const [tabCounts, setTabCounts] = useState<Record<string, number>>({});
 
   const previewRef = useRef<HTMLDivElement>(null);
@@ -90,33 +99,16 @@ export default function ReadOnlyInventoryClient() {
   const [previewLoading, setPreviewLoading] = useState(false);
   const loadedImagesRef = useRef<Set<string>>(new Set());
 
-  async function fetchTabCounts() {
-    try {
-      const response = await fetch("/api/v2/inventory/counts");
-      if (!response.ok) throw new Error("Failed to fetch tab counts");
-      const data = (await response.json()) as Record<string, number>;
-      setTabCounts(data);
-    } catch (err) {
-      toast.error((err as Error).message);
-    }
-  }
-
   useEffect(() => {
-    fetchTabCounts();
-  }, []);
-
-  useEffect(() => {
-    async function fetchPlaces() {
+    async function loadTabCounts() {
       try {
-        const res = await fetch("/api/places");
-        if (!res.ok) throw new Error("Failed to fetch places");
-        const data = (await res.json()) as PlaceDbo[];
-        setPlaces(data);
+        const data = await fetchInventoryCounts();
+        setTabCounts(data);
       } catch (err) {
         toast.error((err as Error).message);
       }
     }
-    fetchPlaces();
+    loadTabCounts();
   }, []);
 
   const fetchMasterInventory = useCallback(
@@ -135,20 +127,12 @@ export default function ReadOnlyInventoryClient() {
       }
 
       try {
-        const url = new URL("/api/v2/inventory", window.location.origin);
-        url.searchParams.set("page", String(pageToFetch));
-        url.searchParams.set("limit", String(PAGE_SIZE));
-        if (searchTerm) {
-          url.searchParams.set("q", searchTerm);
-        } else if (colorGroup) {
-          url.searchParams.set("colorGroup", colorGroup);
-        }
-
-        const invResp = await fetch(url.toString());
-
-        if (!invResp.ok) throw new Error("Failed to fetch master inventory");
-        const invData =
-          (await invResp.json()) as PaginatedMasterInventoryResponse;
+        const invData = await fetchInventoryMeta(
+          pageToFetch,
+          PAGE_SIZE,
+          searchTerm || undefined,
+          colorGroup || undefined,
+        );
 
         setTotalCount(invData.totalCount);
         setHasMore(invData.hasMore);

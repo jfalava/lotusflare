@@ -20,6 +20,13 @@
       "zone_id": "8d3bb209ac51a6e21eee9c0457d06b43",
     },
   ],
+  "secrets_store_secrets": [
+    {
+      "binding": "LOTUSFLARE_AUTH",
+      "store_id": "6722243507114af69e9626e2a66436d0",
+      "secret_name": "LOTUSFLARE_AUTH",
+    },
+  ],
   "vars": { "PROD_APP_URL": "https://lotusflare-dev.jfa.dev" },
   "d1_databases": [
     {
@@ -38,6 +45,13 @@
         {
           "pattern": "lotusflare.jfa.dev/api/*",
           "zone_id": "8d3bb209ac51a6e21eee9c0457d06b43",
+        },
+      ],
+      "secrets_store_secrets": [
+        {
+          "binding": "LOTUSFLARE_AUTH",
+          "store_id": "6722243507114af69e9626e2a66436d0",
+          "secret_name": "LOTUSFLARE_AUTH",
         },
       ],
       "vars": { "PROD_APP_URL": "https://lotusflare.jfa.dev" },

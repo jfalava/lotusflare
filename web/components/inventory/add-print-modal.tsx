@@ -43,6 +43,7 @@ import {
 } from "#/backend/src/types";
 import { ManaCost } from "@/components/ui/mana-cost";
 import { getCardImageUri } from "@/utils/card-utils";
+import { searchScryfallCards } from "@/lib/api-server";
 
 interface AddPrintModalProps {
   open: boolean;
@@ -88,11 +89,8 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
     let ignore = false;
     queueMicrotask(() => setIsLoadingPrints(true));
 
-    fetch(`/api/scryfall/cards/search?q=oracleid:${oracleId}&unique=prints`)
-      .then(async (response) => {
-        if (!response.ok) throw new Error("Failed to fetch prints");
-        const data: ScryfallListResponse<ScryfallApiCard> =
-          await response.json();
+    searchScryfallCards(`oracleid:${oracleId} unique:prints`)
+      .then((data) => {
         if (!ignore) {
           setAvailablePrints(data.data || []);
           if (data.data?.length) setSelectedCard(data.data[0]);

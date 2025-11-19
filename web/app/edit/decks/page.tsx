@@ -3,21 +3,18 @@ import { Suspense } from "react";
 import BrowseDecksClient from "@/components/decks/decklists-edit-client";
 import type { DeckWithDetails } from "#/backend/src/types";
 import { DeckListViewSkeleton } from "@/components/decks/deck-list-view-skeleton";
-import { getApiBaseUrl, serverFetchJsonSafe } from "@/lib/server-fetch";
 import { calculateSimpleDeckStats } from "@/lib/stats-utils";
 import { pickRepresentativeDeckImage } from "@/lib/image-utils";
 import { generateDecksMetadata } from "@/lib/metadata-utils";
+import { fetchDecks } from "@/lib/api-server";
 
 export const dynamic = "force-dynamic";
 
 async function getDeckData(): Promise<{
   decks: DeckWithDetails[];
 }> {
-  const apiBaseUrl = getApiBaseUrl();
-  const decks = await serverFetchJsonSafe<DeckWithDetails[]>(
-    `${apiBaseUrl}/api/decks`,
-  );
-  return { decks: decks || [] };
+  const decks = await fetchDecks();
+  return { decks };
 }
 
 export async function generateMetadata(): Promise<Metadata> {

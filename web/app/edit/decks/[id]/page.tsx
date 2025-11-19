@@ -4,14 +4,11 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import type { DeckWithDetails } from "#/backend/src/types";
 import UpdateBreadcrumbSegment from "@/utils/update-breadcrumb-segment";
-import { getApiBaseUrl, serverFetchJsonSafe } from "@/lib/server-fetch";
 import { parseImageUris } from "@/lib/image-utils";
+import { fetchDeckById } from "@/lib/api-server";
 
 async function getDeck(id: string): Promise<DeckWithDetails | null> {
-  const apiBaseUrl = getApiBaseUrl();
-  return await serverFetchJsonSafe<DeckWithDetails>(
-    `${apiBaseUrl}/api/decks/${id}`,
-  );
+  return await fetchDeckById(id);
 }
 
 function getRepresentativeCardImage(deck: DeckWithDetails): string | null {

@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Loader2, Search, X } from "lucide-react";
 import { useKeyPress } from "@/hooks/useKeyPress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { searchScryfallCards } from "@/lib/api-server";
 
 interface ScryfallSearchBarProps {
   onCardSelected: (card: ScryfallApiCard) => void;
@@ -67,11 +68,7 @@ const ScryfallSearchBar: React.FC<ScryfallSearchBarProps> = ({
     setIsScryfallSearching(true);
     setPopoverOpen(true);
     try {
-      const response = await fetch(
-        `/api/scryfall/cards/search?q=${encodeURIComponent(currentTerm)}`,
-      );
-      if (!response.ok) throw new Error("Scryfall search failed");
-      const data: ScryfallListResponse<ScryfallApiCard> = await response.json();
+      const data = await searchScryfallCards(currentTerm);
       setScryfallResults(data.data || []);
     } catch (error) {
       console.error("Scryfall search error:", error);

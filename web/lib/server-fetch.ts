@@ -5,17 +5,18 @@ import packageJson from "@/package.json";
  */
 export function getApiBaseUrl(): string {
   if (process.env.NODE_ENV === "development") {
-    return "http://localhost:8787";
+    const apiPort = process.env.API_PORT || "8787";
+    return `http://localhost:${apiPort}`;
   }
 
-  const prodUrl = process.env.PROD_APP_URL || process.env.NEXT_PUBLIC_BASE_URL;
-  if (!prodUrl) {
+  if (!process.env.NEXT_PUBLIC_SITE_URL) {
     throw new Error(
-      "PROD_APP_URL or NEXT_PUBLIC_BASE_URL environment variable is not set",
+      "NEXT_PUBLIC_SITE_URL environment variable is required in production. " +
+        "Please set it to the production API URL.",
     );
   }
 
-  return prodUrl;
+  return process.env.NEXT_PUBLIC_SITE_URL;
 }
 
 /**
@@ -25,7 +26,7 @@ export function getAuthHeaders(): HeadersInit {
   const token = process.env.LOTUSFLARE_AUTH;
   if (!token) {
     console.warn(
-      "[SSR] LOTUSFLARE_AUTH environment variable is not set. API requests may fail.",
+      "[SSR] LOTUSFLARE_AUTH environment variable is not set. API requests will fail.",
     );
     return {};
   }
