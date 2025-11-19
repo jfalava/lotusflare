@@ -19,7 +19,11 @@ import { useKeyPress } from "@/hooks/useKeyPress";
 import { Kbd } from "@/components/ui/kbd";
 import { useTopLoader } from "nextjs-toploader";
 
-// Adjusted capitalize function
+/**
+ * Adjusted capitalize function that handles numeric segments and hyphenated words
+ * @param {string} segment - The string segment to capitalize
+ * @returns {string} The capitalized string
+ */
 function capitalize(segment: string): string {
   if (!segment) return "";
   if (!isNaN(Number(segment))) {

@@ -24,8 +24,11 @@ export function useMediaQuery(query: string): boolean {
     return window.matchMedia(query).matches;
   }, [query]);
 
-  // On the server, we can't know the viewport size, so we return a default.
-  // This prevents hydration mismatches.
+  /**
+   * On the server, we can't know the viewport size, so we return a default.
+   * This prevents hydration mismatches.
+   * @returns {boolean} Default value for server-side rendering
+   */
   const getServerSnapshot = (): boolean => {
     return false;
   };

@@ -1,17 +1,19 @@
 {
   "name": "@lotusflare/backend",
-  "version": "0.4.1",
+  "version": "0.5",
   "private": true,
   "scripts": {
     "deploy": "bun run cf-typegen && bun run typecheck && bun run format && pnpx wrangler deploy",
     "format": "prettier --write .",
     "dev": "bun run cf-typegen && wrangler dev",
-    "typecheck": "tsc --noEmit",
-    "cf-typegen": "wrangler types"
+    "typecheck": "tsgo --noEmit",
+    "cf-typegen": "wrangler types",
+    "db:local": "rm -rf .wrangler/state/v3/d1/miniflare-D1DatabaseObject && bun wrangler d1 execute dev-mtgc-db --local --file=\"db/schema.sql\" && echo \"2d84e8d3-5b00-4a15-b4bf-35e5b31877f2-2d84e8d3-5b00-4a15-b4bf-35e5b31877f2\" | bun wrangler secrets-store secret create 6722243507114af69e9626e2a66436d0 --name LOTUSFLARE_AUTH --scopes workers --remote=false"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20251117.0",
     "@types/bun": "catalog:",
+    "@typescript/native-preview": "catalog:",
     "typescript": "catalog:",
     "wrangler": "catalog:"
   },

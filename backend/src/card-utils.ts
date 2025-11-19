@@ -116,7 +116,12 @@ export const mapScryfallCardToDbo: ScryfallToCardDboMappingFn = (
 export const mapDboToScryfallApiCard: DboToScryfallApiCardMappingFn = (
   cardDbo: CardDbo,
 ): ScryfallApiCard => {
-  // Safely parse a JSON string into T, or return null
+  /**
+   * Safely parse a JSON string into T, or return null
+   * @template T
+   * @param {string | null} jsonString - The JSON string to parse
+   * @returns {T | null} The parsed object or null if parsing fails
+   */
   const safeJsonParse = <T>(jsonString: string | null): T | null => {
     if (jsonString == null) return null;
     try {
@@ -131,7 +136,12 @@ export const mapDboToScryfallApiCard: DboToScryfallApiCardMappingFn = (
     }
   };
 
-  // Safely parse a JSON array string into T[], or return empty array
+  /**
+   * Safely parse a JSON array string into T[], or return empty array
+   * @template T
+   * @param {string | null} jsonString - The JSON array string to parse
+   * @returns {T[]} The parsed array or empty array if parsing fails
+   */
   const safeJsonParseArray = <T>(jsonString: string | null): T[] => {
     if (jsonString == null) return [];
     try {

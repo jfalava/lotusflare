@@ -8,8 +8,9 @@
     "build": "next build --turbopack",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "deploy": "bun run cf-typegen && bun run typecheck && bun run lint && bun run format && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "deploy:fast": "bun run typecheck && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings ./cloudflare-env.d.ts"
   },
@@ -34,6 +35,7 @@
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@typescript/native-preview": "catalog:",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
