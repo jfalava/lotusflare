@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lotusflare-web-dev",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-03-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".open-next/assets",
+  },
+  "observability": {
+    "enabled": true,
+  },
+  "routes": [
+    {
+      "pattern": "dev-mtgc.jfa.dev",
+      "custom_domain": true,
+    },
+  ],
+  "vars": { "PROD_APP_URL": "https://dev-mtgc.jfa.dev" },
+  "env": {
+    "production": {
+      "name": "lotusflare-web-pro",
+      "observability": {
+        "enabled": true,
+      },
+      "routes": [
+        {
+          "pattern": "lotusflare.jfa.dev",
+          "custom_domain": true,
+        },
+      ],
+      "vars": { "PROD_APP_URL": "https://lotusflare.jfa.dev" },
+    },
+  },
+}

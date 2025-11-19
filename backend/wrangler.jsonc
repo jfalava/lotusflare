@@ -1,0 +1,48 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lotusflare-backend-dev",
+  "main": "src/lotusflare-api.ts",
+  "compatibility_date": "2025-05-15",
+  "observability": {
+    "enabled": true,
+  },
+  "triggers": {
+    "crons": ["0 5 1 * *"],
+  },
+  "routes": [
+    {
+      "pattern": "dev-mtgc.jfa.dev/api/*",
+      "zone_id": "8d3bb209ac51a6e21eee9c0457d06b43",
+    },
+  ],
+  "vars": { "PROD_APP_URL": "https://dev-mtgc.jfa.dev" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dev-mtgc-db",
+      "database_id": "14017daa-7bfc-4f28-8b51-c13eaa116501",
+    },
+  ],
+  "env": {
+    "production": {
+      "name": "lotusflare-backend-pro",
+      "observability": {
+        "enabled": true,
+      },
+      "routes": [
+        {
+          "pattern": "lotusflare.jfa.dev/api/*",
+          "zone_id": "8d3bb209ac51a6e21eee9c0457d06b43",
+        },
+      ],
+      "vars": { "PROD_APP_URL": "https://lotusflare.jfa.dev" },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "prod-lotusflare-db",
+          "database_id": "0d04f83e-e8c7-465b-aa37-9bc751ad726f",
+        },
+      ],
+    },
+  },
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@lotusflare/monorepo",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "web/*",
+      "backend/*"
+    ]
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.2"
+  }
+}

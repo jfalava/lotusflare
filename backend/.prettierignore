@@ -1,0 +1,7 @@
+**/*.md
+*.md
+*.mdx
+**/*.mdx
+*.yaml
+**/*.yaml
+**/.astro/
