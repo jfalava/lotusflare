@@ -866,7 +866,7 @@ export default function NewInventoryClient({
 
       <div
         ref={previewRef}
-        className="fixed pointer-events-none z-[9999]"
+        className="fixed pointer-events-none z-9999"
         style={{
           visibility: "hidden",
           left: "-9999px",

@@ -134,7 +134,7 @@ const ScryfallSearchBar: React.FC<ScryfallSearchBarProps> = ({
     : "Search cards to add...";
 
   return (
-    <div className="relative flex-grow">
+    <div className="relative grow">
       <Input
         ref={scryfallInputRef}
         type="text"
