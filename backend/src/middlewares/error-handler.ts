@@ -8,7 +8,7 @@ import { Context } from "hono";
  */
 export function withErrorHandling<T>(
   handler: (c: Context) => Promise<Response>,
-  errorMessage: string
+  errorMessage: string,
 ) {
   return async (c: Context): Promise<Response> => {
     try {
@@ -20,7 +20,7 @@ export function withErrorHandling<T>(
           message: errorMessage,
           error: (e as Error).message,
         },
-        500
+        500,
       );
     }
   };
@@ -60,7 +60,7 @@ export class UnauthorizedError extends Error {
 export function handleKnownErrors(
   error: unknown,
   c: Context,
-  defaultMessage: string
+  defaultMessage: string,
 ): Response {
   console.error(`${defaultMessage}:`, error);
 
@@ -81,6 +81,6 @@ export function handleKnownErrors(
       message: defaultMessage,
       error: (error as Error).message,
     },
-    500
+    500,
   );
 }

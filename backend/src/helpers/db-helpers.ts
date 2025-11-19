@@ -1,4 +1,7 @@
-import type { D1Database, D1PreparedStatement } from "@cloudflare/workers-types";
+import type {
+  D1Database,
+  D1PreparedStatement,
+} from "@cloudflare/workers-types";
 import type { CardDbo } from "../types";
 import { NotFoundError } from "../middlewares/error-handler";
 
@@ -25,7 +28,9 @@ const CARD_INSERT_SQL = `
  * @param dbo - Card database object (without created_at/updated_at)
  * @returns Array of values to bind
  */
-export function bindCardParams(dbo: Omit<CardDbo, "created_at" | "updated_at">): unknown[] {
+export function bindCardParams(
+  dbo: Omit<CardDbo, "created_at" | "updated_at">,
+): unknown[] {
   return [
     dbo.scryfall_id,
     dbo.oracle_id,
@@ -68,7 +73,7 @@ export function bindCardParams(dbo: Omit<CardDbo, "created_at" | "updated_at">):
  */
 export function prepareCardInsert(
   db: D1Database,
-  card: Omit<CardDbo, "created_at" | "updated_at">
+  card: Omit<CardDbo, "created_at" | "updated_at">,
 ): D1PreparedStatement {
   return db.prepare(CARD_INSERT_SQL).bind(...bindCardParams(card));
 }
@@ -81,7 +86,7 @@ export function prepareCardInsert(
  */
 export async function batchInsertCards(
   db: D1Database,
-  cards: Omit<CardDbo, "created_at" | "updated_at">[]
+  cards: Omit<CardDbo, "created_at" | "updated_at">[],
 ): Promise<D1Result[]> {
   const statements = cards.map((card) => prepareCardInsert(db, card));
   return await db.batch(statements);
@@ -100,7 +105,7 @@ export async function ensureEntityExists<T>(
   db: D1Database,
   query: string,
   param: string | number,
-  entityName: string
+  entityName: string,
 ): Promise<T> {
   const result = await db.prepare(query).bind(param).first<T>();
 
@@ -119,7 +124,7 @@ export async function ensureEntityExists<T>(
  */
 export async function getPlaceName(
   db: D1Database,
-  placeId: number | null
+  placeId: number | null,
 ): Promise<string | null> {
   if (!placeId) return null;
 
@@ -143,7 +148,7 @@ export function buildUpdateQuery<T extends Record<string, unknown>>(
   updates: T,
   tableName: string,
   whereClause: string,
-  typeConversions?: Record<string, (val: unknown) => unknown>
+  typeConversions?: Record<string, (val: unknown) => unknown>,
 ): { sql: string; values: unknown[] } {
   const fields: string[] = [];
   const values: unknown[] = [];

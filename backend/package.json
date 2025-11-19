@@ -3,10 +3,11 @@
   "version": "0.4.1",
   "private": true,
   "scripts": {
-    "deploy": "bun run cf-typegen && pnpx wrangler deploy",
-    "dev": "bun run cf-typegen && pnpx wrangler dev",
-    "typecheck": "bun tsc --noEmit",
-    "cf-typegen": "bun wrangler types"
+    "deploy": "bun run cf-typegen && bun run typecheck && bun run format && pnpx wrangler deploy",
+    "format": "prettier --write .",
+    "dev": "bun run cf-typegen && wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "cf-typegen": "wrangler types"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20251117.0",

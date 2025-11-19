@@ -21,7 +21,7 @@ export function createPaginatedResponse<T>(
   data: T[],
   totalCount: number,
   page: number,
-  limit: number
+  limit: number,
 ): PaginatedResponse<T> {
   return {
     data,
@@ -38,7 +38,7 @@ export function createPaginatedResponse<T>(
  * @returns Empty paginated response
  */
 export function createEmptyPaginatedResponse<T>(
-  totalCount: number = 0
+  totalCount: number = 0,
 ): PaginatedResponse<T> {
   return {
     data: [],
@@ -63,7 +63,7 @@ export interface SuccessResponse<T> {
  */
 export function createSuccessResponse<T>(
   data: T,
-  message?: string
+  message?: string,
 ): SuccessResponse<T> {
   const response: SuccessResponse<T> = { data };
   if (message) {
@@ -91,7 +91,7 @@ export interface ErrorResponse {
 export function createErrorResponse(
   message: string,
   error?: string,
-  details?: unknown
+  details?: unknown,
 ): ErrorResponse {
   const response: ErrorResponse = { message };
   if (error) response.error = error;

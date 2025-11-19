@@ -25,7 +25,7 @@ app.get("/", async (c) => {
 
     const { results: activities } = await db
       .prepare(
-        `SELECT * FROM (${activityQuery}) ORDER BY timestamp DESC LIMIT ? OFFSET ?`
+        `SELECT * FROM (${activityQuery}) ORDER BY timestamp DESC LIMIT ? OFFSET ?`,
       )
       .bind(limit, offset)
       .all<{

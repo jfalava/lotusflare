@@ -31,7 +31,7 @@ app.get("/analytics", async (c) => {
           SUM(CASE WHEN id.is_foil = 1 THEN id.quantity ELSE 0 END) as foil_cards
         FROM InventoryDetails id
         JOIN Cards c ON id.card_scryfall_id = c.scryfall_id
-      `
+      `,
         )
         .first<{
           unique_cards: number;
@@ -64,7 +64,7 @@ app.get("/analytics", async (c) => {
         JOIN Cards c ON id.card_scryfall_id = c.scryfall_id
         GROUP BY color_group
         ORDER BY total_cards DESC
-      `
+      `,
         )
         .all<{
           color_group: string;
@@ -91,7 +91,7 @@ app.get("/analytics", async (c) => {
             WHEN 'common' THEN 4 
             ELSE 5 
           END
-      `
+      `,
         )
         .all<{
           rarity: string;
@@ -114,7 +114,7 @@ app.get("/analytics", async (c) => {
         GROUP BY c.set_code, c.set_name, c.released_at
         ORDER BY total_cards DESC
         LIMIT 10
-      `
+      `,
         )
         .all<{
           set_name: string;
@@ -152,7 +152,7 @@ app.get("/analytics", async (c) => {
         FROM InventoryDetails id
         JOIN Cards c ON id.card_scryfall_id = c.scryfall_id
         WHERE json_extract(c.legalities, '$.standard') IN ('legal', 'restricted')
-      `
+      `,
         )
         .all<{
           format: string;
@@ -199,7 +199,7 @@ app.get("/analytics", async (c) => {
 
           ORDER BY timestamp DESC
           LIMIT 20
-      `
+      `,
         )
         .all<{
           type: string;
@@ -227,7 +227,7 @@ app.get("/analytics", async (c) => {
         GROUP BY id.master_oracle_id, c.name
         ORDER BY total_copies DESC, different_printings DESC
         LIMIT 10
-      `
+      `,
         )
         .all<{
           name: string;
@@ -292,7 +292,7 @@ app.get("/quick-stats", async (c) => {
         ) card_counts ON d.id = card_counts.deck_id
         GROUP BY d.format
         ORDER BY deck_count DESC
-      `
+      `,
         )
         .all<{
           format: string;
@@ -312,7 +312,7 @@ app.get("/quick-stats", async (c) => {
         WHERE datetime(added_at) >= datetime('now', '-7 days')
         GROUP BY DATE(added_at)
         ORDER BY date ASC
-      `
+      `,
         )
         .all<{
           date: string;

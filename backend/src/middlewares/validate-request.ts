@@ -24,7 +24,7 @@ export function validateRequest<T>(schema: ZodSchema<T>) {
           message: "Validation failed",
           errors: validation.error.flatten(),
         },
-        400
+        400,
       );
     }
 

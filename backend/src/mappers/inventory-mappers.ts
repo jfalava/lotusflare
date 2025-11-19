@@ -16,7 +16,7 @@ import { intToBool } from "../helpers/db-helpers";
 export function buildInventoryDetailResponse(
   row: InventoryDetailDbo,
   cardDbo: CardDbo,
-  placeName: string | null = null
+  placeName: string | null = null,
 ): InventoryDetailWithCardDetails {
   return {
     ...row,

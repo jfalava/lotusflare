@@ -1,8 +1,4 @@
-import type {
-  DeckCardDbo,
-  CardDbo,
-  DeckCardWithDetails,
-} from "../types";
+import type { DeckCardDbo, CardDbo, DeckCardWithDetails } from "../types";
 import { mapDboToScryfallApiCard } from "../card-utils";
 import { intToBool } from "../helpers/db-helpers";
 
@@ -12,7 +8,7 @@ import { intToBool } from "../helpers/db-helpers";
  * @returns Array of deck cards with full card details
  */
 export function mapDeckCardRows(
-  rows: (DeckCardDbo & CardDbo)[]
+  rows: (DeckCardDbo & CardDbo)[],
 ): DeckCardWithDetails[] {
   return (rows || []).map((row) => ({
     id: row.id,

@@ -5,7 +5,12 @@ import { mapScryfallCardToDbo, mapDboToScryfallApiCard } from "../card-utils";
 import { batchInsertCards, prepareCardInsert } from "../helpers/db-helpers";
 import { fetchScryfall } from "../helpers/scryfall-helpers";
 import { handleKnownErrors } from "../middlewares/error-handler";
-import type { ScryfallApiCard, ScryfallListResponse, Bindings, CardDbo } from "../types";
+import type {
+  ScryfallApiCard,
+  ScryfallListResponse,
+  Bindings,
+  CardDbo,
+} from "../types";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
@@ -35,7 +40,7 @@ app.get("/cards/search", async (c) => {
 
     if (!directResponse.ok) {
       console.error(
-        `[WORKER] Scryfall API fetch FAILED. Status: ${directResponse.status}, Query: "${query}", URL: ${scryfallApiUrl}, Body: ${responseText.substring(0, 500)}...`
+        `[WORKER] Scryfall API fetch FAILED. Status: ${directResponse.status}, Query: "${query}", URL: ${scryfallApiUrl}, Body: ${responseText.substring(0, 500)}...`,
       );
       try {
         const errorJson = JSON.parse(responseText); // Scryfall often returns JSON errors
@@ -64,7 +69,7 @@ app.get("/cards/search", async (c) => {
 
     if (scryfallResponse.object === "error") {
       console.warn(
-        `[WORKER] Scryfall API returned an error object. Query: "${query}", Details: ${scryfallResponse.details}`
+        `[WORKER] Scryfall API returned an error object. Query: "${query}", Details: ${scryfallResponse.details}`,
       );
       if (scryfallResponse.code === "not_found") {
         return c.json({
@@ -83,7 +88,7 @@ app.get("/cards/search", async (c) => {
       !Array.isArray(scryfallResponse.data)
     ) {
       console.warn(
-        `[WORKER] Scryfall response not a recognized list. Query: "${query}", Body: ${responseText.substring(0, 200)}...`
+        `[WORKER] Scryfall response not a recognized list. Query: "${query}", Body: ${responseText.substring(0, 200)}...`,
       );
       return c.json({
         object: "list",
@@ -101,11 +106,11 @@ app.get("/cards/search", async (c) => {
         "RAW SCRYFALL DATA FOR SOL RING:",
         JSON.stringify(
           scryfallResponse.data.find((c) =>
-            c.name.toLowerCase().includes("kumena speaker")
+            c.name.toLowerCase().includes("kumena speaker"),
           ),
           null,
-          2
-        )
+          2,
+        ),
       );
     }
 
@@ -114,14 +119,14 @@ app.get("/cards/search", async (c) => {
       if (cardData.name.toLowerCase().includes("kumena speaker")) {
         console.log(
           "INDIVIDUAL cardData for Sol Ring (before map):",
-          JSON.stringify(cardData, null, 2)
+          JSON.stringify(cardData, null, 2),
         );
       }
       const cardDbo = mapScryfallCardToDbo(cardData);
       if (cardData.name.toLowerCase().includes("kumena speaker")) {
         console.log(
           "cardToInsert for Sol Ring (after map):",
-          JSON.stringify(cardDbo, null, 2)
+          JSON.stringify(cardDbo, null, 2),
         );
       }
       return cardDbo;
@@ -137,14 +142,14 @@ app.get("/cards/search", async (c) => {
     console.error(
       `[WORKER] Error in /scryfall/cards/search (Query: "${query}"):`,
       error instanceof Error ? error.message : error,
-      error instanceof Error ? error.stack : ""
+      error instanceof Error ? error.stack : "",
     );
     return c.json(
       {
         message: "Error searching for cards. Please try again.",
         errorDetail: error instanceof Error ? error.message : "Unknown error",
       },
-      500
+      500,
     );
   }
 });
@@ -156,7 +161,7 @@ app.get("/cards/:id", async (c) => {
   try {
     // 1) Try local DB first
     const local = await c.env.DB.prepare(
-      "SELECT * FROM Cards WHERE scryfall_id = ?"
+      "SELECT * FROM Cards WHERE scryfall_id = ?",
     )
       .bind(id)
       .first<CardDbo>();
@@ -195,7 +200,7 @@ app.get("/cards/:id", async (c) => {
         message: "Error fetching card by ID.",
         errorDetail: e instanceof Error ? e.message : "Unknown error",
       },
-      500
+      500,
     );
   }
 });
@@ -235,7 +240,7 @@ app.get("/cards/cardmarket/:cardmarket_id", async (c) => {
 
     if (!directResponse.ok) {
       console.error(
-        `[WORKER] Scryfall API CardMarket ID fetch FAILED. Status: ${directResponse.status}, ID: ${cardmarketId}, URL: ${scryfallApiUrl}, Body: ${responseText.substring(0, 500)}...`
+        `[WORKER] Scryfall API CardMarket ID fetch FAILED. Status: ${directResponse.status}, ID: ${cardmarketId}, URL: ${scryfallApiUrl}, Body: ${responseText.substring(0, 500)}...`,
       );
       try {
         const errorJson = JSON.parse(responseText);
@@ -254,7 +259,7 @@ app.get("/cards/cardmarket/:cardmarket_id", async (c) => {
 
     if (scryfallCard.object !== "card") {
       console.warn(
-        `[WORKER] Scryfall CardMarket ID response not a card object. ID: ${cardmarketId}, Body: ${responseText.substring(0, 200)}...`
+        `[WORKER] Scryfall CardMarket ID response not a card object. ID: ${cardmarketId}, Body: ${responseText.substring(0, 200)}...`,
       );
       return c.json({ message: "Unexpected response from Scryfall" }, 502); // Bad Gateway
     }
@@ -266,14 +271,14 @@ app.get("/cards/cardmarket/:cardmarket_id", async (c) => {
   } catch (error: unknown) {
     console.error(
       `[WORKER] Error in /scryfall/cards/cardmarket/${cardmarketId}:`,
-      error
+      error,
     );
     return c.json(
       {
         message: "Error fetching card by CardMarket ID.",
         errorDetail: error instanceof Error ? error.message : "Unknown error",
       },
-      500
+      500,
     );
   }
 });

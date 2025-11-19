@@ -5,7 +5,10 @@ import { getStringId } from "../helpers/param-helpers";
 import { ensureCardsExist } from "../helpers/scryfall-helpers";
 import { mapDeckCardRows } from "../mappers/deck-mappers";
 import { handleKnownErrors } from "../middlewares/error-handler";
-import { getValidatedData, validateRequest } from "../middlewares/validate-request";
+import {
+  getValidatedData,
+  validateRequest,
+} from "../middlewares/validate-request";
 import type {
   Bindings,
   CardDbo,
@@ -19,7 +22,8 @@ const app = new Hono<{ Bindings: Bindings }>();
 
 app.post("/", validateRequest(createDeckSchema), async (c) => {
   try {
-    const { name, format, description, cards } = getValidatedData<z.infer<typeof createDeckSchema>>(c);
+    const { name, format, description, cards } =
+      getValidatedData<z.infer<typeof createDeckSchema>>(c);
     const db = c.env.DB;
     // generate a UUID for this deck
     const id = crypto.randomUUID();
@@ -30,7 +34,7 @@ app.post("/", validateRequest(createDeckSchema), async (c) => {
 
     const deckResult = await db
       .prepare(
-        "INSERT INTO Decks (id, name, format, description) VALUES (?, ?, ?, ?) RETURNING *"
+        "INSERT INTO Decks (id, name, format, description) VALUES (?, ?, ?, ?) RETURNING *",
       )
       .bind(id, name, format, description || null)
       .first<DeckDbo>();
@@ -42,26 +46,36 @@ app.post("/", validateRequest(createDeckSchema), async (c) => {
 
     if (cards && cards.length > 0) {
       // Make sure every referenced card is present in Cards
-      await ensureCardsExist(db, [...new Set(cards.map((c: { scryfall_id: string }) => c.scryfall_id))]);
-      const cardStatements = cards.map((card: { scryfall_id: string; quantity: number; is_commander?: boolean; is_sideboard?: boolean; is_maybeboard?: boolean }) => {
-        // Verify each card exists in local Cards table before attempting to add to deck
-        // This check can be done upfront for all cards for efficiency
-        return db
-          .prepare(
-            `INSERT INTO DeckCards (
+      await ensureCardsExist(db, [
+        ...new Set(cards.map((c: { scryfall_id: string }) => c.scryfall_id)),
+      ]);
+      const cardStatements = cards.map(
+        (card: {
+          scryfall_id: string;
+          quantity: number;
+          is_commander?: boolean;
+          is_sideboard?: boolean;
+          is_maybeboard?: boolean;
+        }) => {
+          // Verify each card exists in local Cards table before attempting to add to deck
+          // This check can be done upfront for all cards for efficiency
+          return db
+            .prepare(
+              `INSERT INTO DeckCards (
               deck_id, card_scryfall_id, quantity,
               is_commander, is_sideboard, is_maybeboard
-            ) VALUES (?, ?, ?, ?, ?, ?)`
-          )
-          .bind(
-            deckId,
-            card.scryfall_id,
-            card.quantity,
-            boolToInt(card.is_commander),
-            boolToInt(card.is_sideboard),
-            boolToInt(card.is_maybeboard)
-          );
-      });
+            ) VALUES (?, ?, ?, ?, ?, ?)`,
+            )
+            .bind(
+              deckId,
+              card.scryfall_id,
+              card.quantity,
+              boolToInt(card.is_commander),
+              boolToInt(card.is_sideboard),
+              boolToInt(card.is_maybeboard),
+            );
+        },
+      );
       // Before batching, ensure all scryfall_ids in `cards` are valid and exist in your `Cards` table.
       // This is an important validation step.
       // For brevity, this check is omitted here but crucial in production.
@@ -84,7 +98,7 @@ app.post("/", validateRequest(createDeckSchema), async (c) => {
         `SELECT dc.*, cr.*
          FROM DeckCards dc
          JOIN Cards cr ON dc.card_scryfall_id = cr.scryfall_id
-         WHERE dc.deck_id = ?`
+         WHERE dc.deck_id = ?`,
       )
       .bind(deckId)
       .all<DeckCardDbo & CardDbo>();
@@ -118,7 +132,7 @@ app.get("/", async (c) => {
           `SELECT dc.*, cr.*
        FROM DeckCards dc
        JOIN Cards cr ON dc.card_scryfall_id = cr.scryfall_id
-       WHERE dc.deck_id = ?`
+       WHERE dc.deck_id = ?`,
         )
         .bind(deckDbo.id)
         .all<DeckCardDbo & CardDbo>();
@@ -151,7 +165,7 @@ app.get("/:id", async (c) => {
       `SELECT dc.*, cr.*
      FROM DeckCards dc
      JOIN Cards cr ON dc.card_scryfall_id = cr.scryfall_id
-     WHERE dc.deck_id = ?`
+     WHERE dc.deck_id = ?`,
     )
       .bind(id)
       .all<DeckCardDbo & CardDbo>();
@@ -171,7 +185,8 @@ app.put("/:id", validateRequest(updateDeckSchema), async (c) => {
   try {
     const id = getStringId(c);
     const db = c.env.DB;
-    const { name, format, description, cards } = getValidatedData<z.infer<typeof updateDeckSchema>>(c);
+    const { name, format, description, cards } =
+      getValidatedData<z.infer<typeof updateDeckSchema>>(c);
 
     const deckExists = await db
       .prepare("SELECT id FROM Decks WHERE id = ?")
@@ -209,29 +224,38 @@ app.put("/:id", validateRequest(updateDeckSchema), async (c) => {
     // If cards array is provided, replace all existing cards in the deck
     if (cards !== undefined) {
       // Up-front: guarantee FK validity
-      await ensureCardsExist(db, [...new Set(cards.map((c: { scryfall_id: string }) => c.scryfall_id))]);
+      await ensureCardsExist(db, [
+        ...new Set(cards.map((c: { scryfall_id: string }) => c.scryfall_id)),
+      ]);
       // Validate all card scryfall_ids exist in Cards table (omitted for brevity)
       await db
         .prepare("DELETE FROM DeckCards WHERE deck_id = ?")
         .bind(id)
         .run();
       if (cards.length > 0) {
-        const cardStatements = cards.map((card: { scryfall_id: string; quantity: number; is_commander?: boolean; is_sideboard?: boolean; is_maybeboard?: boolean }) =>
-          db
-            .prepare(
-              `INSERT INTO DeckCards (
+        const cardStatements = cards.map(
+          (card: {
+            scryfall_id: string;
+            quantity: number;
+            is_commander?: boolean;
+            is_sideboard?: boolean;
+            is_maybeboard?: boolean;
+          }) =>
+            db
+              .prepare(
+                `INSERT INTO DeckCards (
                 deck_id, card_scryfall_id, quantity,
                 is_commander, is_sideboard, is_maybeboard
-             ) VALUES (?, ?, ?, ?, ?, ?)`
-            )
-            .bind(
-              id,
-              card.scryfall_id,
-              card.quantity,
-              boolToInt(card.is_commander),
-              boolToInt(card.is_sideboard),
-              boolToInt(card.is_maybeboard)
-            )
+             ) VALUES (?, ?, ?, ?, ?, ?)`,
+              )
+              .bind(
+                id,
+                card.scryfall_id,
+                card.quantity,
+                boolToInt(card.is_commander),
+                boolToInt(card.is_sideboard),
+                boolToInt(card.is_maybeboard),
+              ),
         );
         await db.batch(cardStatements);
       }
@@ -251,7 +275,7 @@ app.put("/:id", validateRequest(updateDeckSchema), async (c) => {
         `SELECT dc.*, cr.*
          FROM DeckCards dc
          JOIN Cards cr ON dc.card_scryfall_id = cr.scryfall_id
-         WHERE dc.deck_id = ?`
+         WHERE dc.deck_id = ?`,
       )
       .bind(id)
       .all<DeckCardDbo & CardDbo>();
@@ -271,7 +295,7 @@ app.delete("/:id", async (c) => {
     const id = getStringId(c);
 
     const deckExists = await c.env.DB.prepare(
-      "SELECT id FROM Decks WHERE id = ?"
+      "SELECT id FROM Decks WHERE id = ?",
     )
       .bind(id)
       .first();
@@ -281,7 +305,7 @@ app.delete("/:id", async (c) => {
 
     // ON DELETE CASCADE in DeckCards table will handle associated cards
     const { success, meta } = await c.env.DB.prepare(
-      "DELETE FROM Decks WHERE id = ?"
+      "DELETE FROM Decks WHERE id = ?",
     )
       .bind(id)
       .run();
@@ -303,7 +327,8 @@ app.get("/:id/legality", async (c) => {
       return c.json({ message: "Format query parameter is required" }, 400);
     }
     const db = c.env.DB;
-    const deck = await db.prepare("SELECT format FROM Decks WHERE id = ?")
+    const deck = await db
+      .prepare("SELECT format FROM Decks WHERE id = ?")
       .bind(id)
       .first<{ format: string }>();
 
@@ -315,7 +340,7 @@ app.get("/:id/legality", async (c) => {
       `SELECT cr.name, cr.legalities
        FROM DeckCards dc
        JOIN Cards cr ON dc.card_scryfall_id = cr.scryfall_id
-       WHERE dc.deck_id = ? AND dc.is_sideboard = 0`
+       WHERE dc.deck_id = ? AND dc.is_sideboard = 0`,
     )
       .bind(id)
       .all<{ name: string; legalities: string }>();

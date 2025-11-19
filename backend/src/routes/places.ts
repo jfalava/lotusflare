@@ -1,8 +1,16 @@
 import { Hono } from "hono";
 import { getIntId } from "../helpers/param-helpers";
 import { handleKnownErrors } from "../middlewares/error-handler";
-import { getValidatedData, validateRequest } from "../middlewares/validate-request";
-import type { Bindings, CreatePlacePayload, PlaceDbo, UpdatePlacePayload } from "../types";
+import {
+  getValidatedData,
+  validateRequest,
+} from "../middlewares/validate-request";
+import type {
+  Bindings,
+  CreatePlacePayload,
+  PlaceDbo,
+  UpdatePlacePayload,
+} from "../types";
 import { createPlaceSchema, updatePlaceSchema } from "../validators";
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -11,7 +19,7 @@ const app = new Hono<{ Bindings: Bindings }>();
 app.get("/", async (c) => {
   try {
     const { results } = await c.env.DB.prepare(
-      "SELECT * FROM Places ORDER BY name ASC"
+      "SELECT * FROM Places ORDER BY name ASC",
     ).all<PlaceDbo>();
     return c.json(results || []);
   } catch (e: unknown) {
@@ -24,7 +32,7 @@ app.post("/", validateRequest(createPlaceSchema), async (c) => {
     const { name, type, description } = getValidatedData<CreatePlacePayload>(c);
 
     const result = await c.env.DB.prepare(
-      "INSERT INTO Places (name, type, description) VALUES (?, ?, ?) RETURNING *"
+      "INSERT INTO Places (name, type, description) VALUES (?, ?, ?) RETURNING *",
     )
       .bind(name, type, description || null)
       .first<PlaceDbo>();
@@ -70,7 +78,12 @@ app.put("/:id", validateRequest(updatePlaceSchema), async (c) => {
       valuesToBind.push(type);
     }
     // For description, allow setting to null explicitly
-    if (Object.prototype.hasOwnProperty.call({ name, type, description }, "description")) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        { name, type, description },
+        "description",
+      )
+    ) {
       fieldsToUpdate.push("description = ?");
       valuesToBind.push(description === undefined ? null : description);
     }
@@ -83,7 +96,7 @@ app.put("/:id", validateRequest(updatePlaceSchema), async (c) => {
     valuesToBind.push(id.toString());
 
     const updatedPlace = await c.env.DB.prepare(
-      `UPDATE Places SET ${fieldsToUpdate.join(", ")} WHERE id = ? RETURNING *`
+      `UPDATE Places SET ${fieldsToUpdate.join(", ")} WHERE id = ? RETURNING *`,
     )
       .bind(...valuesToBind)
       .first<PlaceDbo>();
@@ -104,7 +117,7 @@ app.delete("/:id", async (c) => {
     const id = getIntId(c);
 
     const { success, meta } = await c.env.DB.prepare(
-      "DELETE FROM Places WHERE id = ?"
+      "DELETE FROM Places WHERE id = ?",
     )
       .bind(id)
       .run();

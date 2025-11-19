@@ -27,7 +27,7 @@ export function getCardImageUri(card: ScryfallApiCard): string | undefined {
  */
 export async function getCardLocalizedImageUri(
   card: ScryfallApiCard,
-  lang: LanguageCode
+  lang: LanguageCode,
 ): Promise<string | undefined> {
   // If the “card” you already have is in the right language, just use it:
   if (card.lang === lang) {
@@ -41,9 +41,9 @@ export async function getCardLocalizedImageUri(
     // Scryfall endpoint: GET /cards/{set}/{number}/{lang}
     const res = await fetch(
       `https://api.scryfall.com/cards/${encodeURIComponent(
-        setCode
+        setCode,
       )}/${encodeURIComponent(collectorNumber)}/${encodeURIComponent(lang)}`,
-      { headers: { Accept: "application/json" } }
+      { headers: { Accept: "application/json" } },
     );
     if (res.ok) {
       const localized = (await res.json()) as ScryfallApiCard;
@@ -64,7 +64,7 @@ export async function getCardLocalizedImageUri(
  * Made more defensive against potentially undefined incoming fields.
  */
 export const mapScryfallCardToDbo: ScryfallToCardDboMappingFn = (
-  scryfallCard: ScryfallApiCard
+  scryfallCard: ScryfallApiCard,
 ): Omit<CardDbo, "created_at" | "updated_at"> => {
   return {
     scryfall_id: scryfallCard.id,
@@ -114,7 +114,7 @@ export const mapScryfallCardToDbo: ScryfallToCardDboMappingFn = (
  * and ensures mana_cost is populated for adventure/DFC cards.
  */
 export const mapDboToScryfallApiCard: DboToScryfallApiCardMappingFn = (
-  cardDbo: CardDbo
+  cardDbo: CardDbo,
 ): ScryfallApiCard => {
   // Safely parse a JSON string into T, or return null
   const safeJsonParse = <T>(jsonString: string | null): T | null => {
@@ -125,7 +125,7 @@ export const mapDboToScryfallApiCard: DboToScryfallApiCardMappingFn = (
       console.error(
         `Failed to parse JSON for card ${cardDbo.scryfall_id} ('${cardDbo.name}'):`,
         jsonString,
-        e
+        e,
       );
       return null;
     }
@@ -141,7 +141,7 @@ export const mapDboToScryfallApiCard: DboToScryfallApiCardMappingFn = (
       console.error(
         `Failed to parse JSON array for card ${cardDbo.scryfall_id} ('${cardDbo.name}'):`,
         jsonString,
-        e
+        e,
       );
       return [];
     }
@@ -177,7 +177,7 @@ export const mapDboToScryfallApiCard: DboToScryfallApiCardMappingFn = (
     color_identity: safeJsonParseArray<string>(cardDbo.color_identity),
     image_uris: safeJsonParse<ScryfallImageUris>(cardDbo.image_uris),
     finishes: safeJsonParseArray<"foil" | "nonfoil" | "etched" | "glossy">(
-      cardDbo.finishes
+      cardDbo.finishes,
     ),
     card_faces: faces,
     artist: cardDbo.artist,

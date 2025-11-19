@@ -361,12 +361,12 @@ export interface PaginatedActivityResponse {
 
 // Function signature for mapping Scryfall API card data to our CardDbo structure
 export type ScryfallToCardDboMappingFn = (
-  scryfallCard: ScryfallApiCard
+  scryfallCard: ScryfallApiCard,
 ) => Omit<CardDbo, "created_at" | "updated_at">;
 
 // Function signature for mapping CardDbo (from DB) back to ScryfallApiCard for API responses
 export type DboToScryfallApiCardMappingFn = (
-  cardDbo: CardDbo
+  cardDbo: CardDbo,
 ) => ScryfallApiCard;
 
 // Type for Scryfall's list object structure (generic)

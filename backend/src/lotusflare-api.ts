@@ -39,7 +39,7 @@ app.use(
     allowHeaders: ["Content-Type", "Authorization"], // Add any other custom headers
     maxAge: 86400, // Cache preflight response for 1 day
     credentials: true, // If you use cookies or authorization headers
-  })
+  }),
 );
 
 // --- API Sub-Router ---
@@ -67,7 +67,7 @@ app.onError((err, c) => {
         message: "Validation failed",
         errors: err.flatten().fieldErrors,
       },
-      400
+      400,
     );
   }
   // Log other errors to the console
@@ -77,7 +77,7 @@ app.onError((err, c) => {
       message: "An unexpected error occurred.",
       error: err.message, // Be careful about exposing error details in production
     },
-    500
+    500,
   );
 });
 

@@ -13,7 +13,9 @@ export function getIntId(c: Context, paramName: string = "id"): number {
   const id = parseInt(idStr, 10);
 
   if (isNaN(id) || id <= 0) {
-    throw new ValidationError(`Invalid ${paramName}: must be a positive integer`);
+    throw new ValidationError(
+      `Invalid ${paramName}: must be a positive integer`,
+    );
   }
 
   return id;
@@ -55,7 +57,7 @@ export interface PaginationParams {
 export function getPaginationParams(
   c: Context,
   defaultLimit: number = 50,
-  maxLimit: number = 200
+  maxLimit: number = 200,
 ): PaginationParams {
   const pageStr = c.req.query("page");
   const limitStr = c.req.query("limit");
@@ -82,7 +84,7 @@ export function getPaginationParams(
 export function getOptionalInt(
   c: Context,
   paramName: string,
-  defaultValue: number | null = null
+  defaultValue: number | null = null,
 ): number | null {
   const value = c.req.query(paramName);
 
@@ -102,7 +104,7 @@ export function getOptionalInt(
 export function getOptionalString(
   c: Context,
   paramName: string,
-  defaultValue: string | null = null
+  defaultValue: string | null = null,
 ): string | null {
   const value = c.req.query(paramName);
   return value && value.trim() !== "" ? value : defaultValue;
@@ -118,7 +120,7 @@ export function getOptionalString(
 export function getOptionalBoolean(
   c: Context,
   paramName: string,
-  defaultValue: boolean = false
+  defaultValue: boolean = false,
 ): boolean {
   const value = c.req.query(paramName);
 
