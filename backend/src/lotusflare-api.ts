@@ -4,6 +4,31 @@ import { cors } from "hono/cors";
 import { ZodError } from "zod";
 import type { Bindings } from "./types";
 
+/**
+ * Constant-time string comparison to prevent timing attacks
+ * @param a First string to compare
+ * @param b Second string to compare
+ * @returns true if strings are equal, false otherwise
+ */
+function timingSafeEqual(a: string, b: string): boolean {
+  // Convert strings to Uint8Array for byte-level comparison
+  const aBytes = new TextEncoder().encode(a);
+  const bBytes = new TextEncoder().encode(b);
+
+  // If lengths differ, still compare to prevent timing leaks
+  const length = Math.max(aBytes.length, bBytes.length);
+  let result = aBytes.length === bBytes.length ? 0 : 1;
+
+  // Compare every byte in constant time
+  for (let i = 0; i < length; i++) {
+    const aByte = i < aBytes.length ? aBytes[i] : 0;
+    const bByte = i < bBytes.length ? bBytes[i] : 0;
+    result |= aByte ^ bByte;
+  }
+
+  return result === 0;
+}
+
 // Import routes
 import activityRoutes from "./routes/activity";
 import adminRoutes from "./routes/admin";
@@ -56,18 +81,21 @@ app.use("/api/*", async (c, next) => {
   const auth = c.req.header("Authorization");
 
   // Check if Authorization header is present and properly formatted
-  if (!auth || !auth.startsWith("Bearer ")) {
+  // Using regex to validate "Bearer <token>" format with exactly one space
+  const bearerMatch = auth?.match(/^Bearer\s+(\S+)$/);
+  if (!bearerMatch) {
     return c.text("Unauthorized", 401);
   }
 
-  // Extract the token (remove "Bearer " prefix)
-  const token = auth.slice(7);
+  // Extract the token from regex capture group
+  const token = bearerMatch[1];
 
   // Get the expected token from environment/secrets
   const expectedToken = await c.env.LOTUSFLARE_AUTH.get();
 
-  // Validate the token
-  if (!expectedToken || token !== expectedToken) {
+  // Validate the token exists and matches using constant-time comparison
+  // This prevents timing attacks that could leak the token byte-by-byte
+  if (!expectedToken || !timingSafeEqual(token, expectedToken)) {
     return c.text("Unauthorized", 401);
   }
 

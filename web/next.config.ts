@@ -10,18 +10,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
-    const appRewrites = [];
-
-    if (process.env.NODE_ENV === "development") {
-      // during dev, proxy to local `wrangler dev` for /api/list/*
-      appRewrites.push({
-        source: "/api/:path*",
-        destination: "http://localhost:8787/api/:path*",
-      });
-    }
-    return appRewrites;
-  },
+  // Rewrites removed - API requests now handled by Next.js API route handlers
+  // in app/api/* which properly add authentication headers before proxying to backend
 };
 
 export default nextConfig;

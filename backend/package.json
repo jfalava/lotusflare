@@ -3,7 +3,7 @@
   "version": "0.5",
   "private": true,
   "scripts": {
-    "deploy": "bun run cf-typegen && bun run typecheck && bun run format && pnpx wrangler deploy",
+    "deploy": "bun run cf-typegen && bun run typecheck && bun run format && bun wrangler deploy",
     "format": "prettier --write .",
     "dev": "bun run cf-typegen && wrangler dev",
     "typecheck": "tsgo --noEmit",
