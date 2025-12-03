@@ -222,8 +222,9 @@ export interface AddToInventoryPayload {
 
 // For updating, scryfall_card_id is usually not changed for an existing inventory item.
 // If it needs to change, it's often conceptually a new item.
-export interface UpdateInventoryItemPayload
-  extends Partial<Omit<AddToInventoryPayload, "scryfall_card_id">> {}
+export interface UpdateInventoryItemPayload extends Partial<
+  Omit<AddToInventoryPayload, "scryfall_card_id">
+> {}
 
 // Type for an inventory item when joined with card details (reconstructed to ScryfallApiCard)
 // and place details for API responses.
@@ -310,10 +311,9 @@ export interface AddInventoryDetailPayload {
   notes?: string | null;
 }
 
-export interface UpdateInventoryDetailPayload
-  extends Partial<
-    Omit<AddInventoryDetailPayload, "master_oracle_id" | "scryfall_card_id">
-  > {}
+export interface UpdateInventoryDetailPayload extends Partial<
+  Omit<AddInventoryDetailPayload, "master_oracle_id" | "scryfall_card_id">
+> {}
 
 // Type for an inventory detail when joined with card details
 export interface InventoryDetailWithCardDetails {
