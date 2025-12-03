@@ -1,13 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Google+Sans+Code&display=swap");
 @import "mana-font/css/mana.css";
 @font-face {
-  font-family: "Atlassian Sans";
-  font-style: normal;
-  font-weight: 200 700;
-  font-display: swap;
-  src: url("../public/fonts/atlassian/atlassian-sans.woff2") format("woff2");
-}
-@font-face {
   font-family: "Pretendard";
   font-style: normal;
   font-weight: 200 700;
