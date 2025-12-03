@@ -44,7 +44,7 @@ export default function GlobalReloadSplash() {
           className="fixed inset-0 z-[10000] flex items-center justify-center bg-background"
           style={{
             fontFamily:
-              'Atlassian Sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+              'Pretendard, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
           }}
         >
           <div className="text-center">

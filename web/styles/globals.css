@@ -543,9 +543,6 @@
     --font-beleren: "Open Dyslexic Bold";
     --font-beleren-caps: "Open Dyslexic Bold";
   }
-  [data-font-sans="atlassian-sans"] {
-    --font-sans: "Atlassian Sans";
-  }
   [data-font-sans="pretendard-variable"] {
     --font-sans: "Pretendard";
   }

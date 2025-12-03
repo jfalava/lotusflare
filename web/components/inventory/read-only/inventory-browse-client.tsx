@@ -29,9 +29,9 @@ import { InfiniteScrollSentinel } from "@/components/inventory/shared/infinite-s
 import dynamic from "next/dynamic";
 const InventoryReadOnlySkeleton = dynamic(
   () =>
-    import(
-      "@/components/inventory/read-only/inventory-read-only-skeleton"
-    ).then((m) => m.InventoryReadOnlySkeleton),
+    import("@/components/inventory/read-only/inventory-read-only-skeleton").then(
+      (m) => m.InventoryReadOnlySkeleton,
+    ),
   { ssr: false },
 );
 import {

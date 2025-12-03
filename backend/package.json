@@ -11,14 +11,14 @@
     "db:local": "rm -rf .wrangler/state/v3/d1/miniflare-D1DatabaseObject && bun wrangler d1 execute dev-mtgc-db --local --file=\"db/schema.sql\" && echo \"2d84e8d3-5b00-4a15-b4bf-35e5b31877f2-2d84e8d3-5b00-4a15-b4bf-35e5b31877f2\" | bun wrangler secrets-store secret create 6722243507114af69e9626e2a66436d0 --name LOTUSFLARE_AUTH --scopes workers --remote=false"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20251117.0",
+    "@cloudflare/workers-types": "^4.20251202.0",
     "@types/bun": "catalog:",
     "@typescript/native-preview": "catalog:",
     "typescript": "catalog:",
     "wrangler": "catalog:"
   },
   "dependencies": {
-    "hono": "^4.10.6",
+    "hono": "^4.10.7",
     "prettier": "catalog:",
     "zod": "catalog:"
   }

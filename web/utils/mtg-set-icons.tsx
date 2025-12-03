@@ -54,8 +54,10 @@ const MTG_SET_ICONS = {
 
 export type MTGSetIconKey = keyof typeof MTG_SET_ICONS;
 
-export interface MTGSetIconProps
-  extends Omit<React.SVGProps<SVGSVGElement>, "children" | "fill"> {
+export interface MTGSetIconProps extends Omit<
+  React.SVGProps<SVGSVGElement>,
+  "children" | "fill"
+> {
   name: MTGSetIconKey;
   className?: string;
 }

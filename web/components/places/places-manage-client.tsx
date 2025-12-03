@@ -336,8 +336,8 @@ export default function PlacesManageClient({
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
           typeof errorData === "object" &&
-          errorData !== null &&
-          "message" in errorData
+            errorData !== null &&
+            "message" in errorData
             ? String(errorData.message)
             : `Failed to delete: ${response.statusText}`,
         );

@@ -17,7 +17,6 @@ interface Option {
 
 const sansFonts: Option[] = [
   { value: "default", label: "System" },
-  { value: "atlassian-sans", label: "Atlassian Sans" },
   { value: "pretendard-variable", label: "Pretendard" },
   { value: "open-dyslexic", label: "Open Dyslexic" },
 ];
@@ -42,8 +41,6 @@ export function FontSelector({ family }: FontSelectorProps) {
   const getFontStack = (value: string) => {
     if (family === "sans") {
       switch (value) {
-        case "atlassian-sans":
-          return `"Atlassian Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`;
         case "pretendard-variable":
           return `"Pretendard Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`;
         case "open-dyslexic":
