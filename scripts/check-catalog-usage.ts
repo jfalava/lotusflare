@@ -17,14 +17,6 @@
  * - This script modifies package.json files to fix catalog violations.
  * - Implementation is Node/Bun compatible and does not rely on external glob libraries.
  *
- * Usage:
- *
- *   # Update catalog violations (recommended command):
- *   bun run update:catalog:usage
- *
- *   # Legacy check command (still available):
- *   bun run check:catalog
- *
  * Both commands run the same script - it now automatically fixes violations instead of just reporting them.
  */
 
