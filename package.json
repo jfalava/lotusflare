@@ -1,24 +1,24 @@
 {
-    "name": "@lotusflare/monorepo",
-    "private": true,
-    "workspaces": {
-        "packages": [
-            "web",
-            "backend"
-        ],
-        "catalog": {
-            "zod": "^4.1.13",
-            "typescript": "^5.9.3",
-            "@types/bun": "^1.3.4",
-            "@typescript/native-preview": "^7.0.0-dev.20251211.1",
-            "wrangler": "^4.54.0",
-            "prettier": "^3.7.4"
-        }
-    },
-    "scripts": {
-        "check:catalog": "bun scripts/check-catalog-usage.ts"
-    },
-    "devDependencies": {
-        "@types/bun": "^1.3.4"
+  "name": "@lotusflare/monorepo",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "web",
+      "backend"
+    ],
+    "catalog": {
+      "zod": "^4.1.13",
+      "typescript": "^5.9.3",
+      "@types/bun": "^1.3.4",
+      "@typescript/native-preview": "^7.0.0-dev.20251211.1",
+      "wrangler": "^4.54.0",
+      "prettier": "^3.7.4"
     }
+  },
+  "scripts": {
+    "check:catalog": "bun scripts/check-catalog-usage.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.4"
+  }
 }
