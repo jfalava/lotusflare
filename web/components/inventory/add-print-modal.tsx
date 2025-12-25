@@ -81,7 +81,7 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
     let ignore = false;
     queueMicrotask(() => setIsLoadingPrints(true));
 
-    searchScryfallCards(`oracleid:${oracleId} unique:prints`)
+    searchScryfallCards(`oracleid:${oracleId}`)
       .then((data) => {
         if (!ignore) {
           setAvailablePrints(data.data || []);

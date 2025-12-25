@@ -164,7 +164,7 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
     const q =
       card.setCode && card.collectorNumber
         ? `set:${card.setCode} number:${card.collectorNumber} !"//"`
-        : `!"${card.name}" unique:prints`;
+        : `!"${card.name}"`;
     const res = await fetch(`/api/scryfall/cards/search?q=${encodeURIComponent(q)}`);
     if (!res.ok) return [];
     const body = (await res.json()) as {

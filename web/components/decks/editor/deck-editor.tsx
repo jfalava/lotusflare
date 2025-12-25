@@ -285,7 +285,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
     setIsScryfallSearching(true);
     if (!brewMode) setIsPopoverOpen(true);
     try {
-      const query = brewMode ? `!"${scryfallSearchTerm.trim()}" unique:prints` : scryfallSearchTerm;
+      const query = brewMode ? `!"${scryfallSearchTerm.trim()}"` : scryfallSearchTerm;
       const response = await fetch(`/api/scryfall/cards/search?q=${encodeURIComponent(query)}`);
       if (!response.ok) throw new Error(`Search failed: ${response.statusText}`);
       const data: ScryfallListResponse<ScryfallApiCard> = await response.json();

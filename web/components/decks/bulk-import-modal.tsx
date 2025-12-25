@@ -162,7 +162,7 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({ open, onOpenChange, o
         searchQuery = `set:${card.setCode} number:${card.collectorNumber} !"//"`; // Exclude DFC back faces
       } else {
         // Text format - search by exact name
-        searchQuery = `!"${card.name}" unique:prints`;
+        searchQuery = `!"${card.name}"`;
       }
 
       const response = await fetch(
