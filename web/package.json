@@ -4,16 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
     "build": "next build --webpack",
-    "lint": "oxlint . --type-aware --fix",
-    "format": "oxfmt",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings ./cloudflare-env.d.ts",
     "check": "bun typecheck && bun lint",
-    "typecheck": "tsgo --noEmit",
     "deploy": "bun run cf-typegen && bun run typecheck && bun run lint && bun run format && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "deploy:fast": "bun run typecheck && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "dev": "next dev --turbopack",
+    "format": "oxfmt",
+    "lint": "oxlint . --type-aware --fix",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings ./cloudflare-env.d.ts"
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

@@ -3,14 +3,14 @@
   "version": "0.5.0",
   "private": true,
   "scripts": {
-    "deploy": "bun run cf-typegen && bun run typecheck && bun run format && bun wrangler deploy",
-    "lint": "oxlint . --type-aware --fix",
-    "format": "oxfmt",
-    "dev": "bun run cf-typegen && wrangler dev",
-    "check": "bun typecheck && bun lint",
-    "typecheck": "tsgo --noEmit",
     "cf-typegen": "wrangler types",
-    "db:local": "rm -rf .wrangler/state/v3/d1/miniflare-D1DatabaseObject && bun wrangler d1 execute dev-mtgc-db --local --file=\"db/schema.sql\" && echo \"2d84e8d3-5b00-4a15-b4bf-35e5b31877f2-2d84e8d3-5b00-4a15-b4bf-35e5b31877f2\" | bun wrangler secrets-store secret create 6722243507114af69e9626e2a66436d0 --name LOTUSFLARE_AUTH --scopes workers --remote=false"
+    "check": "bun typecheck && bun lint",
+    "db:local": "rm -rf .wrangler/state/v3/d1/miniflare-D1DatabaseObject && bun wrangler d1 execute dev-mtgc-db --local --file=\"db/schema.sql\" && echo \"2d84e8d3-5b00-4a15-b4bf-35e5b31877f2-2d84e8d3-5b00-4a15-b4bf-35e5b31877f2\" | bun wrangler secrets-store secret create 6722243507114af69e9626e2a66436d0 --name LOTUSFLARE_AUTH --scopes workers --remote=false",
+    "deploy": "bun run cf-typegen && bun run typecheck && bun run format && bun wrangler deploy",
+    "dev": "bun run cf-typegen && wrangler dev",
+    "format": "oxfmt",
+    "lint": "oxlint . --type-aware --fix",
+    "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
     "hono": "^4.10.8",

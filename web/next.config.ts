@@ -10,8 +10,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Rewrites removed - API requests now handled by Next.js API route handlers
-  // in app/api/* which properly add authentication headers before proxying to backend
+  allowedDevOrigins: ["192.168.1.134", "192.168.1.132"],
 };
 
 export default nextConfig;
