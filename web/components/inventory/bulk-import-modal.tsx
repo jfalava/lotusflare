@@ -122,7 +122,7 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
 
   useEffect(() => {
     if (!open) return;
-    (async () => {
+    void (async () => {
       try {
         const res = await fetch("/api/places");
         if (!res.ok) throw new Error();

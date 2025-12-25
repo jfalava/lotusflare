@@ -149,7 +149,7 @@ export const DeckLegalityChecker: React.FC<DeckLegalityCheckerProps> = ({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      runFullLegalityCheck();
+      void runFullLegalityCheck();
     }, 1200);
     return () => clearTimeout(timer);
   }, [deckId, deckFormat, totalMainboardCards, runFullLegalityCheck]);

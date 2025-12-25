@@ -91,7 +91,7 @@ const ScryfallSearchBar: React.FC<ScryfallSearchBarProps> = ({
   ) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      triggerScryfallSearch();
+      void triggerScryfallSearch();
     }
   };
 

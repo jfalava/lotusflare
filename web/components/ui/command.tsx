@@ -41,21 +41,31 @@ function CommandDialog({
   showCloseButton = true,
   onOpenChange,
   ...props
-}: React.ComponentProps<typeof Dialog> & {
+}: Omit<React.ComponentProps<typeof Dialog>, "onOpenChange"> & {
   title?: string;
   description?: string;
   className?: string;
   showCloseButton?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
-  const contextValue = React.useMemo(
-    () => ({
-      onDismiss: () => onOpenChange?.(false),
-    }),
+  const handleOpenChange = React.useCallback(
+    (open: boolean) => {
+      onOpenChange?.(open);
+    },
     [onOpenChange],
   );
 
+  const contextValue = React.useMemo(
+    () => ({
+      onDismiss: () => {
+        handleOpenChange(false);
+      },
+    }),
+    [handleOpenChange],
+  );
+
   return (
-    <Dialog onOpenChange={onOpenChange} {...props}>
+    <Dialog onOpenChange={handleOpenChange} {...props}>
       <DialogHeader className="sr-only">
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>

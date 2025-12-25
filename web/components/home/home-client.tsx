@@ -91,7 +91,7 @@ export default function HomeClient({
         const res = await fetch(`/api/activity?page=${activityPage}&limit=10`);
         setPaginatedActivity(await res.json());
       };
-      fetchActivity();
+      void fetchActivity();
     }
   }, [activeTab, activityPage]);
 

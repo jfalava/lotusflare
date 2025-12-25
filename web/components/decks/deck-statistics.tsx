@@ -124,7 +124,7 @@ const getManaSources = (card: ScryfallApiCard): ManaSources => {
   }
 
   // Heuristic 3: Explicit "Add {mana}" abilities.
-  const addManaRegex = /add ((?:{[WUBRGCXY\d\/P]+}\s*(?:or)?\s*)+)/gi; // Case-insensitive
+  const addManaRegex = /add ((?:{[WUBRGCXY\d/P]+}\s*(?:or)?\s*)+)/gi; // Case-insensitive
   let addMatch;
   while ((addMatch = addManaRegex.exec(combinedOracleText)) !== null) {
     const manaPart = addMatch[1];

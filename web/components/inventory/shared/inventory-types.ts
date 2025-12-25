@@ -1,5 +1,5 @@
 import type { InventoryColorGroup } from "@/utils/inventory-color-group";
-import type { Columns2, Columns3, Columns4, Square } from "lucide-react";
+import type { Square } from "lucide-react";
 
 export type TabKey = InventoryColorGroup | "search";
 export type ViewMode = "grid" | "list";
@@ -24,5 +24,5 @@ export interface TabDisplayInfo {
 export interface GridColumnOption {
   value: GridColumns;
   label: string;
-  icon: typeof Square | typeof Columns2 | typeof Columns3 | typeof Columns4;
+  icon: typeof Square      ;
 }

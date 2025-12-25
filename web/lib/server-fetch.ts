@@ -22,7 +22,7 @@ export function getApiBaseUrl(): string {
 /**
  * Get authentication headers with bearer token
  */
-export function getAuthHeaders(): HeadersInit {
+export function getAuthHeaders(): Record<string, string> {
   const token = process.env.LOTUSFLARE_AUTH;
   if (!token) {
     console.warn(
@@ -38,7 +38,7 @@ export function getAuthHeaders(): HeadersInit {
 /**
  * Common headers for SSR fetch requests
  */
-export function getServerFetchHeaders(apiBaseUrl: string): HeadersInit {
+export function getServerFetchHeaders(apiBaseUrl: string): Record<string, string> {
   return {
     "User-Agent": `Lotusflare/WEB v${packageJson.version}`,
     Accept: "application/json",
@@ -74,13 +74,26 @@ export async function serverFetch(
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
   try {
+    const headers: Record<string, string> = {
+      ...getServerFetchHeaders(apiBaseUrl),
+    };
+    if (fetchOptions.headers) {
+      if (fetchOptions.headers instanceof Headers) {
+        fetchOptions.headers.forEach((value, key) => {
+          headers[key] = value;
+        });
+      } else if (Array.isArray(fetchOptions.headers)) {
+        fetchOptions.headers.forEach(([key, value]) => {
+          headers[key] = value;
+        });
+      } else {
+        Object.assign(headers, fetchOptions.headers);
+      }
+    }
     const response = await fetch(url, {
       signal: controller.signal,
       cache: "no-store",
-      headers: {
-        ...getServerFetchHeaders(apiBaseUrl),
-        ...fetchOptions.headers,
-      },
+      headers,
       ...fetchOptions,
     });
 

@@ -179,7 +179,7 @@ export default function NewInventoryClient({
         toast.error((err as Error).message);
       }
     }
-    loadTabCounts();
+    void loadTabCounts();
   }, []);
 
   const fetchMasterInventory = useCallback(
@@ -247,7 +247,7 @@ export default function NewInventoryClient({
 
   useEffect(() => {
     const isSearch = activeTab === "search";
-    fetchMasterInventory(
+    void fetchMasterInventory(
       currentPage,
       infiniteScroll && currentPage > 1,
       isSearch ? activeSearchTerm : "",
@@ -702,7 +702,7 @@ export default function NewInventoryClient({
         card={cardToAdd}
         places={places}
         onSuccess={(detail) => {
-          handleCardAdded(detail);
+          void handleCardAdded(detail);
           setCardToAdd(null);
         }}
       />

@@ -108,7 +108,7 @@ export default function ReadOnlyInventoryClient({
         toast.error((err as Error).message);
       }
     }
-    loadTabCounts();
+    void loadTabCounts();
   }, []);
 
   const fetchMasterInventory = useCallback(
@@ -176,7 +176,7 @@ export default function ReadOnlyInventoryClient({
 
   useEffect(() => {
     const isSearch = activeTab === "search";
-    fetchMasterInventory(
+    void fetchMasterInventory(
       currentPage,
       infiniteScroll && currentPage > 1,
       isSearch ? activeSearchTerm : "",

@@ -32,11 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-interface PageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-export default async function DecksPage({}: PageProps) {
+export default async function DecksPage() {
   const decks = await getDecksData();
 
   return (

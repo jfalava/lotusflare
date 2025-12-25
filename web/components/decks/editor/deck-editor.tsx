@@ -226,7 +226,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
 
   // Initial load / reset
   useEffect(() => {
-    if (deckId) fetchDeck(deckId);
+    if (deckId) void fetchDeck(deckId);
   }, [deckId, fetchDeck]);
 
   // Finish loader on manual nav
@@ -616,7 +616,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
       if (!deckId && saved.id) {
         router.replace(`/edit/decks/${saved.id}`);
       } else if (deckId) {
-        fetchDeck(deckId);
+        void fetchDeck(deckId);
       }
     } catch (err) {
       console.error("Error saving:", err);

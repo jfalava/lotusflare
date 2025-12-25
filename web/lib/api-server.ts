@@ -104,7 +104,7 @@ export async function deleteInventoryDetail(detailId: number): Promise<void> {
       `${apiBaseUrl}/api/v2/inventory/details/${detailId}`,
       {
         method: "DELETE",
-        headers: getAuthHeaders(),
+        headers: { ...getAuthHeaders() },
       },
     );
 
