@@ -13,11 +13,11 @@
     "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
-    "hono": "^4.10.8",
+    "hono": "^4.11.2",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20251211.0",
+    "@cloudflare/workers-types": "^4.20251225.0",
     "@types/bun": "catalog:",
     "@typescript/native-preview": "catalog:",
     "oxfmt": "catalog:",
