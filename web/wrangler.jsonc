@@ -17,7 +17,10 @@
       "custom_domain": true,
     },
   ],
-  "vars": { "PROD_APP_URL": "https://lotusflare-dev.jfa.dev" },
+  "vars": {
+    "PROD_APP_URL": "https://lotusflare-dev.jfa.dev",
+    "NEXT_PUBLIC_BASE_URL": "https://lotusflare-dev.jfa.dev",
+  },
   "env": {
     "production": {
       "name": "lotusflare-web-pro",
@@ -30,7 +33,10 @@
           "custom_domain": true,
         },
       ],
-      "vars": { "PROD_APP_URL": "https://lotusflare.jfa.dev" },
+      "vars": {
+        "PROD_APP_URL": "https://lotusflare.jfa.dev",
+        "NEXT_PUBLIC_BASE_URL": "https://lotusflare.jfa.dev",
+      },
     },
   },
 }
