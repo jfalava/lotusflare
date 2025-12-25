@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "backend/**"
+      - "bun.lock"
     branches:
       - main
 
