@@ -35,12 +35,14 @@ jobs:
       - name: Check & Build
         working-directory: web
         env:
-          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_BASE_URL: ${{ vars.NEXT_PUBLIC_BASE_URL }}
           PROD_APP_URL: ${{ vars.PROD_APP_URL }}
         run: |
           bun run cf-typegen
           bun run lint
-          bun opennextjs-cloudflare build
+          bun opennextjs-cloudflare build \
+          --var ENV="$ENV" \
+          --var NEXT_PUBLIC_BASE_URL="$NEXT_PUBLIC_BASE_URL" \
 
       - name: Deploy
         working-directory: web
