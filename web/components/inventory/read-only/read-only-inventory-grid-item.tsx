@@ -4,11 +4,7 @@ import React, { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type {
-  MasterInventoryWithDetails,
-  PlaceDbo,
-  ScryfallApiCard,
-} from "#/backend/src/types";
+import type { MasterInventoryWithDetails, PlaceDbo, ScryfallApiCard } from "#/backend/src/types";
 import { getCardImageUri } from "@/utils/card-utils";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
@@ -36,9 +32,7 @@ interface ReadOnlyMasterInventoryGridItemProps {
   places: PlaceDbo[];
 }
 
-export const ReadOnlyMasterInventoryGridItem: React.FC<
-  ReadOnlyMasterInventoryGridItemProps
-> = ({
+export const ReadOnlyMasterInventoryGridItem: React.FC<ReadOnlyMasterInventoryGridItemProps> = ({
   item,
   isExpanded,
   onToggleExpanded,
@@ -48,15 +42,11 @@ export const ReadOnlyMasterInventoryGridItem: React.FC<
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedCard, setSelectedCard] =
-    React.useState<ScryfallApiCard | null>(null);
+  const [selectedCard, setSelectedCard] = React.useState<ScryfallApiCard | null>(null);
 
   const primaryCard = item.details[0]?.card;
   const imgUri = primaryCard ? getCardImageUri(primaryCard) : undefined;
-  const totalQuantity = item.details.reduce(
-    (acc, detail) => acc + detail.quantity,
-    0,
-  );
+  const totalQuantity = item.details.reduce((acc, detail) => acc + detail.quantity, 0);
 
   useEffect(() => {
     if (isExpanded && containerRef.current) {
@@ -142,10 +132,7 @@ export const ReadOnlyMasterInventoryGridItem: React.FC<
           }}
           aria-label={`${isExpanded ? "Collapse" : "Expand"} details for ${item.name}`}
         >
-          <motion.div
-            layout
-            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-          >
+          <motion.div layout transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}>
             {!isExpanded ? (
               <CardContent className="flex flex-col items-center justify-between flex-grow p-3">
                 <div className="relative flex justify-center items-center w-full mb-2 aspect-[63/88]">
@@ -169,10 +156,7 @@ export const ReadOnlyMasterInventoryGridItem: React.FC<
                   {item.name}
                 </div>
                 <div className="flex flex-wrap justify-center items-center gap-1 w-full pt-1 border-t border-border/30 mt-auto">
-                  <Badge
-                    variant="outline"
-                    className="font-semibold text-xs px-1.5 py-0.5"
-                  >
+                  <Badge variant="outline" className="font-semibold text-xs px-1.5 py-0.5">
                     {totalQuantity}x total
                   </Badge>
                   <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
@@ -199,27 +183,17 @@ export const ReadOnlyMasterInventoryGridItem: React.FC<
                         />
                       ) : (
                         <div className="w-full aspect-[63/88] bg-muted rounded-lg flex items-center justify-center">
-                          <p className="text-muted-foreground text-xs">
-                            No Image
-                          </p>
+                          <p className="text-muted-foreground text-xs">No Image</p>
                         </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-beleren text-xl mb-3 text-foreground">
-                        {item.name}
-                      </h3>
+                      <h3 className="font-beleren text-xl mb-3 text-foreground">{item.name}</h3>
                       <div className="flex items-center gap-3 mb-4 flex-wrap">
-                        <Badge
-                          variant="outline"
-                          className="font-semibold text-sm px-2 py-1"
-                        >
+                        <Badge variant="outline" className="font-semibold text-sm px-2 py-1">
                           {totalQuantity}x total
                         </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="text-sm px-2 py-1"
-                        >
+                        <Badge variant="secondary" className="text-sm px-2 py-1">
                           {item.details.length} versions
                         </Badge>
                       </div>
@@ -241,9 +215,7 @@ export const ReadOnlyMasterInventoryGridItem: React.FC<
                         onClick={(e) => handleDetailClick(e, detail.card)}
                         onMouseEnter={(e) => {
                           // Skip any interactive elements
-                          if (
-                            (e.target as Element).closest(INTERACTIVE_SELECTOR)
-                          ) {
+                          if ((e.target as Element).closest(INTERACTIVE_SELECTOR)) {
                             return;
                           }
 
@@ -262,15 +234,9 @@ export const ReadOnlyMasterInventoryGridItem: React.FC<
                           <div className="flex items-start justify-between">
                             <div className="space-y-2 min-w-0 flex-1">
                               <div className="flex items-center gap-2 flex-wrap">
-                                <span className="font-medium text-sm">
-                                  {detail.card.set_name}
-                                </span>
-                                <Badge
-                                  variant="outline"
-                                  className="text-xs whitespace-nowrap"
-                                >
-                                  {detail.card.set.toUpperCase()} #
-                                  {detail.card.collector_number}
+                                <span className="font-medium text-sm">{detail.card.set_name}</span>
+                                <Badge variant="outline" className="text-xs whitespace-nowrap">
+                                  {detail.card.set.toUpperCase()} #{detail.card.collector_number}
                                 </Badge>
                                 {detail.is_foil && (
                                   <Badge
@@ -284,21 +250,14 @@ export const ReadOnlyMasterInventoryGridItem: React.FC<
 
                               <div className="flex items-center gap-4 flex-wrap text-sm">
                                 <div className="flex items-center gap-1">
-                                  <span className="text-muted-foreground">
-                                    Qty:
-                                  </span>
-                                  <Badge
-                                    variant="outline"
-                                    className="font-semibold text-xs"
-                                  >
+                                  <span className="text-muted-foreground">Qty:</span>
+                                  <Badge variant="outline" className="font-semibold text-xs">
                                     {detail.quantity}x
                                   </Badge>
                                 </div>
 
                                 <div className="flex items-center gap-1">
-                                  <span className="text-muted-foreground">
-                                    Condition:
-                                  </span>
+                                  <span className="text-muted-foreground">Condition:</span>
                                   <Badge
                                     className={clsx(
                                       "text-xs font-medium",
@@ -311,13 +270,8 @@ export const ReadOnlyMasterInventoryGridItem: React.FC<
 
                                 {detail.language !== "en" && (
                                   <div className="flex items-center gap-1">
-                                    <span className="text-muted-foreground">
-                                      Lang:
-                                    </span>
-                                    <Badge
-                                      variant="outline"
-                                      className="text-xs"
-                                    >
+                                    <span className="text-muted-foreground">Lang:</span>
+                                    <Badge variant="outline" className="text-xs">
                                       {detail.language.toUpperCase()}
                                     </Badge>
                                   </div>
@@ -325,13 +279,8 @@ export const ReadOnlyMasterInventoryGridItem: React.FC<
 
                                 {detail.place_name && (
                                   <div className="flex items-center gap-1">
-                                    <span className="text-muted-foreground">
-                                      Location:
-                                    </span>
-                                    <Badge
-                                      variant="secondary"
-                                      className="text-xs"
-                                    >
+                                    <span className="text-muted-foreground">Location:</span>
+                                    <Badge variant="secondary" className="text-xs">
                                       {detail.place_name}
                                     </Badge>
                                   </div>
@@ -375,11 +324,7 @@ export const ReadOnlyMasterInventoryGridItem: React.FC<
           </motion.div>
         </Card>
       </motion.div>
-      <CardDetailModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        card={selectedCard}
-      />
+      <CardDetailModal open={modalOpen} onOpenChange={setModalOpen} card={selectedCard} />
     </>
   );
 };

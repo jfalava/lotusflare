@@ -62,17 +62,11 @@ const DeckActions: React.FC<DeckActionsProps> = ({
       <Button
         onClick={onSaveClick}
         disabled={isDisabled}
-        className={clsx(
-          "w-full sm:w-48 lg:w-fit bg-green-600 hover:bg-green-700 text-white",
-        )}
+        className={clsx("w-full sm:w-48 lg:w-fit bg-green-600 hover:bg-green-700 text-white")}
       >
         <div className="flex w-full items-center">
           <div className="flex items-center gap-2 mr-2">
-            {isSaving ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4" />
-            )}
+            {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             {deckId ? "Save Changes" : "Create Deck"}
           </div>
           <div className="flex-grow" />

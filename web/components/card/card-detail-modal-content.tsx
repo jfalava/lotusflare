@@ -131,8 +131,7 @@ function useModalHoverPreview() {
           cardObj?: ScryfallApiCard;
         }>,
       )) as EventListener;
-    const onMove = ((e: Event) =>
-      move(e as CustomEvent<{ e: MouseEvent }>)) as EventListener;
+    const onMove = ((e: Event) => move(e as CustomEvent<{ e: MouseEvent }>)) as EventListener;
     const onLeave = (() => leave()) as EventListener;
     window.addEventListener("inventory-hover-enter", onEnter);
     window.addEventListener("inventory-hover-move", onMove);
@@ -176,8 +175,7 @@ export function CardDetailModalContent({ card }: CardDetailModalContentProps) {
   );
 
   // multi‐face handling
-  const isMultiFaced =
-    Array.isArray(card.card_faces) && card.card_faces.length > 1;
+  const isMultiFaced = Array.isArray(card.card_faces) && card.card_faces.length > 1;
   const totalFaces = isMultiFaced ? card.card_faces!.length : 1;
 
   const faces = useMemo(() => {
@@ -221,8 +219,7 @@ export function CardDetailModalContent({ card }: CardDetailModalContentProps) {
       const url = face.image_uris?.large || face.image_uris?.normal;
       if (url && !imagesLoaded[idx]) {
         const img = new Image();
-        img.onload = () =>
-          setImagesLoaded((prev) => ({ ...prev, [idx]: true }));
+        img.onload = () => setImagesLoaded((prev) => ({ ...prev, [idx]: true }));
         img.src = url;
       }
     });
@@ -249,10 +246,7 @@ export function CardDetailModalContent({ card }: CardDetailModalContentProps) {
         </DialogTitle>
       </DialogHeader>
 
-      <ScrollArea
-        className="px-6 pb-6 flex-1 overflow-auto"
-        id="card-detail-scroll-area"
-      >
+      <ScrollArea className="px-6 pb-6 flex-1 overflow-auto" id="card-detail-scroll-area">
         {" "}
         <Tabs defaultValue="overview" className="flex flex-col h-full">
           <TabsList className="grid grid-cols-2">
@@ -270,9 +264,7 @@ export function CardDetailModalContent({ card }: CardDetailModalContentProps) {
               >
                 <motion.div
                   className="w-full aspect-[63/88] bg-muted relative"
-                  animate={
-                    mounted ? { rotateY: faceIndex * 180 } : { rotateY: 0 }
-                  }
+                  animate={mounted ? { rotateY: faceIndex * 180 } : { rotateY: 0 }}
                   transition={{
                     duration: 0.8,
                     type: "spring",
@@ -283,8 +275,7 @@ export function CardDetailModalContent({ card }: CardDetailModalContentProps) {
                 >
                   {" "}
                   {faces.map((face, idx) => {
-                    const url =
-                      face.image_uris?.large || face.image_uris?.normal;
+                    const url = face.image_uris?.large || face.image_uris?.normal;
                     const show = idx === faceIndex;
                     return (
                       <div
@@ -360,9 +351,7 @@ export function CardDetailModalContent({ card }: CardDetailModalContentProps) {
                     transition={{ duration: 0.3, delay: 0.2 }}
                     className="flex items-center gap-3"
                   >
-                    {currentFace.mana_cost && (
-                      <ManaCost manaCost={currentFace.mana_cost} />
-                    )}
+                    {currentFace.mana_cost && <ManaCost manaCost={currentFace.mana_cost} />}
                     {currentFace.power && currentFace.toughness && (
                       <Badge variant="secondary" className="font-mono text-md">
                         {currentFace.power}/{currentFace.toughness}
@@ -370,11 +359,7 @@ export function CardDetailModalContent({ card }: CardDetailModalContentProps) {
                     )}
                     {currentFace.loyalty && (
                       <div className="relative inline-block">
-                        <ManaCost
-                          manaCost="{loyalty-start}"
-                          size="lg"
-                          asImage
-                        />
+                        <ManaCost manaCost="{loyalty-start}" size="lg" asImage />
                         <span className="absolute inset-0 flex items-center justify-center text-white font-bold text-sm">
                           {currentFace.loyalty}
                         </span>
@@ -389,35 +374,18 @@ export function CardDetailModalContent({ card }: CardDetailModalContentProps) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.3 }}
                   >
-                    <OracleTextWithSymbols
-                      text={currentFace.oracle_text}
-                      className="text-sm"
-                    />
+                    <OracleTextWithSymbols text={currentFace.oracle_text} className="text-sm" />
                   </motion.div>
                 </CardContent>
                 <div className="flex gap-2 px-6 pb-6">
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="sm"
-                    className="flex-1"
-                  >
-                    <a
-                      href={card.scryfall_uri}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                  <Button asChild variant="outline" size="sm" className="flex-1">
+                    <a href={card.scryfall_uri} target="_blank" rel="noopener noreferrer">
                       <Info className="mr-2 h-4 w-4" />
                       Scryfall
                     </a>
                   </Button>
                   {card.purchase_uris?.cardmarket && (
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                    >
+                    <Button asChild variant="outline" size="sm" className="flex-1">
                       <a
                         href={card.purchase_uris.cardmarket}
                         target="_blank"

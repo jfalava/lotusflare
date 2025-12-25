@@ -8,13 +8,7 @@ import { cn } from "@/lib/utils";
 import { Nav } from "@/components/ui/nav-menu";
 import { AppBreadcrumbs } from "@/components/ui/app_breadcrumbs";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 
 import { adminRoutes } from "@/data/admin-routes";
@@ -74,11 +68,7 @@ function Header() {
               <SettingsSheet /> {/* Settings button on mobile */}
               <Sheet key={pathname}>
                 <SheetTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    aria-label="Open main menu"
-                  >
+                  <Button variant="outline" size="icon" aria-label="Open main menu">
                     <MenuIcon className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>

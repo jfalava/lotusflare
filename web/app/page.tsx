@@ -3,14 +3,8 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import HomeClient from "@/components/home/home-client";
 import { HomeSkeleton } from "@/components/home/home-skeleton";
-import type {
-  DeckWithDetails,
-  InventoryDetailWithCardDetails,
-} from "#/backend/src/types";
-import type {
-  DashboardAnalytics,
-  QuickStats,
-} from "@/components/home/shared/home-types";
+import type { DeckWithDetails, InventoryDetailWithCardDetails } from "#/backend/src/types";
+import type { DashboardAnalytics, QuickStats } from "@/components/home/shared/home-types";
 import { getApiBaseUrl, serverFetch } from "@/lib/server-fetch";
 import { EXTENDED_FETCH_TIMEOUT_MS } from "@/lib/constants";
 import { fetchInventoryMeta, fetchDecks } from "@/lib/api-server";
@@ -21,17 +15,16 @@ async function getHomeData() {
   try {
     const apiBaseUrl = getApiBaseUrl();
 
-    const [analyticsResponse, quickStatsResponse, inventoryData, allDecks] =
-      await Promise.all([
-        serverFetch(`${apiBaseUrl}/api/dashboard/analytics`, {
-          timeout: EXTENDED_FETCH_TIMEOUT_MS,
-        }),
-        serverFetch(`${apiBaseUrl}/api/dashboard/quick-stats`, {
-          timeout: EXTENDED_FETCH_TIMEOUT_MS,
-        }),
-        fetchInventoryMeta(1, 6),
-        fetchDecks(),
-      ]);
+    const [analyticsResponse, quickStatsResponse, inventoryData, allDecks] = await Promise.all([
+      serverFetch(`${apiBaseUrl}/api/dashboard/analytics`, {
+        timeout: EXTENDED_FETCH_TIMEOUT_MS,
+      }),
+      serverFetch(`${apiBaseUrl}/api/dashboard/quick-stats`, {
+        timeout: EXTENDED_FETCH_TIMEOUT_MS,
+      }),
+      fetchInventoryMeta(1, 6),
+      fetchDecks(),
+    ]);
 
     if (!analyticsResponse.ok || !quickStatsResponse.ok) {
       throw new Error("One or more API requests failed");
@@ -96,8 +89,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const { analytics, quickStats, recentInventory, recentDecks } =
-    await getHomeData();
+  const { analytics, quickStats, recentInventory, recentDecks } = await getHomeData();
   const isProd = process.env.PROD_APP_URL === "https://lotusflare.jfa.dev";
 
   return (

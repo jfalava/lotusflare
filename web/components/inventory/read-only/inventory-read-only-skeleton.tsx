@@ -41,10 +41,7 @@ export function InventoryReadOnlySkeleton({
   viewMode?: ViewMode;
 }) {
   return (
-    <div
-      className="container mx-auto p-4 animate-pulse"
-      suppressHydrationWarning
-    >
+    <div className="container mx-auto p-4 animate-pulse" suppressHydrationWarning>
       <Card>
         <CardContent className="pt-6">
           <div className="grid md:flex justify-end mb-4">

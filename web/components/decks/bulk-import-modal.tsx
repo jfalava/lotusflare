@@ -24,10 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Loader2, AlertCircle, CheckCircle2, Upload } from "lucide-react";
 import { toast } from "sonner";
-import type {
-  ScryfallApiCard,
-  ScryfallListResponse,
-} from "#/backend/src/types";
+import type { ScryfallApiCard, ScryfallListResponse } from "#/backend/src/types";
 import type { EditableDeckCard } from "@/components/decks/editor/types";
 
 interface ParsedCard {
@@ -59,11 +56,7 @@ interface BulkImportModalProps {
   deckFormat: string;
 }
 
-const BulkImportModal: React.FC<BulkImportModalProps> = ({
-  open,
-  onOpenChange,
-  onImport,
-}) => {
+const BulkImportModal: React.FC<BulkImportModalProps> = ({ open, onOpenChange, onImport }) => {
   const [decklistText, setDecklistText] = useState("");
   const [importMode, setImportMode] = useState<"replace" | "append">("append");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -79,9 +72,7 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({
     let currentSection: "mainboard" | "sideboard" | "commander" = "mainboard";
 
     // Detect format by looking for arena-style parentheses
-    const isArenaFormat = lines.some((line) =>
-      /^\d+\s+.+\s+\([A-Z0-9]+\)\s+\d+/.test(line),
-    );
+    const isArenaFormat = lines.some((line) => /^\d+\s+.+\s+\([A-Z0-9]+\)\s+\d+/.test(line));
 
     for (const line of lines) {
       // Skip empty lines
@@ -115,9 +106,7 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({
 
       if (isArenaFormat) {
         // Arena format: "4 Stonecoil Serpent (CMM) 976"
-        const arenaMatch = line.match(
-          /^(\d+)\s+(.+?)\s+\(([A-Z0-9]+)\)\s+(\d+)$/,
-        );
+        const arenaMatch = line.match(/^(\d+)\s+(.+?)\s+\(([A-Z0-9]+)\)\s+(\d+)$/);
         if (arenaMatch) {
           const [, quantity, name, setCode, collectorNumber] = arenaMatch;
           parsed = {
@@ -164,63 +153,59 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({
     return cards;
   }, []);
 
-  const searchCard = useCallback(
-    async (card: ParsedCard): Promise<ResolvedCard> => {
-      try {
-        let searchQuery: string;
+  const searchCard = useCallback(async (card: ParsedCard): Promise<ResolvedCard> => {
+    try {
+      let searchQuery: string;
+
+      if (card.setCode && card.collectorNumber) {
+        // Arena format - search by set and collector number
+        searchQuery = `set:${card.setCode} number:${card.collectorNumber} !"//"`; // Exclude DFC back faces
+      } else {
+        // Text format - search by exact name
+        searchQuery = `!"${card.name}" unique:prints`;
+      }
+
+      const response = await fetch(
+        `/api/scryfall/cards/search?q=${encodeURIComponent(searchQuery)}`,
+      );
+
+      if (!response.ok) {
+        throw new Error(`Search failed: ${response.statusText}`);
+      }
+
+      const data: ScryfallListResponse<ScryfallApiCard> = await response.json();
+
+      if (data.data && data.data.length > 0) {
+        let selectedCard: ScryfallApiCard;
 
         if (card.setCode && card.collectorNumber) {
-          // Arena format - search by set and collector number
-          searchQuery = `set:${card.setCode} number:${card.collectorNumber} !"//"`; // Exclude DFC back faces
+          // For arena format, we should get the exact card
+          selectedCard = data.data[0];
         } else {
-          // Text format - search by exact name
-          searchQuery = `!"${card.name}" unique:prints`;
+          // For text format, find exact name match (case insensitive)
+          const exactMatch = data.data.find(
+            (c) => c.name.toLowerCase() === card.name.toLowerCase(),
+          );
+          selectedCard = exactMatch || data.data[0];
         }
 
-        const response = await fetch(
-          `/api/scryfall/cards/search?q=${encodeURIComponent(searchQuery)}`,
-        );
-
-        if (!response.ok) {
-          throw new Error(`Search failed: ${response.statusText}`);
-        }
-
-        const data: ScryfallListResponse<ScryfallApiCard> =
-          await response.json();
-
-        if (data.data && data.data.length > 0) {
-          let selectedCard: ScryfallApiCard;
-
-          if (card.setCode && card.collectorNumber) {
-            // For arena format, we should get the exact card
-            selectedCard = data.data[0];
-          } else {
-            // For text format, find exact name match (case insensitive)
-            const exactMatch = data.data.find(
-              (c) => c.name.toLowerCase() === card.name.toLowerCase(),
-            );
-            selectedCard = exactMatch || data.data[0];
-          }
-
-          return {
-            ...card,
-            scryfallCard: selectedCard,
-          };
-        } else {
-          return {
-            ...card,
-            error: "Card not found",
-          };
-        }
-      } catch (error) {
         return {
           ...card,
-          error: error instanceof Error ? error.message : "Unknown error",
+          scryfallCard: selectedCard,
+        };
+      } else {
+        return {
+          ...card,
+          error: "Card not found",
         };
       }
-    },
-    [],
-  );
+    } catch (error) {
+      return {
+        ...card,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }, []);
 
   const processDecklist = useCallback(async () => {
     if (!decklistText.trim()) {
@@ -238,9 +223,7 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({
       }
 
       // Search for all cards
-      const resolved = await Promise.all(
-        parsed.map((card) => searchCard(card)),
-      );
+      const resolved = await Promise.all(parsed.map((card) => searchCard(card)));
 
       setParsedCards(resolved);
       setShowPreview(true);
@@ -273,8 +256,7 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({
         is_commander: !!card.isCommander,
         is_sideboard: card.isSideboard,
         cardDetails: card.scryfallCard,
-        tempId:
-          card.scryfallCard.id + Math.random().toString(36).substring(2, 9),
+        tempId: card.scryfallCard.id + Math.random().toString(36).substring(2, 9),
         canonicalName: card.scryfallCard.name,
       };
 
@@ -326,8 +308,8 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({
           </DialogTitle>
           <DialogDescription className="grid">
             <span>
-              Headers like "<code>Mainboard:</code>" , "<code>Sideboard:</code>"
-              , and "<code>Commander:</code>" will be recognized.
+              Headers like "<code>Mainboard:</code>" , "<code>Sideboard:</code>" , and "
+              <code>Commander:</code>" will be recognized.
             </span>
           </DialogDescription>
         </DialogHeader>
@@ -342,20 +324,14 @@ const BulkImportModal: React.FC<BulkImportModalProps> = ({
                   </Label>
                   <Select
                     value={importMode}
-                    onValueChange={(value: "replace" | "append") =>
-                      setImportMode(value)
-                    }
+                    onValueChange={(value: "replace" | "append") => setImportMode(value)}
                   >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="replace">
-                        Replace current deck
-                      </SelectItem>
-                      <SelectItem value="append">
-                        Add to current deck
-                      </SelectItem>
+                      <SelectItem value="replace">Replace current deck</SelectItem>
+                      <SelectItem value="append">Add to current deck</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -395,16 +371,10 @@ Commander:
                 <div className="flex items-center gap-2">
                   {/* mode badge */}
                   <Badge variant="outline" className="text-xs">
-                    {importMode === "append"
-                      ? "Adding to current deck"
-                      : "Replacing current deck"}
+                    {importMode === "append" ? "Adding to current deck" : "Replacing current deck"}
                   </Badge>
                   {/* found / failed */}
-                  <Badge
-                    variant={
-                      successfulCards.length > 0 ? "default" : "secondary"
-                    }
-                  >
+                  <Badge variant={successfulCards.length > 0 ? "default" : "secondary"}>
                     <CheckCircle2 className="h-3 w-3 mr-1" />
                     {successfulCards.length} found
                   </Badge>
@@ -454,9 +424,7 @@ Commander:
                         ) : (
                           <div className="flex items-center gap-1">
                             <AlertCircle className="h-4 w-4 text-red-600" />
-                            <span className="text-xs text-red-600">
-                              {card.error}
-                            </span>
+                            <span className="text-xs text-red-600">{card.error}</span>
                           </div>
                         )}
                       </div>
@@ -474,13 +442,8 @@ Commander:
               <Button variant="outline" onClick={handleClose}>
                 Cancel
               </Button>
-              <Button
-                onClick={processDecklist}
-                disabled={isProcessing || !decklistText.trim()}
-              >
-                {isProcessing ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : null}
+              <Button onClick={processDecklist} disabled={isProcessing || !decklistText.trim()}>
+                {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                 Preview Import
               </Button>
             </>

@@ -24,5 +24,5 @@ export interface TabDisplayInfo {
 export interface GridColumnOption {
   value: GridColumns;
   label: string;
-  icon: typeof Square      ;
+  icon: typeof Square;
 }

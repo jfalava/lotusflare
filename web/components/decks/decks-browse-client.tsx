@@ -54,10 +54,5 @@ export default function DecksBrowseClient({
     );
   }, [initialDecks, debouncedSearchTerm]);
 
-  return (
-    <DeckListClient
-      initialDecks={filteredDecks}
-      initialSearchTerm={debouncedSearchTerm}
-    />
-  );
+  return <DeckListClient initialDecks={filteredDecks} initialSearchTerm={debouncedSearchTerm} />;
 }

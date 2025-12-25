@@ -77,20 +77,14 @@ export const allowsAnyNumberOfCopies = (
     return false;
   }
 
-  const escapedCardName = trimmedCardName.replace(
-    /[.*+?^${}()|[\]\\]/g,
-    "\\$&",
-  );
+  const escapedCardName = trimmedCardName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const regexPattern = `A deck can have any number of cards named ${escapedCardName}\\.`;
   const regex = new RegExp(regexPattern);
 
   return regex.test(oracleText);
 };
 
-export const checkDeckSize = (
-  format: string,
-  mainboardCount: number,
-): string | null => {
+export const checkDeckSize = (format: string, mainboardCount: number): string | null => {
   const rules = DECK_SIZE_RULES[format.toLowerCase()];
   if (!rules) return null;
 
@@ -103,15 +97,10 @@ export const checkDeckSize = (
   return null;
 };
 
-export const checkMaxCopies = (
-  format: string,
-  cards: LegalityCheckCardInfo[],
-): string[] => {
+export const checkMaxCopies = (format: string, cards: LegalityCheckCardInfo[]): string[] => {
   const issues: string[] = [];
-  const cardCounts: Record<string, { quantity: number; isUnlimited: boolean }> =
-    {};
-  const maxCopiesRule =
-    MAX_NON_BASIC_COPIES[format.toLowerCase()] || MAX_NON_BASIC_COPIES.default;
+  const cardCounts: Record<string, { quantity: number; isUnlimited: boolean }> = {};
+  const maxCopiesRule = MAX_NON_BASIC_COPIES[format.toLowerCase()] || MAX_NON_BASIC_COPIES.default;
   const functionName = "[LegalityRules] checkMaxCopies";
 
   cards.forEach((c) => {
@@ -128,10 +117,7 @@ export const checkMaxCopies = (
       const currentOracleText = c.cardDetails.oracle_text;
 
       if (!cardCounts[canonicalCardName]) {
-        const isUnlimited = allowsAnyNumberOfCopies(
-          canonicalCardName,
-          currentOracleText,
-        );
+        const isUnlimited = allowsAnyNumberOfCopies(canonicalCardName, currentOracleText);
         cardCounts[canonicalCardName] = {
           quantity: 0,
           isUnlimited: isUnlimited,
@@ -155,22 +141,16 @@ export const checkMaxCopies = (
   return issues;
 };
 
-export const getCommanderColorIdentity = (
-  commanders: LegalityCheckCardInfo[],
-): string[] => {
+export const getCommanderColorIdentity = (commanders: LegalityCheckCardInfo[]): string[] => {
   if (!commanders.length) return [];
   const identitySet = new Set<string>();
   commanders.forEach((cmd) => {
-    (cmd.cardDetails.color_identity || []).forEach((color) =>
-      identitySet.add(color),
-    );
+    (cmd.cardDetails.color_identity || []).forEach((color) => identitySet.add(color));
   });
   return Array.from(identitySet);
 };
 
-export const checkCommanderRules = (
-  cards: LegalityCheckCardInfo[],
-): string[] => {
+export const checkCommanderRules = (cards: LegalityCheckCardInfo[]): string[] => {
   const issues: string[] = [];
   const commanders = cards.filter((c) => c.is_commander);
 
@@ -182,12 +162,8 @@ export const checkCommanderRules = (
   commanders.forEach((cmd) => {
     const cmdName = cmd.cardDetails.name || cmd.name;
     if (
-      !cmd.cardDetails.type_line
-        ?.toLowerCase()
-        .includes("legendary creature") &&
-      !cmd.cardDetails.type_line
-        ?.toLowerCase()
-        .includes("legendary planeswalker") && // Added for completeness, though typically "Legendary Creature"
+      !cmd.cardDetails.type_line?.toLowerCase().includes("legendary creature") &&
+      !cmd.cardDetails.type_line?.toLowerCase().includes("legendary planeswalker") && // Added for completeness, though typically "Legendary Creature"
       !cmd.cardDetails.keywords?.includes("can be your commander")
     ) {
       issues.push(`${cmdName} is not a legal commander type.`);
@@ -203,9 +179,7 @@ export const checkCommanderRules = (
       (cmd) =>
         cmd.cardDetails.keywords?.includes("Partner") ||
         (cmd.cardDetails.oracle_text &&
-          (/Partner with [A-Z][a-zA-Z\s,'-]+/.test(
-            cmd.cardDetails.oracle_text,
-          ) ||
+          (/Partner with [A-Z][a-zA-Z\s,'-]+/.test(cmd.cardDetails.oracle_text) ||
             /Friends forever/.test(cmd.cardDetails.oracle_text))),
     );
 
@@ -238,9 +212,7 @@ export const checkCommanderRules = (
   return issues;
 };
 
-export const checkOathbreakerRules = (
-  cards: LegalityCheckCardInfo[],
-): string[] => {
+export const checkOathbreakerRules = (cards: LegalityCheckCardInfo[]): string[] => {
   const issues: string[] = [];
   const allCommandZoneCards = cards.filter((c) => c.is_commander);
 
@@ -295,9 +267,7 @@ export const checkOathbreakerRules = (
         // Only check non-command zone cards
         const cardIdentity = card.cardDetails.color_identity || [];
         const cardNameForError = card.cardDetails.name || card.name;
-        if (
-          !cardIdentity.every((color) => oathbreakerIdentity.includes(color))
-        ) {
+        if (!cardIdentity.every((color) => oathbreakerIdentity.includes(color))) {
           issues.push(
             `${cardNameForError} (${cardIdentity.join("") || "C"}) is outside the Oathbreaker's color identity (${oathbreakerIdentity.join("") || "C"}).`,
           );

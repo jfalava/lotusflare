@@ -7,16 +7,11 @@ import { mapScryfallCardToDbo } from "../card-utils";
 const SCRYFALL_RATE_LIMIT_DELAY = 100; // ms
 let lastScryfallRequest = 0;
 
-export async function fetchScryfall(
-  input: string | Request,
-  init?: RequestInit,
-) {
+export async function fetchScryfall(input: string | Request, init?: RequestInit) {
   const now = Date.now();
   const elapsed = now - lastScryfallRequest;
   if (elapsed < SCRYFALL_RATE_LIMIT_DELAY) {
-    await new Promise((r) =>
-      setTimeout(r, SCRYFALL_RATE_LIMIT_DELAY - elapsed),
-    );
+    await new Promise((r) => setTimeout(r, SCRYFALL_RATE_LIMIT_DELAY - elapsed));
   }
   lastScryfallRequest = Date.now();
   return fetch(input, init);
@@ -24,17 +19,12 @@ export async function fetchScryfall(
 
 // Helper: make sure every scryfall_id in `cardIds` is present in `Cards`.
 // Will live-fetch the missing ones from Scryfall and upsert them.
-export async function ensureCardsExist(
-  db: D1Database,
-  cardIds: string[],
-): Promise<void> {
+export async function ensureCardsExist(db: D1Database, cardIds: string[]): Promise<void> {
   if (cardIds.length === 0) return;
 
   const placeholders = cardIds.map(() => "?").join(", ");
   const { results: existing } = await db
-    .prepare(
-      `SELECT scryfall_id FROM Cards WHERE scryfall_id IN (${placeholders})`,
-    )
+    .prepare(`SELECT scryfall_id FROM Cards WHERE scryfall_id IN (${placeholders})`)
     .bind(...cardIds)
     .all<{ scryfall_id: string }>();
 
@@ -54,9 +44,7 @@ export async function ensureCardsExist(
     });
 
     if (!res.ok) {
-      throw new Error(
-        `Failed to fetch card ${id} from Scryfall (${res.status})`,
-      );
+      throw new Error(`Failed to fetch card ${id} from Scryfall (${res.status})`);
     }
 
     const cardData = (await res.json()) as ScryfallApiCard;

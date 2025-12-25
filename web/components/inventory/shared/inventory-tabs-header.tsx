@@ -75,9 +75,7 @@ export const InventoryTabsHeader: React.FC<InventoryTabsHeaderProps> = ({
                 ? "opacity-60"
                 : "hover:bg-muted hover:text-accent-foreground",
             )}
-            disabled={
-              tab.count === 0 && tab.key !== "search" && activeTab !== "search"
-            }
+            disabled={tab.count === 0 && tab.key !== "search" && activeTab !== "search"}
           >
             {renderIcon(tab)}
             <span>{tab.label}</span>
@@ -90,11 +88,7 @@ export const InventoryTabsHeader: React.FC<InventoryTabsHeaderProps> = ({
                   : "bg-muted-foreground/20 text-muted-foreground",
               )}
             >
-              {tab.count === undefined ? (
-                <Loader2 className="h-3 w-3 animate-spin" />
-              ) : (
-                tab.count
-              )}
+              {tab.count === undefined ? <Loader2 className="h-3 w-3 animate-spin" /> : tab.count}
             </Badge>
           </TabsTrigger>
         ))}

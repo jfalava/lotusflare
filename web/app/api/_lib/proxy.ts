@@ -57,8 +57,7 @@ export async function proxyToBackend(
       status: response.status,
       statusText: response.statusText,
       headers: {
-        "Content-Type":
-          response.headers.get("Content-Type") || "application/json",
+        "Content-Type": response.headers.get("Content-Type") || "application/json",
       },
     });
   } catch (error) {
@@ -76,8 +75,7 @@ export async function proxyToBackend(
         return NextResponse.json(
           {
             error: "Backend service unavailable",
-            details:
-              "Unable to connect to the backend service. Please try again later.",
+            details: "Unable to connect to the backend service. Please try again later.",
           },
           { status: 503 },
         );

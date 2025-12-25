@@ -15,9 +15,7 @@ interface ScryfallSearchBarProps {
   onCardSelected: (card: ScryfallApiCard) => void;
 }
 
-const ScryfallSearchBar: React.FC<ScryfallSearchBarProps> = ({
-  onCardSelected,
-}) => {
+const ScryfallSearchBar: React.FC<ScryfallSearchBarProps> = ({ onCardSelected }) => {
   const [scryfallSearchTerm, setScryfallSearchTerm] = useState("");
   const [scryfallResults, setScryfallResults] = useState<ScryfallApiCard[]>([]);
   const [isScryfallSearching, setIsScryfallSearching] = useState(false);
@@ -86,9 +84,7 @@ const ScryfallSearchBar: React.FC<ScryfallSearchBarProps> = ({
     scryfallInputRef.current?.blur();
   };
 
-  const handleScryfallInputKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
+  const handleScryfallInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
       void triggerScryfallSearch();
@@ -114,9 +110,7 @@ const ScryfallSearchBar: React.FC<ScryfallSearchBarProps> = ({
         focusCountRef.current++;
 
         if (focusCountRef.current >= 3 && !cardSelectedRef.current) {
-          toast.info(
-            "Tip: Use the ❌ button to clear your search and try a different query",
-          );
+          toast.info("Tip: Use the ❌ button to clear your search and try a different query");
           focusCountRef.current = 0; // Reset counter after showing toast
         }
       } else {

@@ -49,9 +49,7 @@ export default function GlobalReloadSplash() {
         >
           <div className="text-center">
             <Flower className="mx-auto mb-4 h-16 w-16 text-indigo-500" />
-            <h1 className="text-4xl font-extrabold tracking-tight">
-              Lotusflare
-            </h1>
+            <h1 className="text-4xl font-extrabold tracking-tight">Lotusflare</h1>
           </div>
         </motion.div>
       )}

@@ -19,22 +19,8 @@ export interface InventorySearchBarProps {
   className?: string;
 }
 
-export const InventorySearchBar = forwardRef<
-  HTMLInputElement,
-  InventorySearchBarProps
->(
-  (
-    {
-      value,
-      onChange,
-      onClear,
-      isLoading = false,
-      onKeyDown,
-      onSubmit,
-      className,
-    },
-    ref,
-  ) => {
+export const InventorySearchBar = forwardRef<HTMLInputElement, InventorySearchBarProps>(
+  ({ value, onChange, onClear, isLoading = false, onKeyDown, onSubmit, className }, ref) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const isDesktop = useMediaQuery("(min-width: 768px)");
 

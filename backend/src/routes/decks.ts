@@ -5,17 +5,8 @@ import { getStringId } from "../helpers/param-helpers";
 import { ensureCardsExist } from "../helpers/scryfall-helpers";
 import { mapDeckCardRows } from "../mappers/deck-mappers";
 import { handleKnownErrors } from "../middlewares/error-handler";
-import {
-  getValidatedData,
-  validateRequest,
-} from "../middlewares/validate-request";
-import type {
-  Bindings,
-  CardDbo,
-  DeckCardDbo,
-  DeckDbo,
-  DeckWithDetails,
-} from "../types";
+import { getValidatedData, validateRequest } from "../middlewares/validate-request";
+import type { Bindings, CardDbo, DeckCardDbo, DeckDbo, DeckWithDetails } from "../types";
 import { createDeckSchema, updateDeckSchema } from "../validators";
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -33,9 +24,7 @@ app.post("/", validateRequest(createDeckSchema), async (c) => {
     // Batching is available for multiple inserts/updates of the same type.
 
     const deckResult = await db
-      .prepare(
-        "INSERT INTO Decks (id, name, format, description) VALUES (?, ?, ?, ?) RETURNING *",
-      )
+      .prepare("INSERT INTO Decks (id, name, format, description) VALUES (?, ?, ?, ?) RETURNING *")
       .bind(id, name, format, description || null)
       .first<DeckDbo>();
 
@@ -188,10 +177,7 @@ app.put("/:id", validateRequest(updateDeckSchema), async (c) => {
     const { name, format, description, cards } =
       getValidatedData<z.infer<typeof updateDeckSchema>>(c);
 
-    const deckExists = await db
-      .prepare("SELECT id FROM Decks WHERE id = ?")
-      .bind(id)
-      .first();
+    const deckExists = await db.prepare("SELECT id FROM Decks WHERE id = ?").bind(id).first();
     if (!deckExists) {
       return c.json({ message: "Deck not found" }, 404);
     }
@@ -228,10 +214,7 @@ app.put("/:id", validateRequest(updateDeckSchema), async (c) => {
         ...new Set(cards.map((c: { scryfall_id: string }) => c.scryfall_id)),
       ]);
       // Validate all card scryfall_ids exist in Cards table (omitted for brevity)
-      await db
-        .prepare("DELETE FROM DeckCards WHERE deck_id = ?")
-        .bind(id)
-        .run();
+      await db.prepare("DELETE FROM DeckCards WHERE deck_id = ?").bind(id).run();
       if (cards.length > 0) {
         const cardStatements = cards.map(
           (card: {
@@ -294,19 +277,13 @@ app.delete("/:id", async (c) => {
   try {
     const id = getStringId(c);
 
-    const deckExists = await c.env.DB.prepare(
-      "SELECT id FROM Decks WHERE id = ?",
-    )
-      .bind(id)
-      .first();
+    const deckExists = await c.env.DB.prepare("SELECT id FROM Decks WHERE id = ?").bind(id).first();
     if (!deckExists) {
       return c.json({ message: "Deck not found" }, 404);
     }
 
     // ON DELETE CASCADE in DeckCards table will handle associated cards
-    const { success, meta } = await c.env.DB.prepare(
-      "DELETE FROM Decks WHERE id = ?",
-    )
+    const { success, meta } = await c.env.DB.prepare("DELETE FROM Decks WHERE id = ?")
       .bind(id)
       .run();
 

@@ -57,11 +57,7 @@ export class UnauthorizedError extends Error {
  * @param defaultMessage - Default error message
  * @returns Response with appropriate status code
  */
-export function handleKnownErrors(
-  error: unknown,
-  c: Context,
-  defaultMessage: string,
-): Response {
+export function handleKnownErrors(error: unknown, c: Context, defaultMessage: string): Response {
   console.error(`${defaultMessage}:`, error);
 
   if (error instanceof NotFoundError) {

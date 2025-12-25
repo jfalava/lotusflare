@@ -6,22 +6,9 @@ import { persist } from "zustand/middleware";
 import Cookies from "js-cookie";
 import { hasCookieConsent } from "@/lib/cookies-with-consent";
 
-export type ColorTheme =
-  | "default"
-  | "catppuccin"
-  | "clean-slate"
-  | "melange"
-  | "shadcn-gray";
-export type FontSans =
-  | "default"
-  | "atlassian-sans"
-  | "open-dyslexic"
-  | "pretendard-variable";
-export type FontMono =
-  | "default"
-  | "berkeley-mono"
-  | "geist-mono"
-  | "ibm-plex-mono";
+export type ColorTheme = "default" | "catppuccin" | "clean-slate" | "melange" | "shadcn-gray";
+export type FontSans = "default" | "atlassian-sans" | "open-dyslexic" | "pretendard-variable";
+export type FontMono = "default" | "berkeley-mono" | "geist-mono" | "ibm-plex-mono";
 
 interface ThemeStore {
   colorTheme: ColorTheme;
@@ -91,8 +78,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       // Force re-render when consent changes
     };
     window.addEventListener("cookieConsentChange", handleConsentChange);
-    return () =>
-      window.removeEventListener("cookieConsentChange", handleConsentChange);
+    return () => window.removeEventListener("cookieConsentChange", handleConsentChange);
   }, []);
 
   // Apply theme classes to document root
@@ -113,8 +99,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
     const isDark =
       darkMode === "dark" ||
-      (darkMode === "system" &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches);
+      (darkMode === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
     root.classList.toggle("dark", isDark);
   }, [colorTheme, fontSans, fontMono, darkMode, isClient]);
 

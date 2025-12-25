@@ -5,11 +5,7 @@ import { Activity } from "lucide-react";
 import React from "react";
 
 // Activity Feed Component
-const ActivityFeed = ({
-  activities,
-}: {
-  activities: PaginatedActivityResponse["data"];
-}) => {
+const ActivityFeed = ({ activities }: { activities: PaginatedActivityResponse["data"] }) => {
   if (!activities || activities.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
@@ -19,31 +15,25 @@ const ActivityFeed = ({
     );
   }
 
-  const renderActivityText = (
-    activity: PaginatedActivityResponse["data"][0],
-  ) => {
+  const renderActivityText = (activity: PaginatedActivityResponse["data"][0]) => {
     switch (activity.type) {
       case "inventory_add":
         return (
           <>
             Added {activity.quantity}x to{" "}
-            <span className="font-semibold">
-              {activity.location || "inventory"}
-            </span>
+            <span className="font-semibold">{activity.location || "inventory"}</span>
           </>
         );
       case "deck_create":
         return (
           <>
-            Created deck for{" "}
-            <span className="font-semibold">{activity.location}</span>
+            Created deck for <span className="font-semibold">{activity.location}</span>
           </>
         );
       case "deck_update":
         return (
           <>
-            Updated deck for{" "}
-            <span className="font-semibold">{activity.location}</span>
+            Updated deck for <span className="font-semibold">{activity.location}</span>
           </>
         );
       default:
@@ -64,8 +54,7 @@ const ActivityFeed = ({
           <div className="flex-1 min-w-0">
             <p className="font-medium truncate">{activity.card_name}</p>
             <p className="text-muted-foreground text-xs">
-              {renderActivityText(activity)} •{" "}
-              {new Date(activity.timestamp).toLocaleDateString()}
+              {renderActivityText(activity)} • {new Date(activity.timestamp).toLocaleDateString()}
             </p>
           </div>
         </div>

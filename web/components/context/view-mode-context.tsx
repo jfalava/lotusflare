@@ -8,10 +8,7 @@ import React, {
   type ReactNode,
   useEffect,
 } from "react";
-import {
-  setCookieWithConsent,
-  getCookieWithConsent,
-} from "@/lib/cookies-with-consent";
+import { setCookieWithConsent, getCookieWithConsent } from "@/lib/cookies-with-consent";
 
 export type ViewMode = "grid" | "list";
 const COOKIE_KEY_UNIVERSAL_VIEW_MODE = "universalViewMode";
@@ -21,18 +18,12 @@ export interface ViewModeContextType {
   setViewMode: (mode: ViewMode) => void;
 }
 
-export const ViewModeContext = createContext<ViewModeContextType | undefined>(
-  undefined,
-);
+export const ViewModeContext = createContext<ViewModeContextType | undefined>(undefined);
 
-export const ViewModeProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const ViewModeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [viewMode, setViewModeState] = useState<ViewMode>(() => {
     if (typeof window === "undefined") return "grid";
-    const savedMode = getCookieWithConsent(
-      COOKIE_KEY_UNIVERSAL_VIEW_MODE,
-    ) as ViewMode;
+    const savedMode = getCookieWithConsent(COOKIE_KEY_UNIVERSAL_VIEW_MODE) as ViewMode;
     return savedMode === "list" || savedMode === "grid" ? savedMode : "grid";
   });
 
@@ -41,9 +32,7 @@ export const ViewModeProvider: React.FC<{ children: ReactNode }> = ({
     setCookieWithConsent(COOKIE_KEY_UNIVERSAL_VIEW_MODE, mode, {
       expires: 365,
     });
-    window.dispatchEvent(
-      new CustomEvent("universalViewModeChange", { detail: mode }),
-    );
+    window.dispatchEvent(new CustomEvent("universalViewModeChange", { detail: mode }));
   }, []);
 
   useEffect(() => {
@@ -54,8 +43,7 @@ export const ViewModeProvider: React.FC<{ children: ReactNode }> = ({
       }
     };
     window.addEventListener("cookieConsentChange", handleConsentChange);
-    return () =>
-      window.removeEventListener("cookieConsentChange", handleConsentChange);
+    return () => window.removeEventListener("cookieConsentChange", handleConsentChange);
   }, []);
 
   return (

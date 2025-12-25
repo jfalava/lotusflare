@@ -8,19 +8,12 @@ import type {
 /**
  * Image URI type definition (union of possible input types)
  */
-type ImageUrisInput =
-  | string
-  | ScryfallImageUris
-  | Record<string, string>
-  | null
-  | undefined;
+type ImageUrisInput = string | ScryfallImageUris | Record<string, string> | null | undefined;
 
 /**
  * Parse image URIs from string or object
  */
-export function parseImageUris(
-  imageUris: ImageUrisInput,
-): ScryfallImageUris | null {
+export function parseImageUris(imageUris: ImageUrisInput): ScryfallImageUris | null {
   if (!imageUris) return null;
 
   try {
@@ -74,9 +67,7 @@ export function getCardImageUri(
 /**
  * Get art crop image URI specifically (fallback to normal/large)
  */
-export function getCardArtCrop(
-  card: ScryfallApiCard | undefined | null,
-): string | null {
+export function getCardArtCrop(card: ScryfallApiCard | undefined | null): string | null {
   if (!card) return null;
 
   const uris = parseImageUris(card.image_uris);
@@ -124,9 +115,7 @@ export function pickRepresentativeInventoryImage(
  * Get a representative image from decks
  * Priority: commander cards first, then highest quantity cards
  */
-export function pickRepresentativeDeckImage(
-  decks: DeckWithDetails[],
-): string | null {
+export function pickRepresentativeDeckImage(decks: DeckWithDetails[]): string | null {
   if (decks.length === 0) return null;
 
   // Look for commander cards first
@@ -145,15 +134,12 @@ export function pickRepresentativeDeckImage(
 
   // Try most recent decks sorted by update time
   const sortedDecks = [...decks].sort(
-    (a, b) =>
-      new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+    (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
   );
 
   for (const deck of sortedDecks) {
     // Sort cards by quantity to get the most prominent cards
-    const sortedCards = [...(deck.cards || [])].sort(
-      (a, b) => b.quantity - a.quantity,
-    );
+    const sortedCards = [...(deck.cards || [])].sort((a, b) => b.quantity - a.quantity);
 
     for (const deckCard of sortedCards) {
       if (deckCard.card.image_uris) {

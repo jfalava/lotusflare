@@ -24,9 +24,7 @@ import type { DeckWithDetails } from "#/backend/src/types";
 
 interface DeckDetailsProps {
   deck: Pick<DeckState, "name" | "format" | "description">;
-  onInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onFormatChange: (value: DeckFormat) => void;
   hasEnoughCards: boolean;
   deckForSampleHand: DeckWithDetails;
@@ -58,9 +56,7 @@ const DeckDetails: React.FC<DeckDetailsProps> = ({
             size="sm"
             className="gap-2"
             disabled={!hasEnoughCards}
-            title={
-              hasEnoughCards ? undefined : "Add at least 7 cards to test hand"
-            }
+            title={hasEnoughCards ? undefined : "Add at least 7 cards to test hand"}
           >
             <Hand className="h-4 w-4" />
             Test Hand

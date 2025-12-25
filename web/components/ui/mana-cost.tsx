@@ -171,11 +171,7 @@ export const ManaCost: React.FC<ManaCostProps> = ({
 
   return (
     <span
-      className={cn(
-        "inline-flex items-center gap-0.5",
-        sizeClasses[size],
-        className,
-      )}
+      className={cn("inline-flex items-center gap-0.5", sizeClasses[size], className)}
       aria-label={`Symbols: ${manaCost}`}
       title={manaCost}
     >

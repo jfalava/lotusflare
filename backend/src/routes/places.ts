@@ -1,16 +1,8 @@
 import { Hono } from "hono";
 import { getIntId } from "../helpers/param-helpers";
 import { handleKnownErrors } from "../middlewares/error-handler";
-import {
-  getValidatedData,
-  validateRequest,
-} from "../middlewares/validate-request";
-import type {
-  Bindings,
-  CreatePlacePayload,
-  PlaceDbo,
-  UpdatePlacePayload,
-} from "../types";
+import { getValidatedData, validateRequest } from "../middlewares/validate-request";
+import type { Bindings, CreatePlacePayload, PlaceDbo, UpdatePlacePayload } from "../types";
 import { createPlaceSchema, updatePlaceSchema } from "../validators";
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -37,9 +29,7 @@ app.post("/", validateRequest(createPlaceSchema), async (c) => {
       .bind(name, type, description || null)
       .first<PlaceDbo>();
 
-    return result
-      ? c.json(result, 201)
-      : c.json({ message: "Failed to create place" }, 500);
+    return result ? c.json(result, 201) : c.json({ message: "Failed to create place" }, 500);
   } catch (e: unknown) {
     if (e instanceof Error && e.message.includes("UNIQUE constraint failed")) {
       return c.json({ message: "A place with this name already exists." }, 409);
@@ -78,12 +68,7 @@ app.put("/:id", validateRequest(updatePlaceSchema), async (c) => {
       valuesToBind.push(type);
     }
     // For description, allow setting to null explicitly
-    if (
-      Object.prototype.hasOwnProperty.call(
-        { name, type, description },
-        "description",
-      )
-    ) {
+    if (Object.prototype.hasOwnProperty.call({ name, type, description }, "description")) {
       fieldsToUpdate.push("description = ?");
       valuesToBind.push(description === undefined ? null : description);
     }
@@ -116,9 +101,7 @@ app.delete("/:id", async (c) => {
   try {
     const id = getIntId(c);
 
-    const { success, meta } = await c.env.DB.prepare(
-      "DELETE FROM Places WHERE id = ?",
-    )
+    const { success, meta } = await c.env.DB.prepare("DELETE FROM Places WHERE id = ?")
       .bind(id)
       .run();
 

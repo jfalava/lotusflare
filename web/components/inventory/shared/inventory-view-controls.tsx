@@ -6,12 +6,7 @@ import { LayoutGrid, List, ListOrdered, ChevronsDown } from "lucide-react";
 import clsx from "clsx";
 import type { ViewMode, GridColumns } from "./inventory-types";
 import { GRID_COLUMN_OPTIONS } from "./inventory-constants";
-import {
-  Tooltip,
-  TooltipProvider,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { useKeyPress } from "@/hooks/useKeyPress";
 import { Kbd } from "@/components/ui/kbd";
 import { setCookieWithConsent } from "@/lib/cookies-with-consent";
@@ -28,9 +23,7 @@ const ViewModeToggleButton: React.FC<ViewModeToggleButtonProps> = ({
   const isGrid = viewMode === "grid";
   const nextMode: ViewMode = isGrid ? "list" : "grid";
   const NextIcon = isGrid ? List : LayoutGrid;
-  const label = `Switch to ${
-    nextMode.charAt(0).toUpperCase() + nextMode.slice(1)
-  } View`;
+  const label = `Switch to ${nextMode.charAt(0).toUpperCase() + nextMode.slice(1)} View`;
 
   useKeyPress("v", () => onViewModeChange(nextMode), { alt: true });
 
@@ -43,9 +36,7 @@ const ViewModeToggleButton: React.FC<ViewModeToggleButtonProps> = ({
       className="w-full justify-center transition-colors duration-200 ease-in-out"
     >
       <NextIcon className="h-4 w-4 sm:mr-2" />
-      <span>
-        Switch to {nextMode.charAt(0).toUpperCase() + nextMode.slice(1)}
-      </span>
+      <span>Switch to {nextMode.charAt(0).toUpperCase() + nextMode.slice(1)}</span>
       <div className="hidden items-center gap-1 lg:flex ml-2">
         <Kbd>Alt</Kbd>
         <Kbd>V</Kbd>
@@ -59,14 +50,13 @@ interface InventoryScrollToggleButtonProps {
   onInfiniteScrollToggle: (isInfiniteNext: boolean) => void;
 }
 
-const InventoryScrollToggleButton: React.FC<
-  InventoryScrollToggleButtonProps
-> = ({ infiniteScroll, onInfiniteScrollToggle }) => {
+const InventoryScrollToggleButton: React.FC<InventoryScrollToggleButtonProps> = ({
+  infiniteScroll,
+  onInfiniteScrollToggle,
+}) => {
   const isInfinite = infiniteScroll;
   const actionText = isInfinite ? "Infinite Scroll" : "Pagination";
-  const nextActionText = isInfinite
-    ? "Switch to Pagination"
-    : "Switch to Infinite Scroll";
+  const nextActionText = isInfinite ? "Switch to Pagination" : "Switch to Infinite Scroll";
   const ActionIcon = isInfinite ? ChevronsDown : ListOrdered;
 
   useKeyPress("p", () => onInfiniteScrollToggle(!infiniteScroll), {
@@ -203,10 +193,7 @@ export const InventoryViewControls: React.FC<InventoryViewControlsProps> = ({
         </div>
       )}
       <div className="flex-1 sm:flex-none">
-        <ViewModeToggleButton
-          viewMode={viewMode}
-          onViewModeChange={onViewModeChange}
-        />
+        <ViewModeToggleButton viewMode={viewMode} onViewModeChange={onViewModeChange} />
       </div>
       <div className="flex-1 sm:flex-none">
         <InventoryScrollToggleButton

@@ -2,12 +2,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,11 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import {
   Command,
   CommandInput,
@@ -28,11 +19,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { LANGUAGE_OPTIONS } from "@/components/inventory/shared/inventory-constants";
-import type {
-  InventoryDetailWithCardDetails,
-  PlaceDbo,
-  CardCondition,
-} from "#/backend/src/types";
+import type { InventoryDetailWithCardDetails, PlaceDbo, CardCondition } from "#/backend/src/types";
 
 interface InventoryDetailEditModalProps {
   open: boolean;
@@ -44,9 +31,13 @@ interface InventoryDetailEditModalProps {
 
 const CONDITIONS: CardCondition[] = ["NM", "LP", "MP", "HP", "DMG", "Sealed"];
 
-export const InventoryDetailEditModal: React.FC<
-  InventoryDetailEditModalProps
-> = ({ open, onOpenChange, detail, places, onSave }) => {
+export const InventoryDetailEditModal: React.FC<InventoryDetailEditModalProps> = ({
+  open,
+  onOpenChange,
+  detail,
+  places,
+  onSave,
+}) => {
   const [formData, setFormData] = useState({
     quantity: detail.quantity,
     condition: detail.condition,
@@ -84,22 +75,16 @@ export const InventoryDetailEditModal: React.FC<
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
-          (errorData as { message?: string }).message ||
-            "Failed to update inventory detail",
+          (errorData as { message?: string }).message || "Failed to update inventory detail",
         );
       }
 
-      const updatedDetail =
-        (await response.json()) as InventoryDetailWithCardDetails;
+      const updatedDetail = (await response.json()) as InventoryDetailWithCardDetails;
       await onSave(updatedDetail);
       toast.success("Inventory item updated successfully");
       onOpenChange(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Failed to update inventory item",
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to update inventory item");
       console.error("Error updating inventory detail:", error);
     } finally {
       setIsLoading(false);
@@ -202,19 +187,9 @@ export const InventoryDetailEditModal: React.FC<
                     className="w-full justify-start gap-2"
                     disabled={isLoading}
                   >
+                    <span>{LANGUAGE_OPTIONS.find((l) => l.code === formData.language)?.flag}</span>
                     <span>
-                      {
-                        LANGUAGE_OPTIONS.find(
-                          (l) => l.code === formData.language,
-                        )?.flag
-                      }
-                    </span>
-                    <span>
-                      {
-                        LANGUAGE_OPTIONS.find(
-                          (l) => l.code === formData.language,
-                        )?.nativeName
-                      }
+                      {LANGUAGE_OPTIONS.find((l) => l.code === formData.language)?.nativeName}
                     </span>
                   </Button>
                 </PopoverTrigger>
@@ -266,9 +241,7 @@ export const InventoryDetailEditModal: React.FC<
                     <CommandEmpty>No location found.</CommandEmpty>
                     <CommandGroup>
                       <CommandItem
-                        onSelect={() =>
-                          setFormData((prev) => ({ ...prev, place_id: null }))
-                        }
+                        onSelect={() => setFormData((prev) => ({ ...prev, place_id: null }))}
                       >
                         No location
                       </CommandItem>
@@ -341,12 +314,7 @@ export const InventoryDetailEditModal: React.FC<
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLoading ? "Saving..." : "Save Changes"}
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleCancel}
-              disabled={isLoading}
-            >
+            <Button type="button" variant="outline" onClick={handleCancel} disabled={isLoading}>
               Cancel
             </Button>
           </div>

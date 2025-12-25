@@ -22,13 +22,7 @@ function getRepresentativeCardImage(deck: DeckWithDetails): string | null {
     if (commander?.card.image_uris) {
       const imageUris = parseImageUris(commander.card.image_uris);
       if (imageUris) {
-        return (
-          imageUris.art_crop ||
-          imageUris.normal ||
-          imageUris.large ||
-          imageUris.small ||
-          null
-        );
+        return imageUris.art_crop || imageUris.normal || imageUris.large || imageUris.small || null;
       }
     }
   }
@@ -41,30 +35,16 @@ function getRepresentativeCardImage(deck: DeckWithDetails): string | null {
   if (highestCmcCard?.card.image_uris) {
     const imageUris = parseImageUris(highestCmcCard.card.image_uris);
     if (imageUris) {
-      return (
-        imageUris.art_crop ||
-        imageUris.normal ||
-        imageUris.large ||
-        imageUris.small ||
-        null
-      );
+      return imageUris.art_crop || imageUris.normal || imageUris.large || imageUris.small || null;
     }
   }
 
   // 3. Fallback: First card with image
-  const firstCardWithImage = mainboardCards.find(
-    (card) => card.card.image_uris,
-  );
+  const firstCardWithImage = mainboardCards.find((card) => card.card.image_uris);
   if (firstCardWithImage?.card.image_uris) {
     const imageUris = parseImageUris(firstCardWithImage.card.image_uris);
     if (imageUris) {
-      return (
-        imageUris.art_crop ||
-        imageUris.normal ||
-        imageUris.large ||
-        imageUris.small ||
-        null
-      );
+      return imageUris.art_crop || imageUris.normal || imageUris.large || imageUris.small || null;
     }
   }
 
@@ -128,9 +108,7 @@ export async function generateMetadata(props: {
   };
 }
 
-export default async function EditDeckPage(props: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function EditDeckPage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const deckId = params.id;
   const deck = await getDeck(deckId);

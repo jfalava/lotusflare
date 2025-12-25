@@ -25,9 +25,7 @@ export function getApiBaseUrl(): string {
 export function getAuthHeaders(): Record<string, string> {
   const token = process.env.LOTUSFLARE_AUTH;
   if (!token) {
-    console.warn(
-      "[SSR] LOTUSFLARE_AUTH environment variable is not set. API requests will fail.",
-    );
+    console.warn("[SSR] LOTUSFLARE_AUTH environment variable is not set. API requests will fail.");
     return {};
   }
   return {
@@ -118,10 +116,7 @@ export async function serverFetchJson<T>(
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "Unknown error");
-    console.error(
-      `[SSR] Fetch failed: ${response.status} ${response.statusText}`,
-      errorText,
-    );
+    console.error(`[SSR] Fetch failed: ${response.status} ${response.statusText}`, errorText);
     throw new Error(`Failed to fetch: ${response.status}`);
   }
 

@@ -365,9 +365,7 @@ export type ScryfallToCardDboMappingFn = (
 ) => Omit<CardDbo, "created_at" | "updated_at">;
 
 // Function signature for mapping CardDbo (from DB) back to ScryfallApiCard for API responses
-export type DboToScryfallApiCardMappingFn = (
-  cardDbo: CardDbo,
-) => ScryfallApiCard;
+export type DboToScryfallApiCardMappingFn = (cardDbo: CardDbo) => ScryfallApiCard;
 
 // Type for Scryfall's list object structure (generic)
 export interface ScryfallListResponse<T> {

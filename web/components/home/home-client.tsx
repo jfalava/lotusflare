@@ -21,8 +21,9 @@ export default function HomeClient({
 }: HomeClientProps) {
   const [activeTab, setActiveTab] = useState("overview");
   const [activityPage, setActivityPage] = useState(1);
-  const [paginatedActivity, setPaginatedActivity] =
-    useState<PaginatedActivityResponse | null>(null);
+  const [paginatedActivity, setPaginatedActivity] = useState<PaginatedActivityResponse | null>(
+    null,
+  );
   const router = useRouter();
   const pathname = usePathname();
   const loader = useTopLoader();
@@ -38,11 +39,7 @@ export default function HomeClient({
     "a",
     (e) => {
       const tgt = e.target as HTMLElement;
-      if (
-        tgt.tagName === "INPUT" ||
-        tgt.tagName === "TEXTAREA" ||
-        tgt.isContentEditable
-      ) {
+      if (tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA" || tgt.isContentEditable) {
         return;
       }
       e.preventDefault();
@@ -60,11 +57,7 @@ export default function HomeClient({
     "n",
     (e) => {
       const tgt = e.target as HTMLElement;
-      if (
-        tgt.tagName === "INPUT" ||
-        tgt.tagName === "TEXTAREA" ||
-        tgt.isContentEditable
-      ) {
+      if (tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA" || tgt.isContentEditable) {
         return;
       }
       e.preventDefault();
@@ -100,11 +93,7 @@ export default function HomeClient({
       {!isProd && <QuickActions />}
 
       {/* Tabs for different views */}
-      <Tabs
-        value={activeTab}
-        onValueChange={setActiveTab}
-        className="space-y-6"
-      >
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="collection">Collection</TabsTrigger>

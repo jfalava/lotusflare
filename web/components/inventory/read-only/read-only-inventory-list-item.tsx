@@ -3,11 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, ChevronRight, ShoppingCart } from "lucide-react";
-import type {
-  MasterInventoryWithDetails,
-  PlaceDbo,
-  ScryfallApiCard,
-} from "#/backend/src/types";
+import type { MasterInventoryWithDetails, PlaceDbo, ScryfallApiCard } from "#/backend/src/types";
 import { Badge } from "@/components/ui/badge";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
@@ -44,9 +40,7 @@ interface ReadOnlyMasterInventoryListItemProps {
   places: PlaceDbo[];
 }
 
-export const ReadOnlyMasterInventoryListItem: React.FC<
-  ReadOnlyMasterInventoryListItemProps
-> = ({
+export const ReadOnlyMasterInventoryListItem: React.FC<ReadOnlyMasterInventoryListItemProps> = ({
   item,
   isExpanded,
   onToggleExpanded,
@@ -55,10 +49,7 @@ export const ReadOnlyMasterInventoryListItem: React.FC<
   onMouseLeave,
 }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
-  const totalQuantity = item.details.reduce(
-    (acc, detail) => acc + detail.quantity,
-    0,
-  );
+  const totalQuantity = item.details.reduce((acc, detail) => acc + detail.quantity, 0);
 
   const primaryCard = item.details[0]?.card;
   const imgUri = primaryCard ? getCardImageUri(primaryCard) : undefined;
@@ -179,15 +170,12 @@ export const ReadOnlyMasterInventoryListItem: React.FC<
                       <div className="flex items-start justify-between">
                         <div className="space-y-2 min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-medium text-sm">
-                              {detail.card.set_name}
-                            </span>
+                            <span className="font-medium text-sm">{detail.card.set_name}</span>
                             <Badge
                               variant="outline"
                               className="text-xs whitespace-nowrap font-mono"
                             >
-                              {detail.card.set.toUpperCase()} #
-                              {detail.card.collector_number}
+                              {detail.card.set.toUpperCase()} #{detail.card.collector_number}
                             </Badge>
                             {detail.is_foil && (
                               <Badge
@@ -201,21 +189,14 @@ export const ReadOnlyMasterInventoryListItem: React.FC<
 
                           <div className="flex items-center gap-4 flex-wrap text-sm">
                             <div className="flex items-center gap-1">
-                              <span className="text-muted-foreground">
-                                Qty:
-                              </span>
-                              <Badge
-                                variant="outline"
-                                className="font-semibold text-xs"
-                              >
+                              <span className="text-muted-foreground">Qty:</span>
+                              <Badge variant="outline" className="font-semibold text-xs">
                                 {detail.quantity}x
                               </Badge>
                             </div>
 
                             <div className="flex items-center gap-1">
-                              <span className="text-muted-foreground">
-                                Condition:
-                              </span>
+                              <span className="text-muted-foreground">Condition:</span>
                               <Badge
                                 className={clsx(
                                   "text-xs font-medium",
@@ -228,9 +209,7 @@ export const ReadOnlyMasterInventoryListItem: React.FC<
 
                             {detail.language !== "en" && (
                               <div className="flex items-center gap-1">
-                                <span className="text-muted-foreground">
-                                  Lang:
-                                </span>
+                                <span className="text-muted-foreground">Lang:</span>
                                 <Badge variant="outline" className="text-xs">
                                   {detail.language.toUpperCase()}
                                 </Badge>
@@ -239,9 +218,7 @@ export const ReadOnlyMasterInventoryListItem: React.FC<
 
                             {detail.place_name && (
                               <div className="flex items-center gap-1">
-                                <span className="text-muted-foreground">
-                                  Location:
-                                </span>
+                                <span className="text-muted-foreground">Location:</span>
                                 <Badge variant="secondary" className="text-xs">
                                   {detail.place_name}
                                 </Badge>
@@ -284,11 +261,7 @@ export const ReadOnlyMasterInventoryListItem: React.FC<
           </td>
         </tr>
       )}
-      <CardDetailModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        card={primaryCard || null}
-      />
+      <CardDetailModal open={modalOpen} onOpenChange={setModalOpen} card={primaryCard || null} />
     </>
   );
 };

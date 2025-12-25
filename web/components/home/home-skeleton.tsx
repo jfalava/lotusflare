@@ -13,9 +13,7 @@ const StatCardSkeleton = () => (
   </Card>
 );
 
-const QuickActionSkeleton = () => (
-  <Skeleton className="h-24 w-full rounded-lg" />
-);
+const QuickActionSkeleton = () => <Skeleton className="h-24 w-full rounded-lg" />;
 
 const ChartSkeleton = () => <Skeleton className="h-[300px] w-full" />;
 

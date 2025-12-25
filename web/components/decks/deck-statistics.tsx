@@ -5,37 +5,16 @@ import React, { useCallback, useMemo, useSyncExternalStore } from "react";
 import clsx from "clsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  TrendingUp,
-  Target,
-  Zap,
-  Palette,
-  Droplets,
-  Globe,
-  Sigma,
-  Hash,
-} from "lucide-react";
+import { TrendingUp, Target, Zap, Palette, Droplets, Globe, Sigma, Hash } from "lucide-react";
 import type { DeckWithDetails, ScryfallApiCard } from "#/backend/src/types";
 import { ManaCost } from "@/components/ui/mana-cost";
 import { getPrimaryCardType } from "@/utils/card-utils";
 
 type ManaSources = Record<"W" | "U" | "B" | "R" | "G" | "C" | "M", number>;
-type ManaPips = Record<
-  "W" | "U" | "B" | "R" | "G" | "C" | "P" | "Generic",
-  number
->;
+type ManaPips = Record<"W" | "U" | "B" | "R" | "G" | "C" | "P" | "Generic", number>;
 
 const BASIC_LAND_TYPE_TO_MANA: Record<string, keyof ManaSources> = {
   plains: "W",
@@ -103,16 +82,13 @@ const getManaSources = (card: ScryfallApiCard): ManaSources => {
   // Heuristic 1: "Any Color" producers.
   if (
     combinedOracleText.includes("add one mana of any color") ||
-    combinedOracleText.includes(
-      "mana of any color in your commander's color identity",
-    )
+    combinedOracleText.includes("mana of any color in your commander's color identity")
   ) {
     sources.M = 1;
   }
 
   // Heuristic 2: Fetch lands.
-  const fetchLandRegex =
-    /search your library for an? ([\w\s,]+(?:or [\w\s,]+)*) card/g;
+  const fetchLandRegex = /search your library for an? ([\w\s,]+(?:or [\w\s,]+)*) card/g;
   let fetchMatch;
   while ((fetchMatch = fetchLandRegex.exec(combinedOracleText)) !== null) {
     const landTypesStr = fetchMatch[1];
@@ -303,15 +279,10 @@ const PieChartLegend = ({ data, labelKey }: PieChartLegendProps) => (
   <div className="mb-4 grid w-full grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
     {data.map((entry) => (
       <div key={entry[labelKey] as string} className="flex items-center gap-2">
-        <span
-          className="h-2.5 w-2.5 shrink-0 rounded-sm"
-          style={{ backgroundColor: entry.fill }}
-        />
+        <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ backgroundColor: entry.fill }} />
         <div className="flex-1 truncate">
           {entry[labelKey]}{" "}
-          <span className="font-medium text-muted-foreground">
-            ({entry.percentage}%)
-          </span>
+          <span className="font-medium text-muted-foreground">({entry.percentage}%)</span>
         </div>
       </div>
     ))}
@@ -322,13 +293,9 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
   const stats = useMemo(() => {
     // Only count true mainboard (no sideboard, no maybeboard) for stats
     const mainboardCards =
-      deck.cards?.filter((card) => !card.is_sideboard && !card.is_maybeboard) ||
-      [];
+      deck.cards?.filter((card) => !card.is_sideboard && !card.is_maybeboard) || [];
 
-    const totalCards = mainboardCards.reduce(
-      (sum, card) => sum + card.quantity,
-      0,
-    );
+    const totalCards = mainboardCards.reduce((sum, card) => sum + card.quantity, 0);
 
     // Card type distribution
     const typeDistribution = mainboardCards.reduce(
@@ -424,26 +391,19 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
     const nonLandCmcs = mainboardCards
       .filter((card) => getPrimaryCardType(card.card.type_line) !== "Land")
       .flatMap((deckCard) => {
-        const cmc =
-          deckCard?.card && typeof deckCard.card.cmc === "number"
-            ? deckCard.card.cmc
-            : 0;
+        const cmc = deckCard?.card && typeof deckCard.card.cmc === "number" ? deckCard.card.cmc : 0;
         const quantity = deckCard?.quantity || 0;
         return Array(quantity).fill(cmc);
       });
 
     const calculateAverage = (values: number[]) =>
-      values.length > 0
-        ? values.reduce((sum, val) => sum + val, 0) / values.length
-        : 0;
+      values.length > 0 ? values.reduce((sum, val) => sum + val, 0) / values.length : 0;
 
     const calculateMedian = (values: number[]): number => {
       if (values.length === 0) return 0;
       const sorted = [...values].sort((a, b) => a - b);
       const mid = Math.floor(sorted.length / 2);
-      return sorted.length % 2 !== 0
-        ? sorted[mid]
-        : (sorted[mid - 1] + sorted[mid]) / 2;
+      return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
     };
 
     const averageCmcNonLand = calculateAverage(nonLandCmcs);
@@ -455,8 +415,7 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
     const landRatio = totalCards > 0 ? (landCount / totalCards) * 100 : 0;
 
     const multicolorCount = colorDistribution["Multicolor"] || 0;
-    const multicolorRatio =
-      totalCards > 0 ? (multicolorCount / totalCards) * 100 : 0;
+    const multicolorRatio = totalCards > 0 ? (multicolorCount / totalCards) * 100 : 0;
 
     // Cards that potentially provide card advantage (basic heuristic)
     const cardAdvantageCount = mainboardCards.reduce((count, card) => {
@@ -513,15 +472,11 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
   const colorChartData = Object.entries(stats.colorDistribution)
     .filter(([, count]) => count > 0) // Only include colors that exist
     .map(([color, count]) => ({
-      color:
-        COLOR_IDENTITY_NAMES[color as keyof typeof COLOR_IDENTITY_NAMES] ||
-        color,
+      color: COLOR_IDENTITY_NAMES[color as keyof typeof COLOR_IDENTITY_NAMES] || color,
       colorKey: color,
       count,
       percentage: ((count / stats.totalCards) * 100).toFixed(1),
-      fill:
-        COLOR_IDENTITY_COLORS[color as keyof typeof COLOR_IDENTITY_COLORS] ||
-        "#64748B",
+      fill: COLOR_IDENTITY_COLORS[color as keyof typeof COLOR_IDENTITY_COLORS] || "#64748B",
     }))
     .sort((a, b) => b.count - a.count);
 
@@ -568,9 +523,7 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
     Generic: "Generic",
   };
 
-  const manaSymbolData = (
-    Object.keys(MANA_SYMBOL_NAMES) as Array<keyof typeof MANA_SYMBOL_NAMES>
-  )
+  const manaSymbolData = (Object.keys(MANA_SYMBOL_NAMES) as Array<keyof typeof MANA_SYMBOL_NAMES>)
     .map((key) => ({
       key,
       name: MANA_SYMBOL_NAMES[key],
@@ -592,9 +545,7 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
   };
 
   const renderAccessiblePieChartLabel = (labelKey: string) =>
-    function AccessiblePieChartLabel(
-      props: unknown,
-    ): React.ReactElement | null {
+    function AccessiblePieChartLabel(props: unknown): React.ReactElement | null {
       const labelProps = props as {
         cx?: number;
         cy?: number;
@@ -654,25 +605,19 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-xl font-bold">
-              {stats.medianCmcNonLand.toFixed(1)}
-            </div>
+            <div className="text-xl font-bold">{stats.medianCmcNonLand.toFixed(1)}</div>
             <p className="text-xs text-muted-foreground">Median Spell CMC</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-xl font-bold">
-              {stats.averageCmcNonLand.toFixed(3)}
-            </div>
+            <div className="text-xl font-bold">{stats.averageCmcNonLand.toFixed(3)}</div>
             <p className="text-xs text-muted-foreground">Average Spell CMC</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-xl font-bold">
-              {stats.landRatio.toFixed(0)}%
-            </div>
+            <div className="text-xl font-bold">{stats.landRatio.toFixed(0)}%</div>
             <p className="text-xs text-muted-foreground">Lands</p>
           </CardContent>
         </Card>
@@ -688,21 +633,13 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col p-4 pt-0 pb-2">
-            {!isDesktop && (
-              <PieChartLegend data={typeChartData} labelKey="type" />
-            )}
+            {!isDesktop && <PieChartLegend data={typeChartData} labelKey="type" />}
             <ChartContainer
               config={chartConfig}
               className={clsx("w-full", isDesktop ? "h-[250px]" : "h-[200px]")}
             >
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart
-                  margin={
-                    isDesktop
-                      ? { top: 20, right: 20, bottom: 20, left: 20 }
-                      : {}
-                  }
-                >
+                <PieChart margin={isDesktop ? { top: 20, right: 20, bottom: 20, left: 20 } : {}}>
                   <Pie
                     data={typeChartData}
                     cx="50%"
@@ -747,30 +684,15 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col p-4 pt-0 pb-2">
-            {!isDesktop && (
-              <PieChartLegend data={colorChartData} labelKey="color" />
-            )}
+            {!isDesktop && <PieChartLegend data={colorChartData} labelKey="color" />}
             <ChartContainer
               config={chartConfig}
               className={clsx("w-full", isDesktop ? "h-[250px]" : "h-[200px]")}
             >
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={manaCurveData}
-                  margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-                >
-                  <XAxis
-                    dataKey="cmc"
-                    fontSize={11}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis
-                    fontSize={11}
-                    tickLine={false}
-                    axisLine={false}
-                    width={20}
-                  />
+                <BarChart data={manaCurveData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                  <XAxis dataKey="cmc" fontSize={11} tickLine={false} axisLine={false} />
+                  <YAxis fontSize={11} tickLine={false} axisLine={false} width={20} />
                   <Bar
                     dataKey="count"
                     radius={[2, 2, 0, 0]}
@@ -788,9 +710,7 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
                         return (
                           <div className="rounded-lg border bg-background p-2 shadow-md text-xs">
                             <div className="font-medium">CMC {label}</div>
-                            <div className="text-muted-foreground">
-                              {payload[0].value} cards
-                            </div>
+                            <div className="text-muted-foreground">{payload[0].value} cards</div>
                           </div>
                         );
                       }
@@ -812,21 +732,13 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col p-4 pt-0 pb-2">
-            {!isDesktop && (
-              <PieChartLegend data={colorChartData} labelKey="color" />
-            )}
+            {!isDesktop && <PieChartLegend data={colorChartData} labelKey="color" />}
             <ChartContainer
               config={chartConfig}
               className={clsx("w-full", isDesktop ? "h-[250px]" : "h-[200px]")}
             >
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart
-                  margin={
-                    isDesktop
-                      ? { top: 20, right: 20, bottom: 20, left: 20 }
-                      : {}
-                  }
-                >
+                <PieChart margin={isDesktop ? { top: 20, right: 20, bottom: 20, left: 20 } : {}}>
                   <Pie
                     data={colorChartData}
                     cx="50%"
@@ -885,9 +797,7 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
                 </Badge>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs text-muted-foreground">
-                  Multicolor Cards
-                </span>
+                <span className="text-xs text-muted-foreground">Multicolor Cards</span>
                 <Badge variant="outline" className="text-xs h-5">
                   {stats.multicolorRatio.toFixed(1)}%
                 </Badge>
@@ -899,16 +809,10 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
             <div className="space-y-2">
               <span className="text-xs font-medium">Rarity Breakdown</span>
               {rarityChartData.map((item) => {
-                const rarityStyle =
-                  RARITY_STYLES[item.rarityKey as keyof typeof RARITY_STYLES];
+                const rarityStyle = RARITY_STYLES[item.rarityKey as keyof typeof RARITY_STYLES];
                 return (
-                  <div
-                    key={item.rarity}
-                    className="flex justify-between items-center"
-                  >
-                    <span className="text-xs text-muted-foreground">
-                      {item.rarity}
-                    </span>
+                  <div key={item.rarity} className="flex justify-between items-center">
+                    <span className="text-xs text-muted-foreground">{item.rarity}</span>
                     <div
                       className="text-xs h-5 px-2 py-1 rounded-md font-medium flex items-center"
                       style={{
@@ -927,9 +831,7 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
               <>
                 <Separator />
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">
-                    Potential Card Advantage
-                  </span>
+                  <span className="text-xs text-muted-foreground">Potential Card Advantage</span>
                   <Badge variant="outline" className="text-xs h-5">
                     {stats.cardAdvantageCount} cards
                   </Badge>
@@ -950,27 +852,20 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
           <CardContent className="p-4 pt-0 space-y-2">
             {manaSourceData.length > 0 ? (
               manaSourceData.map((source) => (
-                <div
-                  key={source.key}
-                  className="flex justify-between items-center"
-                >
+                <div key={source.key} className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     {source.key === "M" ? (
                       <Globe className="h-4 w-4 text-muted-foreground" />
                     ) : (
                       <ManaCost manaCost={`{${source.key}}`} size="sm" />
                     )}
-                    <span className="text-xs text-muted-foreground">
-                      {source.name}
-                    </span>
+                    <span className="text-xs text-muted-foreground">{source.name}</span>
                   </div>
                   <Badge variant="outline">{source.count} Sources</Badge>
                 </div>
               ))
             ) : (
-              <p className="text-xs text-muted-foreground">
-                No mana sources found in mainboard.
-              </p>
+              <p className="text-xs text-muted-foreground">No mana sources found in mainboard.</p>
             )}
           </CardContent>
         </Card>
@@ -986,19 +881,14 @@ export default function DeckStatistics({ deck }: DeckStatisticsProps) {
           <CardContent className="p-4 pt-0 space-y-2">
             {manaSymbolData.length > 0 ? (
               manaSymbolData.map((symbol) => (
-                <div
-                  key={symbol.key}
-                  className="flex justify-between items-center"
-                >
+                <div key={symbol.key} className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     {symbol.key === "Generic" ? (
                       <Hash className="h-4 w-4 text-muted-foreground" />
                     ) : (
                       <ManaCost manaCost={`{${symbol.key}}`} size="sm" />
                     )}
-                    <span className="text-xs text-muted-foreground">
-                      {symbol.name}
-                    </span>
+                    <span className="text-xs text-muted-foreground">{symbol.name}</span>
                   </div>
                   <Badge variant="outline">{symbol.count} Pips</Badge>
                 </div>

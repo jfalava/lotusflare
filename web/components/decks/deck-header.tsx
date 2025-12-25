@@ -19,9 +19,7 @@ export const DeckHeader: React.FC<DeckHeaderProps> = ({
 }) => {
   return (
     <div className="mb-8 pb-6 border-b border-border">
-      <h2 className="text-4xl font-beleren-caps font-bold tracking-tight mb-2">
-        {deck.name}
-      </h2>
+      <h2 className="text-4xl font-beleren-caps font-bold tracking-tight mb-2">{deck.name}</h2>
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-muted-foreground text-sm">
         <Badge
@@ -37,9 +35,7 @@ export const DeckHeader: React.FC<DeckHeaderProps> = ({
       </div>
 
       {deck.description && (
-        <p className="mt-3 text-md text-muted-foreground max-w-3xl">
-          {deck.description}
-        </p>
+        <p className="mt-3 text-md text-muted-foreground max-w-3xl">{deck.description}</p>
       )}
     </div>
   );

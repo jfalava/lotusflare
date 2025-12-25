@@ -17,11 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import {
   Command,
   CommandInput,
@@ -73,11 +69,8 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   // Print selection state
-  const [selectedCard, setSelectedCard] =
-    React.useState<ScryfallApiCard | null>(null);
-  const [availablePrints, setAvailablePrints] = React.useState<
-    ScryfallApiCard[]
-  >([]);
+  const [selectedCard, setSelectedCard] = React.useState<ScryfallApiCard | null>(null);
+  const [availablePrints, setAvailablePrints] = React.useState<ScryfallApiCard[]>([]);
   const [isLoadingPrints, setIsLoadingPrints] = React.useState<boolean>(false);
   const [printsOpen, setPrintsOpen] = React.useState<boolean>(false);
 
@@ -159,13 +152,11 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
         if (!detailRes.ok) {
           const err = await detailRes.json().catch(() => null);
           throw new Error(
-            (err as { message?: string })?.message ||
-              "Failed to add inventory detail",
+            (err as { message?: string })?.message || "Failed to add inventory detail",
           );
         }
 
-        const detailData =
-          (await detailRes.json()) as InventoryDetailWithCardDetails;
+        const detailData = (await detailRes.json()) as InventoryDetailWithCardDetails;
 
         onSuccess(detailData);
         // Let the parent handle closing the modal after success
@@ -175,22 +166,10 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
         setIsLoading(false);
       }
     },
-    [
-      selectedCard,
-      oracleId,
-      condition,
-      isFoil,
-      language,
-      notes,
-      onSuccess,
-      placeId,
-      quantity,
-    ],
+    [selectedCard, oracleId, condition, isFoil, language, notes, onSuccess, placeId, quantity],
   );
 
-  const selectedLanguageOption = LANGUAGE_OPTIONS.find(
-    (l) => l.code === language,
-  );
+  const selectedLanguageOption = LANGUAGE_OPTIONS.find((l) => l.code === language);
   const selectedPlace = places.find((p) => String(p.id) === placeId);
 
   return (
@@ -199,15 +178,11 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
         <DialogHeader>
           <DialogTitle>Add Copy of "{cardName}"</DialogTitle>
           <DialogDescription>
-            Select a specific print and set quantity, condition, and other
-            details.
+            Select a specific print and set quantity, condition, and other details.
           </DialogDescription>
         </DialogHeader>
 
-        <form
-          onSubmit={handleSubmit}
-          className="flex-1 overflow-hidden flex flex-col gap-4 py-4"
-        >
+        <form onSubmit={handleSubmit} className="flex-1 overflow-hidden flex flex-col gap-4 py-4">
           {/* Print Selection */}
           <div className="flex flex-col space-y-1">
             <Label htmlFor="print-select">Select Print</Label>
@@ -235,20 +210,14 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
                         />
                         <div className="flex flex-col min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-medium truncate">
-                              {selectedCard.set_name}
-                            </span>
+                            <span className="font-medium truncate">{selectedCard.set_name}</span>
                             <Badge variant="outline" className="text-xs">
-                              {selectedCard.set.toUpperCase()} #
-                              {selectedCard.collector_number}
+                              {selectedCard.set.toUpperCase()} #{selectedCard.collector_number}
                             </Badge>
                           </div>
                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             {selectedCard.mana_cost && (
-                              <ManaCost
-                                manaCost={selectedCard.mana_cost}
-                                size="xs"
-                              />
+                              <ManaCost manaCost={selectedCard.mana_cost} size="xs" />
                             )}
                             <span>{selectedCard.rarity}</span>
                           </div>
@@ -256,9 +225,7 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
                       </div>
                     ) : (
                       <span className="text-muted-foreground">
-                        {availablePrints.length === 0
-                          ? "No prints available"
-                          : "Select a print..."}
+                        {availablePrints.length === 0 ? "No prints available" : "Select a print..."}
                       </span>
                     )}
                   </Button>
@@ -292,16 +259,12 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
                                     {card.set_name}
                                   </span>
                                   <Badge variant="outline" className="text-xs">
-                                    {card.set.toUpperCase()} #
-                                    {card.collector_number}
+                                    {card.set.toUpperCase()} #{card.collector_number}
                                   </Badge>
                                 </div>
                                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                   {card.mana_cost && (
-                                    <ManaCost
-                                      manaCost={card.mana_cost}
-                                      size="xs"
-                                    />
+                                    <ManaCost manaCost={card.mana_cost} size="xs" />
                                   )}
                                   <span>{card.rarity}</span>
                                   <span>•</span>
@@ -342,11 +305,7 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
               <Label htmlFor="condition">Condition</Label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button
-                    id="condition"
-                    variant="outline"
-                    className="justify-between"
-                  >
+                  <Button id="condition" variant="outline" className="justify-between">
                     {condition}
                   </Button>
                 </PopoverTrigger>
@@ -368,11 +327,7 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
 
             {/* Foil */}
             <div className="flex items-center space-x-2">
-              <Checkbox
-                id="is_foil"
-                checked={isFoil}
-                onCheckedChange={(v) => setIsFoil(!!v)}
-              />
+              <Checkbox id="is_foil" checked={isFoil} onCheckedChange={(v) => setIsFoil(!!v)} />
               <Label htmlFor="is_foil">Premium finish</Label>
             </div>
 
@@ -381,11 +336,7 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
               <Label htmlFor="language">Language</Label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button
-                    id="language"
-                    variant="outline"
-                    className="w-full justify-start gap-2"
-                  >
+                  <Button id="language" variant="outline" className="w-full justify-start gap-2">
                     <span>{selectedLanguageOption?.flag}</span>
                     <span>{selectedLanguageOption?.nativeName}</span>
                   </Button>
@@ -416,11 +367,7 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
               <Label htmlFor="place">Location</Label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button
-                    id="place"
-                    variant="outline"
-                    className="justify-between"
-                  >
+                  <Button id="place" variant="outline" className="justify-between">
                     {placeId === NONE_PLACE_VALUE ? "-" : selectedPlace?.name}
                   </Button>
                 </PopoverTrigger>
@@ -429,17 +376,11 @@ export const AddPrintModal: React.FC<AddPrintModalProps> = ({
                     <CommandInput placeholder="Search location..." />
                     <CommandEmpty>No location found.</CommandEmpty>
                     <CommandGroup>
-                      <CommandItem
-                        key="none"
-                        onSelect={() => setPlaceId(NONE_PLACE_VALUE)}
-                      >
+                      <CommandItem key="none" onSelect={() => setPlaceId(NONE_PLACE_VALUE)}>
                         None
                       </CommandItem>
                       {places.map((p) => (
-                        <CommandItem
-                          key={p.id}
-                          onSelect={() => setPlaceId(String(p.id))}
-                        >
+                        <CommandItem key={p.id} onSelect={() => setPlaceId(String(p.id))}>
                           {p.name}
                         </CommandItem>
                       ))}

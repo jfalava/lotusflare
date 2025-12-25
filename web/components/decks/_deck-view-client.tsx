@@ -7,12 +7,7 @@ import React, { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Table,
   TableBody,
@@ -21,11 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import {
@@ -100,30 +91,22 @@ export default function DeckViewClient({ initialDeck }: DeckViewClientProps) {
 
       if (commanders.length > 0) {
         listString += format === "arena" ? "Commander\n" : "Commander:\n";
-        commanders.forEach(
-          (c) => (listString += formatCardLine(c, format === "arena") + "\n"),
-        );
+        commanders.forEach((c) => (listString += formatCardLine(c, format === "arena") + "\n"));
         listString += "\n";
       }
 
       listString += format === "arena" ? "Deck\n" : "Mainboard:\n";
-      mainboardCards.forEach(
-        (c) => (listString += formatCardLine(c, format === "arena") + "\n"),
-      );
+      mainboardCards.forEach((c) => (listString += formatCardLine(c, format === "arena") + "\n"));
 
       if (sideboardCards.length > 0) {
         listString += "\n";
         listString += format === "arena" ? "Sideboard\n" : "Sideboard:\n";
-        sideboardCards.forEach(
-          (c) => (listString += formatCardLine(c, format === "arena") + "\n"),
-        );
+        sideboardCards.forEach((c) => (listString += formatCardLine(c, format === "arena") + "\n"));
       }
 
       navigator.clipboard
         .writeText(listString.trim())
-        .then(() =>
-          toast.success(`Decklist copied to clipboard (${format} format)!`),
-        )
+        .then(() => toast.success(`Decklist copied to clipboard (${format} format)!`))
         .catch((err) => {
           console.error("Failed to copy decklist: ", err);
           toast.error("Failed to copy decklist.");
@@ -139,20 +122,12 @@ export default function DeckViewClient({ initialDeck }: DeckViewClientProps) {
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)]">
         <ArchiveX className="h-16 w-16 text-muted-foreground mb-4" />
         <h2 className="text-2xl font-semibold">Deck Data Unavailable</h2>
-        <p className="text-muted-foreground mt-2">
-          The deck details could not be loaded.
-        </p>
+        <p className="text-muted-foreground mt-2">The deck details could not be loaded.</p>
       </div>
     );
   }
 
-  const CardGroupDisplay = ({
-    title,
-    cards,
-  }: {
-    title: string;
-    cards: DeckCardWithDetails[];
-  }) => {
+  const CardGroupDisplay = ({ title, cards }: { title: string; cards: DeckCardWithDetails[] }) => {
     if (cards.length === 0) return null;
 
     const groupedByType = cards.reduce(
@@ -212,9 +187,7 @@ export default function DeckViewClient({ initialDeck }: DeckViewClientProps) {
                       <TableRow>
                         <TableHead className="w-[40px]">Qty</TableHead>
                         <TableHead>Name</TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Type
-                        </TableHead>
+                        <TableHead className="hidden md:table-cell">Type</TableHead>
                         <TableHead className="text-right">Mana</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -238,10 +211,7 @@ export default function DeckViewClient({ initialDeck }: DeckViewClientProps) {
                               {item.card.type_line}
                             </TableCell>
                             <TableCell className="text-right">
-                              <ManaCost
-                                manaCost={item.card.mana_cost}
-                                size="sm"
-                              />
+                              <ManaCost manaCost={item.card.mana_cost} size="sm" />
                             </TableCell>
                           </TableRow>
                         ))}
@@ -258,19 +228,12 @@ export default function DeckViewClient({ initialDeck }: DeckViewClientProps) {
   return (
     <TooltipProvider>
       <div className="container mx-auto max-w-6xl py-8 px-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => router.back()}
-          className="mb-6"
-        >
+        <Button variant="outline" size="sm" onClick={() => router.back()} className="mb-6">
           <ArrowLeft className="mr-2 h-4 w-4" /> Back
         </Button>
 
         <header className="mb-8 pb-6 border-b border-border">
-          <h1 className="text-4xl font-bold tracking-tight mb-2 font-beleren">
-            {deck.name}
-          </h1>
+          <h1 className="text-4xl font-bold tracking-tight mb-2 font-beleren">{deck.name}</h1>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-muted-foreground text-sm">
             <Badge
               variant="outline"
@@ -278,17 +241,11 @@ export default function DeckViewClient({ initialDeck }: DeckViewClientProps) {
             >
               <BookOpen className="h-4 w-4" /> {deck.format}
             </Badge>
-            <span>
-              Updated: {new Date(deck.updated_at).toLocaleDateString()}
-            </span>
-            <span>
-              Total Cards: {totalMainboardCards + totalSideboardCards}
-            </span>
+            <span>Updated: {new Date(deck.updated_at).toLocaleDateString()}</span>
+            <span>Total Cards: {totalMainboardCards + totalSideboardCards}</span>
           </div>
           {deck.description && (
-            <p className="mt-3 text-md text-muted-foreground max-w-3xl">
-              {deck.description}
-            </p>
+            <p className="mt-3 text-md text-muted-foreground max-w-3xl">{deck.description}</p>
           )}
         </header>
 
@@ -308,10 +265,7 @@ export default function DeckViewClient({ initialDeck }: DeckViewClientProps) {
                   aria-label={`View commander ${item.card.name} on Scryfall`}
                 >
                   <CardImage
-                    src={
-                      item.card.image_uris?.art_crop ||
-                      item.card.image_uris?.normal
-                    }
+                    src={item.card.image_uris?.art_crop || item.card.image_uris?.normal}
                     alt={item.card.name}
                     className="rounded-xl shadow-lg hover:scale-105 transition-transform duration-200 border-2 border-transparent group-hover:border-primary"
                     isCommander
@@ -327,16 +281,10 @@ export default function DeckViewClient({ initialDeck }: DeckViewClientProps) {
 
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => copyDecklistToClipboard("text")}
-            >
+            <Button variant="outline" onClick={() => copyDecklistToClipboard("text")}>
               <ClipboardCopy className="mr-2 h-4 w-4" /> Copy Text
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => copyDecklistToClipboard("arena")}
-            >
+            <Button variant="outline" onClick={() => copyDecklistToClipboard("arena")}>
               <ClipboardCopy className="mr-2 h-4 w-4" /> Copy Arena
             </Button>
           </div>

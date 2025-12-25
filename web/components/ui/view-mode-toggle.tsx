@@ -3,10 +3,7 @@
 
 import * as React from "react";
 import { LayoutGrid, List } from "lucide-react";
-import {
-  useViewMode,
-  type ViewMode,
-} from "@/components/context/view-mode-context";
+import { useViewMode, type ViewMode } from "@/components/context/view-mode-context";
 import {
   Select,
   SelectContent,
@@ -31,10 +28,7 @@ export function ViewModeToggle() {
 
   return (
     <div>
-      <Select
-        value={viewMode}
-        onValueChange={(v) => setViewMode(v as ViewMode)}
-      >
+      <Select value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
         <SelectTrigger className="w-full">
           <SelectValue />
         </SelectTrigger>

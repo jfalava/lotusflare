@@ -70,9 +70,7 @@ export function FontSelector({ family }: FontSelectorProps) {
       <SelectContent>
         {options.map((opt) => (
           <SelectItem key={opt.value} value={opt.value}>
-            <span style={{ fontFamily: getFontStack(opt.value) }}>
-              {opt.label}
-            </span>
+            <span style={{ fontFamily: getFontStack(opt.value) }}>{opt.label}</span>
           </SelectItem>
         ))}
       </SelectContent>

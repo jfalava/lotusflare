@@ -17,11 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import {
   Command,
   CommandInput,
@@ -101,8 +97,7 @@ export const AddToMasterModal: React.FC<AddToMasterModalProps> = ({
         if (!masterRes.ok && masterRes.status !== 409) {
           const err = await masterRes.json().catch(() => null);
           throw new Error(
-            (err as { message?: string })?.message ||
-              "Failed to create master entry",
+            (err as { message?: string })?.message || "Failed to create master entry",
           );
         }
 
@@ -125,12 +120,10 @@ export const AddToMasterModal: React.FC<AddToMasterModalProps> = ({
         if (!detailRes.ok) {
           const err = await detailRes.json().catch(() => null);
           throw new Error(
-            (err as { message?: string })?.message ||
-              "Failed to add inventory detail",
+            (err as { message?: string })?.message || "Failed to add inventory detail",
           );
         }
-        const detailData =
-          (await detailRes.json()) as InventoryDetailWithCardDetails;
+        const detailData = (await detailRes.json()) as InventoryDetailWithCardDetails;
 
         onSuccess(detailData);
         onOpenChange(false);
@@ -140,17 +133,7 @@ export const AddToMasterModal: React.FC<AddToMasterModalProps> = ({
         setIsLoading(false);
       }
     },
-    [
-      card,
-      condition,
-      isFoil,
-      language,
-      notes,
-      onOpenChange,
-      onSuccess,
-      placeId,
-      quantity,
-    ],
+    [card, condition, isFoil, language, notes, onOpenChange, onSuccess, placeId, quantity],
   );
 
   if (!card) return null;
@@ -207,11 +190,7 @@ export const AddToMasterModal: React.FC<AddToMasterModalProps> = ({
 
             {/* Foil */}
             <div className="flex items-center space-x-2">
-              <Checkbox
-                id="is_foil"
-                checked={isFoil}
-                onCheckedChange={(v) => setIsFoil(!!v)}
-              />
+              <Checkbox id="is_foil" checked={isFoil} onCheckedChange={(v) => setIsFoil(!!v)} />
               <Label htmlFor="is_foil">Premium finish</Label>
             </div>
 
@@ -220,20 +199,9 @@ export const AddToMasterModal: React.FC<AddToMasterModalProps> = ({
               <Label htmlFor="language">Language</Label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button
-                    id="language"
-                    variant="outline"
-                    className="w-full justify-start gap-2"
-                  >
-                    <span>
-                      {LANGUAGE_OPTIONS.find((l) => l.code === language)?.flag}
-                    </span>
-                    <span>
-                      {
-                        LANGUAGE_OPTIONS.find((l) => l.code === language)
-                          ?.nativeName
-                      }
-                    </span>
+                  <Button id="language" variant="outline" className="w-full justify-start gap-2">
+                    <span>{LANGUAGE_OPTIONS.find((l) => l.code === language)?.flag}</span>
+                    <span>{LANGUAGE_OPTIONS.find((l) => l.code === language)?.nativeName}</span>
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="p-0 w-[200px]">
@@ -262,11 +230,7 @@ export const AddToMasterModal: React.FC<AddToMasterModalProps> = ({
               <Label htmlFor="place">Location</Label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button
-                    id="place"
-                    variant="outline"
-                    className="justify-between"
-                  >
+                  <Button id="place" variant="outline" className="justify-between">
                     {placeId === NONE_PLACE_VALUE
                       ? "-"
                       : places.find((p) => String(p.id) === placeId)?.name}
@@ -277,17 +241,11 @@ export const AddToMasterModal: React.FC<AddToMasterModalProps> = ({
                     <CommandInput placeholder="Search location..." />
                     <CommandEmpty>No location found.</CommandEmpty>
                     <CommandGroup>
-                      <CommandItem
-                        key="none"
-                        onSelect={() => setPlaceId(NONE_PLACE_VALUE)}
-                      >
+                      <CommandItem key="none" onSelect={() => setPlaceId(NONE_PLACE_VALUE)}>
                         None
                       </CommandItem>
                       {places.map((p) => (
-                        <CommandItem
-                          key={p.id}
-                          onSelect={() => setPlaceId(String(p.id))}
-                        >
+                        <CommandItem key={p.id} onSelect={() => setPlaceId(String(p.id))}>
                           {p.name}
                         </CommandItem>
                       ))}

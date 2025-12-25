@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useRef,
-} from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import clsx from "clsx";
 import {
   Dialog,
@@ -30,13 +24,7 @@ import type {
   ScryfallApiCard,
   AddInventoryDetailPayload,
 } from "#/backend/src/types";
-import {
-  Check,
-  ChevronsUpDown,
-  AlertTriangle,
-  Loader2,
-  Upload,
-} from "lucide-react";
+import { Check, ChevronsUpDown, AlertTriangle, Loader2, Upload } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -45,11 +33,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { getCardLocalizedImageUri } from "#/backend/src/card-utils";
 import { useKeyPress } from "@/hooks/useKeyPress";
 import { Kbd } from "../ui/kbd";
@@ -91,8 +75,7 @@ interface BulkImportModalProps {
   onImported?: (newItems: InventoryDetailWithCardDetails[]) => void;
 }
 
-const sleep = (ms: number) =>
-  new Promise<void>((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export function BulkImportModal({ onImported }: BulkImportModalProps) {
   const [open, setOpen] = useState(false);
@@ -105,9 +88,7 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
   const [loading, setLoading] = useState(false);
   const [progressIndex, setProgressIndex] = useState(0);
   const [progressTotal, setProgressTotal] = useState(0);
-  const [importPhase, setImportPhase] = useState<"masters" | "details">(
-    "masters",
-  );
+  const [importPhase, setImportPhase] = useState<"masters" | "details">("masters");
 
   // Preview functionality
   const previewRef = useRef<HTMLDivElement>(null);
@@ -166,9 +147,7 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
       .split("\n")
       .map((l) => l.trim())
       .filter(Boolean);
-    const isArena = lines.some((l) =>
-      /^\d+\s+.+\s+\([A-Z0-9]+\)\s+\d+/.test(l),
-    );
+    const isArena = lines.some((l) => /^\d+\s+.+\s+\([A-Z0-9]+\)\s+\d+/.test(l));
     return lines.map((line) => {
       const m = isArena
         ? line.match(/^(\d+)\s+(.+?)\s+\(([A-Z0-9]+)\)\s+(\d+)$/)
@@ -181,30 +160,22 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
     });
   }, []);
 
-  const fetchPrintOptions = useCallback(
-    async (card: ParsedCard): Promise<ScryfallApiCard[]> => {
-      const q =
-        card.setCode && card.collectorNumber
-          ? `set:${card.setCode} number:${card.collectorNumber} !"//"`
-          : `!"${card.name}" unique:prints`;
-      const res = await fetch(
-        `/api/scryfall/cards/search?q=${encodeURIComponent(q)}`,
-      );
-      if (!res.ok) return [];
-      const body = (await res.json()) as {
-        object: string;
-        data: ScryfallApiCard[];
-      };
-      return body.object === "list" ? body.data : [];
-    },
-    [],
-  );
+  const fetchPrintOptions = useCallback(async (card: ParsedCard): Promise<ScryfallApiCard[]> => {
+    const q =
+      card.setCode && card.collectorNumber
+        ? `set:${card.setCode} number:${card.collectorNumber} !"//"`
+        : `!"${card.name}" unique:prints`;
+    const res = await fetch(`/api/scryfall/cards/search?q=${encodeURIComponent(q)}`);
+    if (!res.ok) return [];
+    const body = (await res.json()) as {
+      object: string;
+      data: ScryfallApiCard[];
+    };
+    return body.object === "list" ? body.data : [];
+  }, []);
 
   const validItems = useMemo(
-    () =>
-      parsedItems.filter(
-        (it) => !it.error && (format === "json" ? !!it.card : !!it.selected),
-      ),
+    () => parsedItems.filter((it) => !it.error && (format === "json" ? !!it.card : !!it.selected)),
     [parsedItems, format],
   );
 
@@ -238,18 +209,12 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
     let finalImgUri = imgUri;
     if (language && language !== "en" && card) {
       try {
-        const localizedUri = await getCardLocalizedImageUri(
-          card,
-          language as LanguageCode,
-        );
+        const localizedUri = await getCardLocalizedImageUri(card, language as LanguageCode);
         if (localizedUri) {
           finalImgUri = localizedUri;
         }
       } catch (error) {
-        console.warn(
-          `Failed to fetch localized image for ${cardName} in ${language}:`,
-          error,
-        );
+        console.warn(`Failed to fetch localized image for ${cardName} in ${language}:`, error);
       }
     }
 
@@ -535,11 +500,7 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
         open={open}
         onOpenChange={(next) => {
           if (loading && !next) {
-            if (
-              window.confirm(
-                "An import is in progress. Cancel and close the modal?",
-              )
-            ) {
+            if (window.confirm("An import is in progress. Cancel and close the modal?")) {
               abortControllerRef.current?.abort();
               setOpen(false);
             }
@@ -659,15 +620,12 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
                                 <div className="font-medium">
                                   {it.raw.quantity}×{" "}
                                   <span className="font-semibold">
-                                    {card?.name ??
-                                      it.raw.name ??
-                                      it.raw.scryfall_id}
+                                    {card?.name ?? it.raw.name ?? it.raw.scryfall_id}
                                   </span>
                                 </div>
                                 {card && (
                                   <div className="text-xs text-muted-foreground">
-                                    {card.set.toUpperCase()} #
-                                    {card.collector_number}
+                                    {card.set.toUpperCase()} #{card.collector_number}
                                   </div>
                                 )}
                               </div>
@@ -750,14 +708,11 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
                               >
                                 <div className="font-medium">
                                   {it.raw.quantity}×{" "}
-                                  <span className="font-semibold">
-                                    {it.raw.name}
-                                  </span>
+                                  <span className="font-semibold">{it.raw.name}</span>
                                 </div>
                                 {card && (
                                   <div className="text-xs text-muted-foreground">
-                                    {card.set.toUpperCase()} #
-                                    {card.collector_number}
+                                    {card.set.toUpperCase()} #{card.collector_number}
                                   </div>
                                 )}
                               </div>
@@ -785,34 +740,26 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
                                     <Command>
                                       <CommandInput placeholder="Search prints…" />
                                       <CommandList>
-                                        <CommandEmpty>
-                                          No prints found.
-                                        </CommandEmpty>
+                                        <CommandEmpty>No prints found.</CommandEmpty>
                                         <CommandGroup>
                                           {it.options?.map((opt) => (
                                             <CommandItem
                                               key={opt.id}
                                               value={opt.id}
-                                              onSelect={(v) =>
-                                                handleSelectPrint(i, v)
-                                              }
+                                              onSelect={(v) => handleSelectPrint(i, v)}
                                             >
                                               <Check
                                                 className={clsx(
                                                   "mr-2 h-4 w-4",
-                                                  card?.id === opt.id
-                                                    ? "opacity-100"
-                                                    : "opacity-0",
+                                                  card?.id === opt.id ? "opacity-100" : "opacity-0",
                                                 )}
                                               />
                                               <div className="flex flex-col">
                                                 <div>
-                                                  {opt.set.toUpperCase()} #
-                                                  {opt.collector_number}
+                                                  {opt.set.toUpperCase()} #{opt.collector_number}
                                                 </div>
                                                 <div className="text-xs text-muted-foreground">
-                                                  {opt.set_name} •{" "}
-                                                  {opt.released_at}
+                                                  {opt.set_name} • {opt.released_at}
                                                 </div>
                                               </div>
                                             </CommandItem>
@@ -843,11 +790,7 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
           <DialogFooter className="px-6 py-4 border-t flex-shrink-0">
             <div className="flex flex-col sm:flex-row gap-2 w-full sm:justify-end">
               {loading && (
-                <Button
-                  variant="destructive"
-                  onClick={handleCancel}
-                  className="w-full sm:w-auto"
-                >
+                <Button variant="destructive" onClick={handleCancel} className="w-full sm:w-auto">
                   Cancel Import
                 </Button>
               )}
@@ -872,9 +815,7 @@ export function BulkImportModal({ onImported }: BulkImportModalProps) {
               >
                 {loading
                   ? `${
-                      importPhase === "masters"
-                        ? "Adding card entries"
-                        : "Importing card details"
+                      importPhase === "masters" ? "Adding card entries" : "Importing card details"
                     } ${progressIndex}/${progressTotal}…`
                   : step === "input"
                     ? "Next"

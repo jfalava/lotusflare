@@ -65,9 +65,7 @@ export interface InventoryMetadataOptions {
   isEditMode?: boolean;
 }
 
-export function generateInventoryMetadata(
-  options: InventoryMetadataOptions,
-): Metadata {
+export function generateInventoryMetadata(options: InventoryMetadataOptions): Metadata {
   const { totalUnique, imageUrl, isEditMode = false } = options;
 
   const pageType = isEditMode ? "Edit Inventory" : "Inventory";
@@ -179,11 +177,8 @@ export interface SingleDeckMetadataOptions {
   description?: string;
 }
 
-export function generateSingleDeckMetadata(
-  options: SingleDeckMetadataOptions,
-): Metadata {
-  const { deckName, format, totalCards, commander, imageUrl, description } =
-    options;
+export function generateSingleDeckMetadata(options: SingleDeckMetadataOptions): Metadata {
+  const { deckName, format, totalCards, commander, imageUrl, description } = options;
 
   const title = `${deckName} | Lotusflare`;
   const desc =

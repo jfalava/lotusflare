@@ -42,9 +42,7 @@ export const InventoryPagination: React.FC<InventoryPaginationProps> = ({
       <Button
         variant="outline"
         size="sm"
-        onClick={() =>
-          handlePageChangeInternal(Math.min(totalPages, currentPage + 1))
-        }
+        onClick={() => handlePageChangeInternal(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
       >
         Next

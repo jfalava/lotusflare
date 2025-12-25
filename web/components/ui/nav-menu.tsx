@@ -61,11 +61,7 @@ function NavItem({ route }: { route: AppRoute }) {
 
   if (route.children && route.children.length > 0) {
     return (
-      <DropdownMenu
-        key={pathname}
-        open={isChildMenuOpen}
-        onOpenChange={setIsChildMenuOpen}
-      >
+      <DropdownMenu key={pathname} open={isChildMenuOpen} onOpenChange={setIsChildMenuOpen}>
         <DropdownMenuTrigger asChild>
           <button
             className={cn(
@@ -99,10 +95,7 @@ function NavItem({ route }: { route: AppRoute }) {
               <DropdownMenuItem
                 key={child.path}
                 asChild
-                className={cn(
-                  "w-full",
-                  isChildActive && "bg-accent text-accent-foreground",
-                )}
+                className={cn("w-full", isChildActive && "bg-accent text-accent-foreground")}
               >
                 <Link
                   href={child.path}

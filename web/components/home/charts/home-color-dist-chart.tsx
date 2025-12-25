@@ -1,13 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Cell,
-  Pie,
-  PieChart as RechartsPieChart,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
+import { Cell, Pie, PieChart as RechartsPieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { MTG_COLORS } from "../shared/home-constants";
 import { PieChartDataPoint, PieChartLabelProps } from "../shared/home-types";
@@ -23,8 +17,7 @@ const ColorDistributionChart = ({
   const total = data.reduce((sum, d) => sum + d.total_cards, 0);
   const chartData: PieChartDataPoint[] = data.map((d) => ({
     ...d,
-    percentage:
-      total > 0 ? Math.round((d.total_cards / total) * 100 * 10) / 10 : 0,
+    percentage: total > 0 ? Math.round((d.total_cards / total) * 100 * 10) / 10 : 0,
     fill: MTG_COLORS[d.color_group as keyof typeof MTG_COLORS] ?? "#8884d8",
   }));
 

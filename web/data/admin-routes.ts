@@ -1,12 +1,5 @@
 // data/admin-routes.ts
-import {
-  User,
-  Plus,
-  DraftingCompass,
-  BookMarked,
-  Package,
-  SquareLibrary,
-} from "lucide-react";
+import { User, Plus, DraftingCompass, BookMarked, Package, SquareLibrary } from "lucide-react";
 import type { AppRoute } from "@/components/ui/nav-menu";
 
 export const adminRoutes: AppRoute[] = [

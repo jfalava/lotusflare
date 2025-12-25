@@ -1,13 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState, useCallback } from "react";
-import {
-  Loader2,
-  ShieldCheck,
-  ShieldAlert,
-  ShieldQuestion,
-  Info,
-} from "lucide-react";
+import { Loader2, ShieldCheck, ShieldAlert, ShieldQuestion, Info } from "lucide-react";
 import {
   type LegalityCheckCardInfo,
   checkDeckSize,
@@ -108,18 +102,12 @@ export const DeckLegalityNotice: React.FC<DeckLegalityNoticeProps> = ({
             details?: string;
           };
           const apiErrorMessage =
-            errorData.message ||
-            errorData.details ||
-            `API Error: ${response.status}`;
-          currentIssues.push(
-            `Server could not verify card restrictions: ${apiErrorMessage}.`,
-          );
+            errorData.message || errorData.details || `API Error: ${response.status}`;
+          currentIssues.push(`Server could not verify card restrictions: ${apiErrorMessage}.`);
         }
       } catch (error) {
-        let msg =
-          "Network error: Failed to connect to server for legality check.";
-        if (error instanceof Error && error.message)
-          msg += ` (${error.message})`;
+        let msg = "Network error: Failed to connect to server for legality check.";
+        if (error instanceof Error && error.message) msg += ` (${error.message})`;
         else if (typeof error === "string" && error) msg += ` (${error})`;
         currentIssues.push(msg);
       }
@@ -171,8 +159,7 @@ export const DeckLegalityNotice: React.FC<DeckLegalityNoticeProps> = ({
     detailMessage = "This deck has one or more issues:";
   } else if (legality.status === "unknown") {
     titleMessage = `Legality for ${deckFormat}`;
-    detailMessage =
-      legality.issues[0] || "Add cards or save the deck to check legality.";
+    detailMessage = legality.issues[0] || "Add cards or save the deck to check legality.";
   }
 
   return (

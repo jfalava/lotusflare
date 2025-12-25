@@ -37,9 +37,7 @@ export function createPaginatedResponse<T>(
  * @param totalCount - Total count (usually 0 for empty responses)
  * @returns Empty paginated response
  */
-export function createEmptyPaginatedResponse<T>(
-  totalCount: number = 0,
-): PaginatedResponse<T> {
+export function createEmptyPaginatedResponse<T>(totalCount: number = 0): PaginatedResponse<T> {
   return {
     data: [],
     totalCount,
@@ -61,10 +59,7 @@ export interface SuccessResponse<T> {
  * @param message - Optional success message
  * @returns Success response object
  */
-export function createSuccessResponse<T>(
-  data: T,
-  message?: string,
-): SuccessResponse<T> {
+export function createSuccessResponse<T>(data: T, message?: string): SuccessResponse<T> {
   const response: SuccessResponse<T> = { data };
   if (message) {
     response.message = message;

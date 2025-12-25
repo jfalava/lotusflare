@@ -23,13 +23,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const deckImage = pickRepresentativeDeckImage(decks);
 
   // Calculate average cards per deck
-  const averageCards =
-    stats.totalDecks > 0 ? Math.round(stats.totalCards / stats.totalDecks) : 0;
+  const averageCards = stats.totalDecks > 0 ? Math.round(stats.totalCards / stats.totalDecks) : 0;
 
   // Get top format
   const topFormat =
-    Object.entries(stats.formatGroups).sort(([, a], [, b]) => b - a)[0]?.[0] ||
-    "unknown";
+    Object.entries(stats.formatGroups).sort(([, a], [, b]) => b - a)[0]?.[0] || "unknown";
 
   return generateDecksMetadata({
     totalDecks: stats.totalDecks,

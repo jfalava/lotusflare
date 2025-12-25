@@ -13,9 +13,7 @@ export function getIntId(c: Context, paramName: string = "id"): number {
   const id = parseInt(idStr, 10);
 
   if (isNaN(id) || id <= 0) {
-    throw new ValidationError(
-      `Invalid ${paramName}: must be a positive integer`,
-    );
+    throw new ValidationError(`Invalid ${paramName}: must be a positive integer`);
   }
 
   return id;

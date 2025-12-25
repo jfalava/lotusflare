@@ -11,11 +11,7 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { LanguageCode } from "#/backend/src/types";
 
 const languages: { value: LanguageCode; label: string; flag: string }[] = [
@@ -50,8 +46,7 @@ export function LanguageSelect({ value, onChange }: LanguageSelectProps) {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {languages.find((language) => language.value === value)?.label ??
-            "Select language..."}
+          {languages.find((language) => language.value === value)?.label ?? "Select language..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

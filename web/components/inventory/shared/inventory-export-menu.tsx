@@ -36,9 +36,7 @@ export const InventoryExportMenu: React.FC<InventoryExportMenuProps> = ({
   const exportJson = useCallback(
     (full: boolean) => {
       const masterItems = full ? inventory : currentListForTab;
-      const allDetails = masterItems.flatMap(
-        (masterItem) => masterItem.details,
-      );
+      const allDetails = masterItems.flatMap((masterItem) => masterItem.details);
 
       const data = allDetails.map((detail) => ({
         scryfall_id: detail.card.id,
@@ -73,9 +71,7 @@ export const InventoryExportMenu: React.FC<InventoryExportMenuProps> = ({
   const exportCsv = useCallback(
     (full: boolean) => {
       const masterItems = full ? inventory : currentListForTab;
-      const allDetails = masterItems.flatMap(
-        (masterItem) => masterItem.details,
-      );
+      const allDetails = masterItems.flatMap((masterItem) => masterItem.details);
 
       const headers = [
         "scryfall_id",
@@ -133,10 +129,7 @@ export const InventoryExportMenu: React.FC<InventoryExportMenuProps> = ({
           <Button
             size="sm"
             variant="outline"
-            className={clsx(
-              "flex items-center justify-center sm:justify-end",
-              className,
-            )}
+            className={clsx("flex items-center justify-center sm:justify-end", className)}
           >
             <Download className="h-4 w-4 sm:mr-2" />
             <span>Export inventory</span>

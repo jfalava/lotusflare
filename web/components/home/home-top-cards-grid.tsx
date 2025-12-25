@@ -10,9 +10,7 @@ import { DashboardAnalytics } from "./shared/home-types";
 
 // Top Cards Grid
 const TopCardsGrid = ({ cards }: { cards: DashboardAnalytics["topCards"] }) => {
-  const [selectedCard, setSelectedCard] = useState<ScryfallApiCard | null>(
-    null,
-  );
+  const [selectedCard, setSelectedCard] = useState<ScryfallApiCard | null>(null);
   const [loadingCardId, setLoadingCardId] = useState<string | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
@@ -80,9 +78,7 @@ const TopCardsGrid = ({ cards }: { cards: DashboardAnalytics["topCards"] }) => {
             <div
               key={`${card.scryfall_id}-${index}`}
               className="group relative aspect-[5/7] cursor-pointer rounded-lg overflow-hidden border-2 border-transparent hover:border-primary transition-all duration-200 bg-muted"
-              onClick={() =>
-                !isModalLoading && handleCardClick(card.scryfall_id)
-              }
+              onClick={() => !isModalLoading && handleCardClick(card.scryfall_id)}
             >
               {!isImageLoaded && imageUri && (
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -122,12 +118,8 @@ const TopCardsGrid = ({ cards }: { cards: DashboardAnalytics["topCards"] }) => {
                 )}
               >
                 <div className="absolute bottom-2 left-2 right-2">
-                  <p className="text-white text-xs font-medium truncate">
-                    {card.name}
-                  </p>
-                  <p className="text-white/80 text-xs">
-                    {card.total_copies}x copies
-                  </p>
+                  <p className="text-white text-xs font-medium truncate">{card.name}</p>
+                  <p className="text-white/80 text-xs">{card.total_copies}x copies</p>
                 </div>
               </div>
               <div className="absolute top-2 right-2">

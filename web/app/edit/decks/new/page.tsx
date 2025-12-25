@@ -41,9 +41,7 @@ function DeckEditorLoading() {
   return (
     <div className="container mx-auto py-12 px-4 text-center">
       <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
-      <p className="mt-4 text-lg text-muted-foreground">
-        Loading deck editor...
-      </p>
+      <p className="mt-4 text-lg text-muted-foreground">Loading deck editor...</p>
     </div>
   );
 }

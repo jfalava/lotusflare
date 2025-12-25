@@ -1,8 +1,4 @@
-import type {
-  InventoryDetailDbo,
-  CardDbo,
-  InventoryDetailWithCardDetails,
-} from "../types";
+import type { InventoryDetailDbo, CardDbo, InventoryDetailWithCardDetails } from "../types";
 import { mapDboToScryfallApiCard } from "../card-utils";
 import { intToBool } from "../helpers/db-helpers";
 

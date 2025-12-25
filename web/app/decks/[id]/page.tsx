@@ -57,13 +57,7 @@ function getRepresentativeCardImage(deck: DeckWithDetails): string | null {
           ? JSON.parse(commander.card.image_uris)
           : commander.card.image_uris;
       // prefer the illustration crop, then fallbacks
-      return (
-        imageUris.art_crop ||
-        imageUris.normal ||
-        imageUris.large ||
-        imageUris.small ||
-        null
-      );
+      return imageUris.art_crop || imageUris.normal || imageUris.large || imageUris.small || null;
     }
   }
 
@@ -78,32 +72,18 @@ function getRepresentativeCardImage(deck: DeckWithDetails): string | null {
         ? JSON.parse(highestCmcCard.card.image_uris)
         : highestCmcCard.card.image_uris;
     // prefer the illustration crop, then fallbacks
-    return (
-      imageUris.art_crop ||
-      imageUris.normal ||
-      imageUris.large ||
-      imageUris.small ||
-      null
-    );
+    return imageUris.art_crop || imageUris.normal || imageUris.large || imageUris.small || null;
   }
 
   // 3. Fallback: First card with image
-  const firstCardWithImage = mainboardCards.find(
-    (card) => card.card.image_uris,
-  );
+  const firstCardWithImage = mainboardCards.find((card) => card.card.image_uris);
   if (firstCardWithImage?.card.image_uris) {
     const imageUris =
       typeof firstCardWithImage.card.image_uris === "string"
         ? JSON.parse(firstCardWithImage.card.image_uris)
         : firstCardWithImage.card.image_uris;
     // prefer the illustration crop, then fallbacks
-    return (
-      imageUris.art_crop ||
-      imageUris.normal ||
-      imageUris.large ||
-      imageUris.small ||
-      null
-    );
+    return imageUris.art_crop || imageUris.normal || imageUris.large || imageUris.small || null;
   }
 
   return null;
@@ -130,12 +110,8 @@ export async function generateMetadata({
 
   const title = `${deck.name} (${deck.format}) | Lotusflare`;
   const description = deck.description
-    ? `${deck.description.substring(0, 150)}${
-        deck.description.length > 150 ? "..." : ""
-      }`
-    : `A ${deck.format} deck with ${stats.totalCards} cards. ${
-        stats.mainboardCards
-      } mainboard${
+    ? `${deck.description.substring(0, 150)}${deck.description.length > 150 ? "..." : ""}`
+    : `A ${deck.format} deck with ${stats.totalCards} cards. ${stats.mainboardCards} mainboard${
         stats.sideboardCards > 0 ? `, ${stats.sideboardCards} sideboard` : ""
       }${stats.commanders > 0 ? `, ${stats.commanders} commander(s)` : ""}.`;
 

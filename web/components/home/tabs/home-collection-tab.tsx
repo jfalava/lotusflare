@@ -15,8 +15,7 @@ interface CollectionTabProps {
 const CollectionTab = ({ analytics }: CollectionTabProps) => {
   const foilPercentage =
     analytics.totalStats.total_cards > 0
-      ? (analytics.totalStats.foil_cards / analytics.totalStats.total_cards) *
-        100
+      ? (analytics.totalStats.foil_cards / analytics.totalStats.total_cards) * 100
       : 0;
 
   return (
@@ -46,12 +45,9 @@ const CollectionTab = ({ analytics }: CollectionTabProps) => {
                   className="flex items-center justify-between py-2 border-b border-border/50"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm truncate">
-                      {set.set_name}
-                    </p>
+                    <p className="font-medium text-sm truncate">{set.set_name}</p>
                     <p className="text-xs text-muted-foreground">
-                      {set.unique_cards} unique • Released{" "}
-                      {new Date(set.released_at).getFullYear()}
+                      {set.unique_cards} unique • Released {new Date(set.released_at).getFullYear()}
                     </p>
                   </div>
                   <Badge variant="secondary">{set.total_cards}</Badge>
@@ -95,20 +91,15 @@ const CollectionTab = ({ analytics }: CollectionTabProps) => {
             <div className="text-center">
               <p className="text-3xl font-bold text-primary">
                 {analytics.totalStats.unique_cards > 0
-                  ? (
-                      analytics.totalStats.total_cards /
-                      analytics.totalStats.unique_cards
-                    ).toFixed(1)
+                  ? (analytics.totalStats.total_cards / analytics.totalStats.unique_cards).toFixed(
+                      1,
+                    )
                   : "0"}
               </p>
-              <p className="text-sm text-muted-foreground">
-                Avg copies per card
-              </p>
+              <p className="text-sm text-muted-foreground">Avg copies per card</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-primary">
-                {foilPercentage.toFixed(1)}%
-              </p>
+              <p className="text-3xl font-bold text-primary">{foilPercentage.toFixed(1)}%</p>
               <p className="text-sm text-muted-foreground">Foil percentage</p>
             </div>
           </div>

@@ -12,8 +12,7 @@ export function EditShortcut() {
   const nextPathRef = useRef<string | null>(null);
 
   const cleanPath = pathname.replace(/^\/edit/, "");
-  const canEdit =
-    cleanPath.startsWith("/inventory") || cleanPath.startsWith("/decks");
+  const canEdit = cleanPath.startsWith("/inventory") || cleanPath.startsWith("/decks");
   const isEditMode = pathname.startsWith("/edit");
 
   const performNavigation = useCallback(

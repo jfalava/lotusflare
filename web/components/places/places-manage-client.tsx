@@ -1,13 +1,7 @@
 // components/places/places-manage-client.tsx
 "use client";
 
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,16 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import {
-  Loader2,
-  PlusCircle,
-  Edit3,
-  Trash2,
-  Search,
-  ArchiveX,
-  MapPin,
-  X,
-} from "lucide-react";
+import { Loader2, PlusCircle, Edit3, Trash2, Search, ArchiveX, MapPin, X } from "lucide-react";
 import type {
   PlaceDbo,
   CreatePlacePayload,
@@ -76,9 +61,7 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
   onOpenChange,
   onPlaceSaved,
 }) => {
-  const [formData, setFormData] = useState<
-    CreatePlacePayload | UpdatePlacePayload
-  >(
+  const [formData, setFormData] = useState<CreatePlacePayload | UpdatePlacePayload>(
     mode === "edit" && initialData
       ? {
           name: initialData.name,
@@ -89,9 +72,7 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -106,9 +87,7 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
 
     const payload = {
       ...formData,
-      description: formData.description?.trim()
-        ? formData.description.trim()
-        : null,
+      description: formData.description?.trim() ? formData.description.trim() : null,
     };
 
     if (!payload.name?.trim()) {
@@ -118,8 +97,7 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
     }
 
     try {
-      const url =
-        mode === "edit" ? `/api/places/${initialData?.id}` : "/api/places";
+      const url = mode === "edit" ? `/api/places/${initialData?.id}` : "/api/places";
       const method = mode === "edit" ? "PUT" : "POST";
 
       const response = await fetch(url, {
@@ -131,9 +109,7 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         const errorMessage =
-          typeof errorData === "object" &&
-          errorData !== null &&
-          "message" in errorData
+          typeof errorData === "object" && errorData !== null && "message" in errorData
             ? String(errorData.message)
             : `Failed to ${mode === "add" ? "create" : "update"} place`;
         throw new Error(errorMessage);
@@ -146,9 +122,7 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
       onOpenChange(false);
     } catch (error) {
       console.error(`Error ${mode}ing place:`, error);
-      toast.error(
-        error instanceof Error ? error.message : "An unknown error occurred.",
-      );
+      toast.error(error instanceof Error ? error.message : "An unknown error occurred.");
     } finally {
       setIsSubmitting(false);
     }
@@ -158,20 +132,12 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>
-            {mode === "add" ? "Add New Place" : "Edit Place"}
-          </DialogTitle>
+          <DialogTitle>{mode === "add" ? "Add New Place" : "Edit Place"}</DialogTitle>
           {mode === "edit" && (
-            <DialogDescription>
-              Make changes to your storage place.
-            </DialogDescription>
+            <DialogDescription>Make changes to your storage place.</DialogDescription>
           )}
         </DialogHeader>
-        <form
-          onSubmit={handleSubmit}
-          id="place-form"
-          className="space-y-4 py-2"
-        >
+        <form onSubmit={handleSubmit} id="place-form" className="space-y-4 py-2">
           <div>
             <Label htmlFor="name" className="mb-2">
               Name
@@ -202,8 +168,7 @@ const PlaceFormModal: React.FC<PlaceFormModalProps> = ({
               <SelectContent>
                 {PLACE_TYPES_ARRAY.map((typeOpt) => (
                   <SelectItem key={typeOpt} value={typeOpt}>
-                    {typeOpt.charAt(0).toUpperCase() +
-                      typeOpt.slice(1).replace("_", " ")}
+                    {typeOpt.charAt(0).toUpperCase() + typeOpt.slice(1).replace("_", " ")}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -258,9 +223,7 @@ export default function PlacesManageClient({
 
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [formMode, setFormMode] = useState<"add" | "edit">("add");
-  const [editingPlace, setEditingPlace] = useState<PlaceDbo | undefined>(
-    undefined,
-  );
+  const [editingPlace, setEditingPlace] = useState<PlaceDbo | undefined>(undefined);
 
   const [placeToDelete, setPlaceToDelete] = useState<PlaceDbo | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -276,9 +239,7 @@ export default function PlacesManageClient({
         params.delete("search");
       }
 
-      const newURL = params.toString()
-        ? `?${params.toString()}`
-        : "/edit/places";
+      const newURL = params.toString() ? `?${params.toString()}` : "/edit/places";
       router.replace(newURL, { scroll: false });
     },
     [router, searchParams],
@@ -309,9 +270,7 @@ export default function PlacesManageClient({
 
   const handlePlaceSaved = (savedPlace: PlaceDbo) => {
     if (formMode === "add") {
-      setPlaces((prev) =>
-        [savedPlace, ...prev].sort((a, b) => a.name.localeCompare(b.name)),
-      );
+      setPlaces((prev) => [savedPlace, ...prev].sort((a, b) => a.name.localeCompare(b.name)));
     } else {
       setPlaces((prev) =>
         prev
@@ -335,9 +294,7 @@ export default function PlacesManageClient({
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
-          typeof errorData === "object" &&
-            errorData !== null &&
-            "message" in errorData
+          typeof errorData === "object" && errorData !== null && "message" in errorData
             ? String(errorData.message)
             : `Failed to delete: ${response.statusText}`,
         );
@@ -347,9 +304,7 @@ export default function PlacesManageClient({
       setPlaceToDelete(null);
     } catch (error) {
       console.error("Delete failed:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Failed to delete place.",
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to delete place.");
     } finally {
       setIsDeleting(false);
     }
@@ -376,9 +331,7 @@ export default function PlacesManageClient({
       <Card className="shadow-lg border-border/60">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <div>
-            <CardTitle className="text-2xl font-semibold">
-              Manage Storage Places
-            </CardTitle>
+            <CardTitle className="text-2xl font-semibold">Manage Storage Places</CardTitle>
             <p className="text-sm text-muted-foreground mt-1">
               Organize your card storage locations
             </p>
@@ -423,9 +376,7 @@ export default function PlacesManageClient({
               <>
                 {filteredPlaces.length} place
                 {filteredPlaces.length !== 1 ? "s" : ""} found
-                {filteredPlaces.length !== places.length && (
-                  <> out of {places.length} total</>
-                )}
+                {filteredPlaces.length !== places.length && <> out of {places.length} total</>}
               </>
             ) : (
               <>
@@ -470,8 +421,7 @@ export default function PlacesManageClient({
                     <p className="text-sm text-muted-foreground">
                       Type:{" "}
                       <span className="font-medium text-foreground">
-                        {place.type.charAt(0).toUpperCase() +
-                          place.type.slice(1).replace("_", " ")}
+                        {place.type.charAt(0).toUpperCase() + place.type.slice(1).replace("_", " ")}
                       </span>
                     </p>
                     {place.description && (
@@ -482,20 +432,12 @@ export default function PlacesManageClient({
                     <p className="text-xs text-muted-foreground mt-1">
                       Created: {new Date(place.created_at).toLocaleDateString()}
                       {place.updated_at !== place.created_at && (
-                        <>
-                          {" "}
-                          • Updated:{" "}
-                          {new Date(place.updated_at).toLocaleDateString()}
-                        </>
+                        <> • Updated: {new Date(place.updated_at).toLocaleDateString()}</>
                       )}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0 self-start sm:self-center">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleOpenEditModal(place)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => handleOpenEditModal(place)}>
                       <Edit3 className="mr-1.5 h-3.5 w-3.5" /> Edit
                     </Button>
                     <Button
@@ -526,32 +468,24 @@ export default function PlacesManageClient({
 
       {/* Delete Confirmation Dialog */}
       {placeToDelete && (
-        <AlertDialog
-          open={!!placeToDelete}
-          onOpenChange={() => setPlaceToDelete(null)}
-        >
+        <AlertDialog open={!!placeToDelete} onOpenChange={() => setPlaceToDelete(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
                 This action will permanently delete the place{" "}
-                <strong>"{placeToDelete.name}"</strong>. Any inventory items
-                assigned to this place will become "Unassigned". This cannot be
-                undone.
+                <strong>"{placeToDelete.name}"</strong>. Any inventory items assigned to this place
+                will become "Unassigned". This cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={isDeleting}>
-                Cancel
-              </AlertDialogCancel>
+              <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDeletePlace}
                 disabled={isDeleting}
                 className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
               >
-                {isDeleting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
+                {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Delete Place
               </AlertDialogAction>
             </AlertDialogFooter>

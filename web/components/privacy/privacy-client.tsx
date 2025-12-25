@@ -58,22 +58,19 @@ export default function PrivacyClient() {
                   <CardTitle>Data We Collect</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm text-slate-700 dark:text-slate-300">
-                  <p>
-                    We collect the minimum amount of data required to run the
-                    service:
-                  </p>
+                  <p>We collect the minimum amount of data required to run the service:</p>
                   <ul className="list-disc list-inside space-y-2">
                     <li>
-                      <strong>User Preferences:</strong> Theme, font, view mode,
-                      infinite-scroll toggle.
+                      <strong>User Preferences:</strong> Theme, font, view mode, infinite-scroll
+                      toggle.
                     </li>
                     <li>
-                      <strong>Basic Telemetry:</strong> Error traces and
-                      performance metrics via Cloudflare Workers.
+                      <strong>Basic Telemetry:</strong> Error traces and performance metrics via
+                      Cloudflare Workers.
                     </li>
                     <li>
-                      <strong>Session Data:</strong> Temporary identifiers for
-                      rate-limiting and abuse prevention.
+                      <strong>Session Data:</strong> Temporary identifiers for rate-limiting and
+                      abuse prevention.
                     </li>
                   </ul>
                 </CardContent>
@@ -153,9 +150,8 @@ export default function PrivacyClient() {
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm text-slate-700 dark:text-slate-300">
                   <p>
-                    Our edge workers log the following{" "}
-                    <strong>anonymized</strong> data for stability and
-                    performance insights:
+                    Our edge workers log the following <strong>anonymized</strong> data for
+                    stability and performance insights:
                   </p>
                   <ul className="list-disc list-inside space-y-2">
                     <li>HTTP status codes</li>
@@ -186,12 +182,9 @@ export default function PrivacyClient() {
             </CardHeader>
             <CardContent className="text-sm text-slate-700 dark:text-slate-300">
               <p>
-                You may revoke consent at any time by clearing cookies or using
-                the “Decline” button in the cookie banner. For questions, email{" "}
-                <a
-                  href="mailto:lotusflare@jfa.dev"
-                  className="font-medium underline"
-                >
+                You may revoke consent at any time by clearing cookies or using the “Decline” button
+                in the cookie banner. For questions, email{" "}
+                <a href="mailto:lotusflare@jfa.dev" className="font-medium underline">
                   lotusflare@jfa.dev
                 </a>
                 .
@@ -204,28 +197,16 @@ export default function PrivacyClient() {
   );
 }
 
-function CookieRow({
-  name,
-  purpose,
-  expiry,
-}: {
-  name: string;
-  purpose: string;
-  expiry: string;
-}) {
+function CookieRow({ name, purpose, expiry }: { name: string; purpose: string; expiry: string }) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 dark:border-slate-700 py-3 last:border-0">
       <div>
         <Badge variant="outline" className="font-mono text-xs">
           {name}
         </Badge>
-        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          {purpose}
-        </p>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{purpose}</p>
       </div>
-      <p className="mt-2 sm:mt-0 text-xs text-slate-500 dark:text-slate-400">
-        Expires: {expiry}
-      </p>
+      <p className="mt-2 sm:mt-0 text-xs text-slate-500 dark:text-slate-400">Expires: {expiry}</p>
     </div>
   );
 }

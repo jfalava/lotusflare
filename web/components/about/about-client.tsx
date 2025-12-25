@@ -42,8 +42,8 @@ export default function AboutClient() {
               Lotusflare
             </h1>
             <p className="mt-4 max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-300">
-              A single-seat, open-source MTG inventory and deckbuilding tool,
-              made for Cloudflare and its services.
+              A single-seat, open-source MTG inventory and deckbuilding tool, made for Cloudflare
+              and its services.
             </p>
           </motion.div>
         </motion.section>
@@ -60,28 +60,26 @@ export default function AboutClient() {
               <span className="flex items center">
                 <Info className="w-5 h-auto mr-2" />
                 <p>
-                  Lotusflare is a tool designed for Magic: The Gathering players
-                  who want to manage their card collection and build decks. It
-                  provides the following features:
+                  Lotusflare is a tool designed for Magic: The Gathering players who want to manage
+                  their card collection and build decks. It provides the following features:
                 </p>
               </span>
               <ul className="list-disc list-inside space-y-1">
                 <li>
-                  <strong>Inventory Management:</strong> Keep track of your
-                  entire card collection, including different printings,
-                  conditions, and foils.
+                  <strong>Inventory Management:</strong> Keep track of your entire card collection,
+                  including different printings, conditions, and foils.
                 </li>
                 <li>
-                  <strong>Deckbuilding:</strong> Create, edit, and manage your
-                  decks for various formats.
+                  <strong>Deckbuilding:</strong> Create, edit, and manage your decks for various
+                  formats.
                 </li>
                 <li>
-                  <strong>Card Search:</strong> A powerful search service to
-                  find any card: cardboard or digital.
+                  <strong>Card Search:</strong> A powerful search service to find any card:
+                  cardboard or digital.
                 </li>
                 <li>
-                  <strong>Statistics:</strong> Get insights into your collection
-                  and decks with detailed statistics.
+                  <strong>Statistics:</strong> Get insights into your collection and decks with
+                  detailed statistics.
                 </li>
               </ul>
             </CardContent>
@@ -95,9 +93,8 @@ export default function AboutClient() {
             </CardHeader>
             <CardContent className="text-sm text-slate-700 dark:text-slate-300">
               <p>
-                This project is licensed under the{" "}
-                <strong>GPL-2.0 license</strong>. The source code is available
-                on{" "}
+                This project is licensed under the <strong>GPL-2.0 license</strong>. The source code
+                is available on{" "}
                 <a
                   href="https://github.com/jfalava/lotusflare"
                   rel="noopener noreferrer"
@@ -119,8 +116,7 @@ export default function AboutClient() {
             </CardHeader>
             <CardContent>
               <p className="mb-4 text-sm text-slate-700 dark:text-slate-300">
-                This application is built with the help of these amazing
-                open-source projects:
+                This application is built with the help of these amazing open-source projects:
               </p>
               <Accordion type="single" collapsible className="w-full">
                 {sortedPackages.map((pkg) => (
@@ -132,9 +128,7 @@ export default function AboutClient() {
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="space-y-2">
-                      <p className="text-xs italic text-muted-foreground">
-                        {pkg.description}
-                      </p>
+                      <p className="text-xs italic text-muted-foreground">{pkg.description}</p>
                       <a
                         href={pkg.license_url}
                         target="_blank"

@@ -8,11 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { X, Upload, FileSearch2, Loader2, Info } from "lucide-react";
 import { SearchResultsPopover } from "@/components/search/search-results-popover";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import type { ScryfallApiCard } from "#/backend/src/types";
 import { Kbd } from "@/components/ui/kbd";
@@ -63,11 +59,7 @@ const AddCardsPanel: React.FC<AddCardsPanelProps> = ({
     "a",
     (e) => {
       const tgt = e.target as HTMLElement;
-      if (
-        tgt.tagName === "INPUT" ||
-        tgt.tagName === "TEXTAREA" ||
-        tgt.isContentEditable
-      ) {
+      if (tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA" || tgt.isContentEditable) {
         return;
       }
       e.preventDefault();
@@ -81,11 +73,7 @@ const AddCardsPanel: React.FC<AddCardsPanelProps> = ({
     "y",
     (e) => {
       const tgt = e.target as HTMLElement;
-      if (
-        tgt.tagName === "INPUT" ||
-        tgt.tagName === "TEXTAREA" ||
-        tgt.isContentEditable
-      ) {
+      if (tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA" || tgt.isContentEditable) {
         return;
       }
       e.preventDefault();
@@ -99,11 +87,7 @@ const AddCardsPanel: React.FC<AddCardsPanelProps> = ({
     "m",
     (e) => {
       const tgt = e.target as HTMLElement;
-      if (
-        tgt.tagName === "INPUT" ||
-        tgt.tagName === "TEXTAREA" ||
-        tgt.isContentEditable
-      ) {
+      if (tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA" || tgt.isContentEditable) {
         return;
       }
       e.preventDefault();
@@ -117,11 +101,7 @@ const AddCardsPanel: React.FC<AddCardsPanelProps> = ({
     "f",
     (e) => {
       const tgt = e.target as HTMLElement;
-      if (
-        tgt.tagName === "INPUT" ||
-        tgt.tagName === "TEXTAREA" ||
-        tgt.isContentEditable
-      ) {
+      if (tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA" || tgt.isContentEditable) {
         return;
       }
       e.preventDefault();
@@ -165,12 +145,7 @@ const AddCardsPanel: React.FC<AddCardsPanelProps> = ({
             </Button>
           </Link>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onBulkImportClick}
-          className="gap-2"
-        >
+        <Button variant="outline" size="sm" onClick={onBulkImportClick} className="gap-2">
           <Upload className="h-4 w-4" /> Bulk Import
           <div className="hidden items-center gap-1 lg:flex ml-2">
             <Kbd>Alt</Kbd>
@@ -180,11 +155,7 @@ const AddCardsPanel: React.FC<AddCardsPanelProps> = ({
       </div>
 
       <div
-        className={clsx(
-          "flex flex-col md:flex-row",
-          "items-start md:items-center",
-          "gap-4 mb-3",
-        )}
+        className={clsx("flex flex-col md:flex-row", "items-start md:items-center", "gap-4 mb-3")}
       >
         <div className="relative flex-grow w-full">
           <Input
@@ -238,11 +209,7 @@ const AddCardsPanel: React.FC<AddCardsPanelProps> = ({
 
         <div className="flex items-center gap-6 whitespace-nowrap">
           <div className="flex items-center gap-2">
-            <Switch
-              id="brew-mode"
-              checked={brewMode}
-              onCheckedChange={onBrewModeChange}
-            />
+            <Switch id="brew-mode" checked={brewMode} onCheckedChange={onBrewModeChange} />
             <Label
               htmlFor="brew-mode"
               className="cursor-pointer select-none flex items-center gap-2"
@@ -259,8 +226,8 @@ const AddCardsPanel: React.FC<AddCardsPanelProps> = ({
               </TooltipTrigger>
               <TooltipContent side="right">
                 <p>
-                  "Brew Mode" will skip the card print selection and add the
-                  latest print available instead.
+                  "Brew Mode" will skip the card print selection and add the latest print available
+                  instead.
                 </p>
                 <p>The card name must be the canonical english name.</p>
                 <p>Upon adding a card, the search bar will be focused again.</p>
@@ -275,13 +242,8 @@ const AddCardsPanel: React.FC<AddCardsPanelProps> = ({
                 checked={sendToMayeboardInBrew}
                 onCheckedChange={onSendToMayeboardInBrewChange}
               />
-              <Label
-                htmlFor="send-to-maybeboard"
-                className="cursor-pointer select-none"
-              >
-                <span className="max-md:hidden">
-                  Add directly to Maybeboard
-                </span>
+              <Label htmlFor="send-to-maybeboard" className="cursor-pointer select-none">
+                <span className="max-md:hidden">Add directly to Maybeboard</span>
                 <span className="md:hidden">To Maybeboard</span>
               </Label>
             </div>

@@ -16,10 +16,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import type { InventoryColorGroup } from "@/utils/inventory-color-group";
 import { InventoryTabsHeader } from "@/components/inventory/shared/inventory-tabs-header";
 import { COLOR_TABS } from "@/components/inventory/shared/inventory-constants";
-import type {
-  TabDisplayInfo,
-  TabKey,
-} from "@/components/inventory/shared/inventory-types";
+import type { TabDisplayInfo, TabKey } from "@/components/inventory/shared/inventory-types";
 import { MasterInventoryGridItem } from "./inventory-grid-item";
 import { InventoryViewControls } from "@/components/inventory/shared/inventory-view-controls";
 import { MasterInventoryListItem } from "./inventory-list-item";
@@ -48,11 +45,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { Kbd } from "../ui/kbd";
 import { INVENTORY_PAGE_SIZE } from "@/lib/constants";
-import {
-  fetchInventoryMeta,
-  fetchInventoryCounts,
-  deleteInventoryDetail,
-} from "@/lib/api-server";
+import { fetchInventoryMeta, fetchInventoryCounts, deleteInventoryDetail } from "@/lib/api-server";
 
 const PAGE_SIZE = INVENTORY_PAGE_SIZE;
 const INTERACTIVE_SELECTOR =
@@ -76,18 +69,10 @@ function getCardColorGroup(card: ScryfallApiCard): InventoryColorGroup {
   let cardTypeLine = card.type_line;
 
   // For double-faced cards, use the front face's information
-  if (
-    !cardColors &&
-    Array.isArray(card.card_faces) &&
-    card.card_faces.length > 0
-  ) {
+  if (!cardColors && Array.isArray(card.card_faces) && card.card_faces.length > 0) {
     cardColors = card.card_faces[0].colors;
   }
-  if (
-    !cardTypeLine &&
-    Array.isArray(card.card_faces) &&
-    card.card_faces.length > 0
-  ) {
+  if (!cardTypeLine && Array.isArray(card.card_faces) && card.card_faces.length > 0) {
     cardTypeLine = card.card_faces[0].type_line;
   }
 
@@ -135,9 +120,9 @@ export default function NewInventoryClient({
   initialInventory,
   initialPlaces,
 }: NewInventoryClientProps) {
-  const [masterInventory, setMasterInventory] = useState<
-    MasterInventoryWithDetails[]
-  >(initialInventory.data);
+  const [masterInventory, setMasterInventory] = useState<MasterInventoryWithDetails[]>(
+    initialInventory.data,
+  );
   const [places] = useState<PlaceDbo[]>(initialPlaces);
   const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("White");
@@ -183,12 +168,7 @@ export default function NewInventoryClient({
   }, []);
 
   const fetchMasterInventory = useCallback(
-    async (
-      pageToFetch = 1,
-      append = false,
-      searchTerm = "",
-      colorGroup = "",
-    ) => {
+    async (pageToFetch = 1, append = false, searchTerm = "", colorGroup = "") => {
       const isSearch = !!searchTerm;
 
       if (isSearch) {
@@ -208,19 +188,14 @@ export default function NewInventoryClient({
         setTotalCount(invData.totalCount);
         setHasMore(invData.hasMore);
 
-        const targetStateUpdater = isSearch
-          ? setFilteredMasterInventory
-          : setMasterInventory;
+        const targetStateUpdater = isSearch ? setFilteredMasterInventory : setMasterInventory;
 
         if (append) {
           targetStateUpdater((prev: MasterInventoryWithDetails[] | null) => {
             const prevItems = prev || [];
             const newOnes = invData.data.filter(
               (n) =>
-                !prevItems.some(
-                  (p: MasterInventoryWithDetails) =>
-                    p.oracle_id === n.oracle_id,
-                ),
+                !prevItems.some((p: MasterInventoryWithDetails) => p.oracle_id === n.oracle_id),
             );
             return [...prevItems, ...newOnes];
           });
@@ -253,20 +228,11 @@ export default function NewInventoryClient({
       isSearch ? activeSearchTerm : "",
       isSearch ? "" : activeTab,
     );
-  }, [
-    currentPage,
-    infiniteScroll,
-    activeSearchTerm,
-    activeTab,
-    fetchMasterInventory,
-  ]);
+  }, [currentPage, infiniteScroll, activeSearchTerm, activeTab, fetchMasterInventory]);
 
   const groupedInventory = useMemo(() => {
     const data = filteredMasterInventory ?? masterInventory;
-    const out: Record<
-      InventoryColorGroup | "search",
-      MasterInventoryWithDetails[]
-    > = {
+    const out: Record<InventoryColorGroup | "search", MasterInventoryWithDetails[]> = {
       White: [],
       Blue: [],
       Black: [],
@@ -387,18 +353,12 @@ export default function NewInventoryClient({
     let finalImgUri = imgUri;
     if (language && language !== "en" && card) {
       try {
-        const localizedUri = await getCardLocalizedImageUri(
-          card,
-          language as LanguageCode,
-        );
+        const localizedUri = await getCardLocalizedImageUri(card, language as LanguageCode);
         if (localizedUri) {
           finalImgUri = localizedUri;
         }
       } catch (error) {
-        console.warn(
-          `Failed to fetch localized image for ${cardName} in ${language}:`,
-          error,
-        );
+        console.warn(`Failed to fetch localized image for ${cardName} in ${language}:`, error);
       }
     }
 
@@ -508,9 +468,7 @@ export default function NewInventoryClient({
     setExpandedItems(new Set());
   };
 
-  const handleBulkItemsAdded = async (
-    newItems: InventoryDetailWithCardDetails[],
-  ) => {
+  const handleBulkItemsAdded = async (newItems: InventoryDetailWithCardDetails[]) => {
     const newCounts = await fetchInventoryCounts();
     setTabCounts(newCounts);
     const newMap = new Map<string, MasterInventoryWithDetails>();
@@ -529,9 +487,7 @@ export default function NewInventoryClient({
     });
     setMasterInventory((prev) => {
       const seen = new Set(prev.map((m) => m.oracle_id));
-      const toPrepend = Array.from(newMap.values()).filter(
-        (m) => !seen.has(m.oracle_id),
-      );
+      const toPrepend = Array.from(newMap.values()).filter((m) => !seen.has(m.oracle_id));
       return [...toPrepend, ...prev];
     });
     setFilteredMasterInventory(null);
@@ -546,8 +502,7 @@ export default function NewInventoryClient({
   const handleCardAdded = useCallback(
     async (detail: InventoryDetailWithCardDetails) => {
       const cardColorGroup = getCardColorGroup(detail.card);
-      const isCurrentTab =
-        activeTab === "search" ? true : activeTab === cardColorGroup;
+      const isCurrentTab = activeTab === "search" ? true : activeTab === cardColorGroup;
 
       // Update tab counts
       const newCounts = await fetchInventoryCounts();
@@ -577,17 +532,9 @@ export default function NewInventoryClient({
         isSearch ? "" : activeTab,
       );
 
-      toast.success(
-        `Added ${detail.card.name} (${detail.card.set_name}) to inventory.`,
-      );
+      toast.success(`Added ${detail.card.name} (${detail.card.set_name}) to inventory.`);
     },
-    [
-      activeTab,
-      activeSearchTerm,
-      currentPage,
-      fetchMasterInventory,
-      setActiveTab,
-    ],
+    [activeTab, activeSearchTerm, currentPage, fetchMasterInventory, setActiveTab],
   );
 
   const handleDetailUpdate = useCallback(
@@ -649,14 +596,7 @@ export default function NewInventoryClient({
         console.error("Error deleting inventory detail:", error);
       }
     },
-    [
-      activeTab,
-      activeSearchTerm,
-      currentPage,
-      fetchMasterInventory,
-      infiniteScroll,
-      totalCount,
-    ],
+    [activeTab, activeSearchTerm, currentPage, fetchMasterInventory, infiniteScroll, totalCount],
   );
 
   if (isInitialLoading) {
@@ -738,23 +678,14 @@ export default function NewInventoryClient({
             isSearching={isInventorySearching}
           />
 
-          <Tabs
-            value={activeTab}
-            onValueChange={handleTabChange}
-            className="w-full"
-          >
-            <InventoryTabsHeader
-              tabsToDisplay={tabsToDisplay}
-              activeTab={activeTab}
-            />
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+            <InventoryTabsHeader tabsToDisplay={tabsToDisplay} activeTab={activeTab} />
 
             {tabsToDisplay.map((tab) => (
               <TabsContent key={tab.key} value={tab.key}>
                 {viewMode === "grid" ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {groupedInventory[
-                      tab.key as keyof typeof groupedInventory
-                    ].map((item) => (
+                    {groupedInventory[tab.key as keyof typeof groupedInventory].map((item) => (
                       <MasterInventoryGridItem
                         key={item.oracle_id}
                         item={item}
@@ -788,9 +719,7 @@ export default function NewInventoryClient({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border">
-                        {groupedInventory[
-                          tab.key as keyof typeof groupedInventory
-                        ].map((item) => (
+                        {groupedInventory[tab.key as keyof typeof groupedInventory].map((item) => (
                           <MasterInventoryListItem
                             key={item.oracle_id}
                             onAddCopy={(card) => setCardToAdd(card)}
@@ -827,9 +756,7 @@ export default function NewInventoryClient({
               <Pagination aria-label="Pagination">
                 <PaginationPrevious
                   aria-disabled={currentPage === 1}
-                  onClick={() =>
-                    currentPage > 1 && handlePageChange(currentPage - 1)
-                  }
+                  onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
                 />
                 <PaginationContent>
                   {paginationRange.map((page, idx) => (
@@ -853,10 +780,7 @@ export default function NewInventoryClient({
                 </PaginationContent>
                 <PaginationNext
                   aria-disabled={currentPage === totalPages}
-                  onClick={() =>
-                    currentPage < totalPages &&
-                    handlePageChange(currentPage + 1)
-                  }
+                  onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
                 />
               </Pagination>
             </div>

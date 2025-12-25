@@ -15,10 +15,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import type { InventoryColorGroup } from "@/utils/inventory-color-group";
 import { InventoryTabsHeader } from "@/components/inventory/shared/inventory-tabs-header";
 import { COLOR_TABS } from "@/components/inventory/shared/inventory-constants";
-import type {
-  TabDisplayInfo,
-  TabKey,
-} from "@/components/inventory/shared/inventory-types";
+import type { TabDisplayInfo, TabKey } from "@/components/inventory/shared/inventory-types";
 import { ReadOnlyMasterInventoryGridItem } from "./read-only-inventory-grid-item";
 import { InventoryViewControls } from "@/components/inventory/shared/inventory-view-controls";
 import { ReadOnlyMasterInventoryListItem } from "./read-only-inventory-list-item";
@@ -65,9 +62,9 @@ export default function ReadOnlyInventoryClient({
   initialInventory,
   initialPlaces,
 }: ReadOnlyInventoryClientProps) {
-  const [masterInventory, setMasterInventory] = useState<
-    MasterInventoryWithDetails[]
-  >(initialInventory.data);
+  const [masterInventory, setMasterInventory] = useState<MasterInventoryWithDetails[]>(
+    initialInventory.data,
+  );
   const [places] = useState<PlaceDbo[]>(initialPlaces);
   const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("White");
@@ -112,12 +109,7 @@ export default function ReadOnlyInventoryClient({
   }, []);
 
   const fetchMasterInventory = useCallback(
-    async (
-      pageToFetch = 1,
-      append = false,
-      searchTerm = "",
-      colorGroup = "",
-    ) => {
+    async (pageToFetch = 1, append = false, searchTerm = "", colorGroup = "") => {
       const isSearch = !!searchTerm;
 
       if (isSearch) {
@@ -137,19 +129,14 @@ export default function ReadOnlyInventoryClient({
         setTotalCount(invData.totalCount);
         setHasMore(invData.hasMore);
 
-        const targetStateUpdater = isSearch
-          ? setFilteredMasterInventory
-          : setMasterInventory;
+        const targetStateUpdater = isSearch ? setFilteredMasterInventory : setMasterInventory;
 
         if (append) {
           targetStateUpdater((prev: MasterInventoryWithDetails[] | null) => {
             const prevItems = prev || [];
             const newOnes = invData.data.filter(
               (n) =>
-                !prevItems.some(
-                  (p: MasterInventoryWithDetails) =>
-                    p.oracle_id === n.oracle_id,
-                ),
+                !prevItems.some((p: MasterInventoryWithDetails) => p.oracle_id === n.oracle_id),
             );
             return [...prevItems, ...newOnes];
           });
@@ -182,20 +169,11 @@ export default function ReadOnlyInventoryClient({
       isSearch ? activeSearchTerm : "",
       isSearch ? "" : activeTab,
     );
-  }, [
-    currentPage,
-    infiniteScroll,
-    activeSearchTerm,
-    activeTab,
-    fetchMasterInventory,
-  ]);
+  }, [currentPage, infiniteScroll, activeSearchTerm, activeTab, fetchMasterInventory]);
 
   const groupedInventory = useMemo(() => {
     const data = filteredMasterInventory ?? masterInventory;
-    const out: Record<
-      InventoryColorGroup | "search",
-      MasterInventoryWithDetails[]
-    > = {
+    const out: Record<InventoryColorGroup | "search", MasterInventoryWithDetails[]> = {
       White: [],
       Blue: [],
       Black: [],
@@ -316,18 +294,12 @@ export default function ReadOnlyInventoryClient({
     let finalImgUri = imgUri;
     if (language && language !== "en" && card) {
       try {
-        const localizedUri = await getCardLocalizedImageUri(
-          card,
-          language as LanguageCode,
-        );
+        const localizedUri = await getCardLocalizedImageUri(card, language as LanguageCode);
         if (localizedUri) {
           finalImgUri = localizedUri;
         }
       } catch (error) {
-        console.warn(
-          `Failed to fetch localized image for ${cardName} in ${language}:`,
-          error,
-        );
+        console.warn(`Failed to fetch localized image for ${cardName} in ${language}:`, error);
       }
     }
 
@@ -476,23 +448,14 @@ export default function ReadOnlyInventoryClient({
             isSearching={isInventorySearching}
           />
 
-          <Tabs
-            value={activeTab}
-            onValueChange={handleTabChange}
-            className="w-full"
-          >
-            <InventoryTabsHeader
-              tabsToDisplay={tabsToDisplay}
-              activeTab={activeTab}
-            />
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+            <InventoryTabsHeader tabsToDisplay={tabsToDisplay} activeTab={activeTab} />
 
             {tabsToDisplay.map((tab) => (
               <TabsContent key={tab.key} value={tab.key}>
                 {viewMode === "grid" ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {groupedInventory[
-                      tab.key as keyof typeof groupedInventory
-                    ].map((item) => (
+                    {groupedInventory[tab.key as keyof typeof groupedInventory].map((item) => (
                       <ReadOnlyMasterInventoryGridItem
                         key={item.oracle_id}
                         item={item}
@@ -522,9 +485,7 @@ export default function ReadOnlyInventoryClient({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border">
-                        {groupedInventory[
-                          tab.key as keyof typeof groupedInventory
-                        ].map((item) => (
+                        {groupedInventory[tab.key as keyof typeof groupedInventory].map((item) => (
                           <ReadOnlyMasterInventoryListItem
                             key={item.oracle_id}
                             item={item}
@@ -557,9 +518,7 @@ export default function ReadOnlyInventoryClient({
               <Pagination aria-label="Pagination">
                 <PaginationPrevious
                   aria-disabled={currentPage === 1}
-                  onClick={() =>
-                    currentPage > 1 && handlePageChange(currentPage - 1)
-                  }
+                  onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
                 />
                 <PaginationContent>
                   {paginationRange.map((page, idx) => (
@@ -583,10 +542,7 @@ export default function ReadOnlyInventoryClient({
                 </PaginationContent>
                 <PaginationNext
                   aria-disabled={currentPage === totalPages}
-                  onClick={() =>
-                    currentPage < totalPages &&
-                    handlePageChange(currentPage + 1)
-                  }
+                  onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
                 />
               </Pagination>
             </div>

@@ -11,10 +11,7 @@ interface CommanderSectionProps {
   onCardClick: (c: DeckCardWithDetails) => void;
 }
 
-export const CommanderSection: React.FC<CommanderSectionProps> = ({
-  commanders,
-  onCardClick,
-}) => {
+export const CommanderSection: React.FC<CommanderSectionProps> = ({ commanders, onCardClick }) => {
   if (commanders.length === 0) return null;
 
   return (
@@ -32,9 +29,7 @@ export const CommanderSection: React.FC<CommanderSectionProps> = ({
             className="block group cursor-pointer"
           >
             <CardImage
-              src={
-                item.card.image_uris?.art_crop ?? item.card.image_uris?.normal
-              }
+              src={item.card.image_uris?.art_crop ?? item.card.image_uris?.normal}
               alt={item.card.name}
               className="rounded-xl shadow-lg hover:scale-105 transition-transform duration-200 border-2 border-transparent group-hover:border-primary"
               isCommander

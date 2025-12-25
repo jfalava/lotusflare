@@ -5,12 +5,9 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { COOKIE_CONSENT_KEY } from "@/lib/cookies-with-consent";
 
-const CookieConsent = dynamic(
-  () => import("@/components/blocks/cookie-consent"),
-  {
-    ssr: false,
-  },
-);
+const CookieConsent = dynamic(() => import("@/components/blocks/cookie-consent"), {
+  ssr: false,
+});
 
 export function CookieConsentWrapper() {
   const [showConsent, setShowConsent] = useState(false);

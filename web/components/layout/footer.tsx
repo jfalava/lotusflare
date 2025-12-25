@@ -36,9 +36,7 @@ function Footer() {
           <span className="hidden md:flex items-center font-sans font-semibold text-xs gap-x-1 mb-1">
             an MTG inventory and deckbuilding tool
           </span>
-          <span className="flex items-center font-sans font-bold text-xs gap-x-1 mb-1">
-            by JFA
-          </span>
+          <span className="flex items-center font-sans font-bold text-xs gap-x-1 mb-1">by JFA</span>
           <div className="flex items-center font-mono text-xs gap-x-1">
             <span>v{VERSION}</span>
             <span>❖</span>
@@ -48,9 +46,7 @@ function Footer() {
         <div className="grid gap-y-2 text-xs">
           {navItems.map(({ href, label, Icon }) => (
             <Link key={label} href={href}>
-              <span
-                className={clsx("flex items-center gap-x-1 hover:underline")}
-              >
+              <span className={clsx("flex items-center gap-x-1 hover:underline")}>
                 <Icon className="w-4 h-4" aria-hidden />
                 {label}
               </span>

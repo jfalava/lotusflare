@@ -13,8 +13,7 @@ export const packages = [
   {
     name: "@hookform/resolvers",
     license: "MIT",
-    license_url:
-      "https://github.com/react-hook-form/resolvers/blob/master/LICENSE",
+    license_url: "https://github.com/react-hook-form/resolvers/blob/master/LICENSE",
     description:
       'Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction...',
   },
@@ -98,16 +97,14 @@ export const packages = [
   {
     name: "next-themes",
     license: "MIT",
-    license_url:
-      "https://github.com/pacocoursey/next-themes/blob/main/LICENSE.md",
+    license_url: "https://github.com/pacocoursey/next-themes/blob/main/LICENSE.md",
     description:
       'The MIT License (MIT) Copyright (c) 2020 Paco Coursey Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction...',
   },
   {
     name: "nextjs-toploader",
     license: "MIT",
-    license_url:
-      "https://github.com/TheRealStoplight/nextjs-toploader/blob/master/LICENSE",
+    license_url: "https://github.com/TheRealStoplight/nextjs-toploader/blob/master/LICENSE",
     description:
       'MIT License Copyright (c) 2023 TheRealStoplight Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction...',
   },
@@ -135,16 +132,14 @@ export const packages = [
   {
     name: "react-dnd-html5-backend",
     license: "MIT",
-    license_url:
-      "https://github.com/react-dnd/react-dnd/blob/main/packages/backend-html5/LICENSE",
+    license_url: "https://github.com/react-dnd/react-dnd/blob/main/packages/backend-html5/LICENSE",
     description:
       'The MIT License (MIT) Copyright (c) 2015-2021 Dan Abramov Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction...',
   },
   {
     name: "react-hook-form",
     license: "MIT",
-    license_url:
-      "https://github.com/react-hook-form/react-hook-form/blob/master/LICENSE",
+    license_url: "https://github.com/react-hook-form/react-hook-form/blob/master/LICENSE",
     description:
       'MIT License Copyright (c) 2019-present Beier (Bill) Luo Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction...',
   },

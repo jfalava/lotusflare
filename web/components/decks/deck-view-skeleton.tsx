@@ -20,11 +20,7 @@ const CardTypeGroupSkeleton = ({ cardCount }: { cardCount: number }) => (
 
 import type { ViewMode } from "@/components/context/view-mode-context";
 
-export function DeckViewSkeleton({
-  viewMode = "grid" as ViewMode,
-}: {
-  viewMode?: ViewMode;
-}) {
+export function DeckViewSkeleton({ viewMode = "grid" as ViewMode }: { viewMode?: ViewMode }) {
   return (
     <div className="container mx-auto max-w-6xl animate-pulse py-8 px-4">
       {/* Back Button */}
@@ -101,10 +97,7 @@ export function DeckViewSkeleton({
                     <Skeleton className="mb-2 h-4 w-40" />
                     <div className="space-y-1">
                       {Array.from({ length: 6 }).map((__, j) => (
-                        <div
-                          key={j}
-                          className="flex items-center justify-between py-1"
-                        >
+                        <div key={j} className="flex items-center justify-between py-1">
                           <Skeleton className="h-4 w-48" />
                           <Skeleton className="h-4 w-16" />
                         </div>
@@ -125,10 +118,7 @@ export function DeckViewSkeleton({
                     <Skeleton className="mb-2 h-4 w-40" />
                     <div className="space-y-1">
                       {Array.from({ length: 4 }).map((__, j) => (
-                        <div
-                          key={j}
-                          className="flex items-center justify-between py-1"
-                        >
+                        <div key={j} className="flex items-center justify-between py-1">
                           <Skeleton className="h-4 w-48" />
                           <Skeleton className="h-4 w-16" />
                         </div>

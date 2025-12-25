@@ -74,11 +74,7 @@ export const CardImage = ({
 
   return (
     <div
-      className={cn(
-        "relative aspect-[63/88] w-full",
-        isCommander && "aspect-[744/538]",
-        className,
-      )}
+      className={cn("relative aspect-[63/88] w-full", isCommander && "aspect-[744/538]", className)}
       draggable={draggable}
       onDragStart={draggable ? handleDragStart : undefined}
     >

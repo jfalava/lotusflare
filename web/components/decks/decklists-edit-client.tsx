@@ -1,13 +1,7 @@
 // components/decks/decklists-edit-client.tsx
 "use client";
 
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  startTransition,
-  useMemo,
-} from "react";
+import React, { useState, useRef, useEffect, startTransition, useMemo } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useTopLoader } from "nextjs-toploader";
 import { useKeyPress } from "@/hooks/useKeyPress";
@@ -21,13 +15,7 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,20 +30,11 @@ import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Separator } from "@/components/ui/separator";
 import { ManaCost } from "@/components/ui/mana-cost";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { CardImage } from "@/components/ui/card-image";
 import { Loader2, PlusCircle, Edit3, Trash2, ListChecks } from "lucide-react";
 import { toast } from "sonner";
-import type {
-  DeckWithDetails,
-  DeckCardWithDetails,
-  ScryfallApiCard,
-} from "#/backend/src/types";
+import type { DeckWithDetails, DeckCardWithDetails, ScryfallApiCard } from "#/backend/src/types";
 import { CardDetailModal } from "@/components/card/card-detail-modal";
 import { Kbd } from "@/components/ui/kbd";
 import { getPrimaryCardType } from "@/utils/card-utils";
@@ -89,10 +68,7 @@ interface DeckCardDisplayItemProps {
   onCardClick: (card: ScryfallApiCard) => void;
 }
 
-const DeckCardDisplayItem: React.FC<DeckCardDisplayItemProps> = ({
-  cardItem,
-  onCardClick,
-}) => {
+const DeckCardDisplayItem: React.FC<DeckCardDisplayItemProps> = ({ cardItem, onCardClick }) => {
   const imgUri = getCardImageUri(cardItem.card);
 
   return (
@@ -113,22 +89,13 @@ const DeckCardDisplayItem: React.FC<DeckCardDisplayItemProps> = ({
               {cardItem.quantity}x {cardItem.card.name}
             </span>
             {cardItem.card.mana_cost && (
-              <ManaCost
-                manaCost={cardItem.card.mana_cost}
-                size="xs"
-                asImage={true}
-              />
+              <ManaCost manaCost={cardItem.card.mana_cost} size="xs" asImage={true} />
             )}
           </div>
         </TooltipTrigger>
 
         {imgUri && (
-          <TooltipContent
-            side="right"
-            align="start"
-            sideOffset={8}
-            className="p-0"
-          >
+          <TooltipContent side="right" align="start" sideOffset={8} className="p-0">
             <CardImage
               src={imgUri}
               alt={cardItem.card.name}
@@ -145,18 +112,13 @@ interface BrowseDecksClientProps {
   initialDecks: DeckWithDetails[];
 }
 
-export default function BrowseDecksClient({
-  initialDecks,
-}: BrowseDecksClientProps) {
+export default function BrowseDecksClient({ initialDecks }: BrowseDecksClientProps) {
   const [decks, setDecks] = useState<DeckWithDetails[]>(
     initialDecks.sort(
-      (a, b) =>
-        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+      (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
     ),
   );
-  const [deckToDelete, setDeckToDelete] = useState<DeckWithDetails | null>(
-    null,
-  );
+  const [deckToDelete, setDeckToDelete] = useState<DeckWithDetails | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedCardForDetailModal, setSelectedCardForDetailModal] =
     useState<ScryfallApiCard | null>(null);
@@ -167,9 +129,7 @@ export default function BrowseDecksClient({
 
   const filteredDecks = useMemo(() => {
     if (!searchQuery) return decks;
-    return decks.filter((deck) =>
-      deck.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    return decks.filter((deck) => deck.name.toLowerCase().includes(searchQuery.toLowerCase()));
   }, [decks, searchQuery]);
 
   const paginatedDecks = useMemo(() => {
@@ -189,11 +149,7 @@ export default function BrowseDecksClient({
     "c",
     (e) => {
       const tgt = e.target as HTMLElement;
-      if (
-        tgt.tagName === "INPUT" ||
-        tgt.tagName === "TEXTAREA" ||
-        tgt.isContentEditable
-      ) {
+      if (tgt.tagName === "INPUT" || tgt.tagName === "TEXTAREA" || tgt.isContentEditable) {
         return;
       }
       e.preventDefault();
@@ -276,15 +232,10 @@ export default function BrowseDecksClient({
       ) : (
         <div className="space-y-8">
           {paginatedDecks.map((deck) => {
-            const mainboardCards = deck.cards.filter(
-              (c) => !c.is_sideboard && !c.is_maybeboard,
-            );
+            const mainboardCards = deck.cards.filter((c) => !c.is_sideboard && !c.is_maybeboard);
             const sideboardCards = deck.cards.filter((c) => c.is_sideboard);
             const maybeboardCards = getMaybeboard(deck);
-            const totalMaybe = maybeboardCards.reduce(
-              (sum, item) => sum + item.quantity,
-              0,
-            );
+            const totalMaybe = maybeboardCards.reduce((sum, item) => sum + item.quantity, 0);
             const groupedMainboard = mainboardCards.reduce(
               (acc: Record<string, DeckCardWithDetails[]>, cardItem) => {
                 const type = getPrimaryCardType(cardItem.card.type_line);
@@ -294,14 +245,8 @@ export default function BrowseDecksClient({
               },
               {},
             );
-            const totalMain = mainboardCards.reduce(
-              (sum, item) => sum + item.quantity,
-              0,
-            );
-            const totalSide = sideboardCards.reduce(
-              (sum, item) => sum + item.quantity,
-              0,
-            );
+            const totalMain = mainboardCards.reduce((sum, item) => sum + item.quantity, 0);
+            const totalSide = sideboardCards.reduce((sum, item) => sum + item.quantity, 0);
 
             return (
               <Card
@@ -323,8 +268,7 @@ export default function BrowseDecksClient({
                         </Badge>
                         <span>&bull;</span>
                         <span>
-                          {totalMain} Main / {totalSide} Side / {totalMaybe}{" "}
-                          Maybe
+                          {totalMain} Main / {totalSide} Side / {totalMaybe} Maybe
                         </span>
                         <span>&bull;</span>
                         <span>Updated: {formatDate(deck.updated_at)}</span>
@@ -336,11 +280,7 @@ export default function BrowseDecksClient({
                           <Edit3 className="mr-2 h-4 w-4" /> Edit
                         </Button>
                       </Link>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => setDeckToDelete(deck)}
-                      >
+                      <Button variant="destructive" size="sm" onClick={() => setDeckToDelete(deck)}>
                         <Trash2 className="mr-2 h-4 w-4" /> Delete
                       </Button>
                     </div>
@@ -357,10 +297,7 @@ export default function BrowseDecksClient({
                     {CARD_TYPE_ORDER.map((typeKey) => {
                       const cardsOfType = groupedMainboard[typeKey];
                       if (!cardsOfType?.length) return null;
-                      const count = cardsOfType.reduce(
-                        (sum, item) => sum + item.quantity,
-                        0,
-                      );
+                      const count = cardsOfType.reduce((sum, item) => sum + item.quantity, 0);
                       return (
                         <div key={typeKey} className="min-w-[180px]">
                           <h4 className="flex items-center text-sm font-semibold mb-1.5 text-muted-foreground uppercase tracking-wider">
@@ -375,9 +312,7 @@ export default function BrowseDecksClient({
                           </h4>
                           <div className="space-y-0.5 text-xs">
                             {cardsOfType
-                              .sort((a, b) =>
-                                a.card.name.localeCompare(b.card.name),
-                              )
+                              .sort((a, b) => a.card.name.localeCompare(b.card.name))
                               .map((cardItem) => (
                                 <DeckCardDisplayItem
                                   key={cardItem.id}
@@ -400,9 +335,7 @@ export default function BrowseDecksClient({
                         </h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-0.5 text-xs">
                           {sideboardCards
-                            .sort((a, b) =>
-                              a.card.name.localeCompare(b.card.name),
-                            )
+                            .sort((a, b) => a.card.name.localeCompare(b.card.name))
                             .map((cardItem) => (
                               <DeckCardDisplayItem
                                 key={`side-${cardItem.id}`}
@@ -424,9 +357,7 @@ export default function BrowseDecksClient({
                         </h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-0.5 text-xs">
                           {maybeboardCards
-                            .sort((a, b) =>
-                              a.card.name.localeCompare(b.card.name),
-                            )
+                            .sort((a, b) => a.card.name.localeCompare(b.card.name))
                             .map((cardItem) => (
                               <DeckCardDisplayItem
                                 key={`maybe-${cardItem.id}`}
@@ -463,9 +394,7 @@ export default function BrowseDecksClient({
               </PaginationItem>
             ))}
             <PaginationNext
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               aria-disabled={currentPage === totalPages}
             />
           </PaginationContent>
@@ -473,22 +402,17 @@ export default function BrowseDecksClient({
       )}
 
       {deckToDelete && (
-        <AlertDialog
-          open={!!deckToDelete}
-          onOpenChange={() => setDeckToDelete(null)}
-        >
+        <AlertDialog open={!!deckToDelete} onOpenChange={() => setDeckToDelete(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action will permanently delete the deck "
-                <strong>{deckToDelete.name}</strong>". This cannot be undone.
+                This action will permanently delete the deck "<strong>{deckToDelete.name}</strong>".
+                This cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={isDeleting}>
-                Cancel
-              </AlertDialogCancel>
+              <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDeleteDeck}
                 disabled={isDeleting}

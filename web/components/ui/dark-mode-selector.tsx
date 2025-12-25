@@ -24,9 +24,7 @@ export function DarkModeSelector() {
     <div>
       <Select
         value={darkMode}
-        onValueChange={(value) =>
-          setDarkMode(value as "light" | "dark" | "system")
-        }
+        onValueChange={(value) => setDarkMode(value as "light" | "dark" | "system")}
       >
         <SelectTrigger className="w-full">
           <SelectValue />

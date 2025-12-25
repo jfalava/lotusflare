@@ -1,7 +1,4 @@
-import type {
-  D1Database,
-  D1PreparedStatement,
-} from "@cloudflare/workers-types";
+import type { D1Database, D1PreparedStatement } from "@cloudflare/workers-types";
 import type { CardDbo } from "../types";
 import { NotFoundError } from "../middlewares/error-handler";
 
@@ -28,9 +25,7 @@ const CARD_INSERT_SQL = `
  * @param dbo - Card database object (without created_at/updated_at)
  * @returns Array of values to bind
  */
-export function bindCardParams(
-  dbo: Omit<CardDbo, "created_at" | "updated_at">,
-): unknown[] {
+export function bindCardParams(dbo: Omit<CardDbo, "created_at" | "updated_at">): unknown[] {
   return [
     dbo.scryfall_id,
     dbo.oracle_id,
@@ -122,10 +117,7 @@ export async function ensureEntityExists<T>(
  * @param placeId - Place ID
  * @returns Place name or null if not found
  */
-export async function getPlaceName(
-  db: D1Database,
-  placeId: number | null,
-): Promise<string | null> {
+export async function getPlaceName(db: D1Database, placeId: number | null): Promise<string | null> {
   if (!placeId) return null;
 
   const result = await db

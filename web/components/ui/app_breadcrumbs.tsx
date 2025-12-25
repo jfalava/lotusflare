@@ -98,11 +98,7 @@ export function AppBreadcrumbs() {
             const lc = segments.map((s) => s.toLowerCase());
             if (idx === 2 && lc[0] === "edit" && lc[1] === "decks") {
               useReplacement = true;
-            } else if (
-              idx === 1 &&
-              lc[0] === "decks" &&
-              segments.length === 2
-            ) {
+            } else if (idx === 1 && lc[0] === "decks" && segments.length === 2) {
               useReplacement = true;
             }
           }
@@ -112,10 +108,7 @@ export function AppBreadcrumbs() {
           return (
             <Fragment key={href}>
               <BreadcrumbItem
-                className={cn(
-                  "whitespace-nowrap",
-                  isLast && "font-semibold text-foreground",
-                )}
+                className={cn("whitespace-nowrap", isLast && "font-semibold text-foreground")}
               >
                 {isLast ? (
                   <BreadcrumbPage

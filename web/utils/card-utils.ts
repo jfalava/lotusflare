@@ -4,9 +4,7 @@ import type { InventoryColorGroup } from "@/utils/inventory-color-group";
 /**
  * @deprecated Use getCardImageUri from @/lib/image-utils instead
  */
-export const getCardImageUri = (
-  card: ScryfallApiCard | undefined | null,
-): string | undefined => {
+export const getCardImageUri = (card: ScryfallApiCard | undefined | null): string | undefined => {
   if (!card) return undefined;
   if (card.image_uris?.normal) return card.image_uris.normal;
   if (card.image_uris?.png) return card.image_uris.png;

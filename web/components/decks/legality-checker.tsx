@@ -2,13 +2,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import {
-  Loader2,
-  ShieldCheck,
-  ShieldAlert,
-  ShieldQuestion,
-  Info,
-} from "lucide-react";
+import { Loader2, ShieldCheck, ShieldAlert, ShieldQuestion, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   type LegalityCheckCardInfo,
@@ -115,16 +109,11 @@ export const DeckLegalityChecker: React.FC<DeckLegalityCheckerProps> = ({
             details?: string;
           };
           const apiErrorMessage =
-            errorData.message ||
-            errorData.details ||
-            `API Error: ${response.status}`;
-          currentIssues.push(
-            `Server could not verify card restrictions: ${apiErrorMessage}.`,
-          );
+            errorData.message || errorData.details || `API Error: ${response.status}`;
+          currentIssues.push(`Server could not verify card restrictions: ${apiErrorMessage}.`);
         }
       } catch (error) {
-        let networkErrorMessage =
-          "Network error: Failed to connect to server for legality check.";
+        let networkErrorMessage = "Network error: Failed to connect to server for legality check.";
         if (error instanceof Error && error.message) {
           networkErrorMessage += ` (${error.message})`;
         } else if (typeof error === "string" && error) {
@@ -183,8 +172,7 @@ export const DeckLegalityChecker: React.FC<DeckLegalityCheckerProps> = ({
     detailMessage = "This deck has one or more issues:";
   } else if (legality.status === "unknown") {
     titleMessage = `Legality for ${deckFormat}`;
-    detailMessage =
-      legality.issues[0] || "Add cards or save the deck to check legality.";
+    detailMessage = legality.issues[0] || "Add cards or save the deck to check legality.";
   }
 
   return (
@@ -192,9 +180,7 @@ export const DeckLegalityChecker: React.FC<DeckLegalityCheckerProps> = ({
       <div className="flex items-center mb-2">
         <IconComponent
           className={`mr-2 h-6 w-6 ${iconColor} ${
-            legality.status === "checking" || isCheckingApi
-              ? "animate-spin"
-              : ""
+            legality.status === "checking" || isCheckingApi ? "animate-spin" : ""
           }`}
         />
         <h2 className={`text-lg font-semibold ${iconColor}`}>{titleMessage}</h2>

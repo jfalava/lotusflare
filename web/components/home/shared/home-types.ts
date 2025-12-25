@@ -1,7 +1,4 @@
-import type {
-  DeckWithDetails,
-  InventoryDetailWithCardDetails,
-} from "#/backend/src/types";
+import type { DeckWithDetails, InventoryDetailWithCardDetails } from "#/backend/src/types";
 
 export interface DashboardAnalytics {
   totalStats: {

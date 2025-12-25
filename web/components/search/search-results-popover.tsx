@@ -160,17 +160,14 @@ export const SearchResultsPopover: React.FC<SearchResultsPopoverProps> = ({
       }
 
       // Check if mouse is outside the dialog
-      const dialogElement = document.querySelector(
-        "[data-radix-dialog-content]",
-      );
+      const dialogElement = document.querySelector("[data-radix-dialog-content]");
       if (dialogElement && !dialogElement.contains(e.target as Node)) {
         clearHoveredImage();
       }
     };
 
     document.addEventListener("mousemove", handleGlobalMouseMove);
-    return () =>
-      document.removeEventListener("mousemove", handleGlobalMouseMove);
+    return () => document.removeEventListener("mousemove", handleGlobalMouseMove);
   }, [open, clearHoveredImage]);
 
   return (
@@ -193,10 +190,7 @@ export const SearchResultsPopover: React.FC<SearchResultsPopoverProps> = ({
           onEscapeKeyDown={handleClose}
         >
           <div className="flex flex-col max-h-[80vh] h-[80vh] md:max-h-[85vh] md:h-[85vh]">
-            <ScrollArea
-              className="flex-1 min-h-0 h-0"
-              onMouseLeave={handleMouseLeave}
-            >
+            <ScrollArea className="flex-1 min-h-0 h-0" onMouseLeave={handleMouseLeave}>
               <div className="p-2 md:p-4 space-y-1 md:space-y-2">
                 {isLoading && (
                   <div className="flex items-center justify-center p-4 md:p-6 text-muted-foreground">

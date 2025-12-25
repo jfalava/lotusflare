@@ -21,12 +21,7 @@ export const useKeyPress = (
   callback: KeyPressCallback,
   options: KeyPressOptions = {},
 ) => {
-  const {
-    ctrl = false,
-    alt = false,
-    shift = false,
-    disabled = false,
-  } = options;
+  const { ctrl = false, alt = false, shift = false, disabled = false } = options;
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {

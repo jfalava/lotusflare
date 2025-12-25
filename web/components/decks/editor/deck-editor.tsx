@@ -1,14 +1,7 @@
 // components/decks/editor/deck-editor.tsx
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useRef,
-  startTransition,
-} from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef, startTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTopLoader } from "nextjs-toploader";
 import { Button } from "@/components/ui/button";
@@ -40,11 +33,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import type {
-  EditableDeckCard,
-  DeckState,
-  DeckFormat,
-} from "@/components/decks/editor/types";
+import type { EditableDeckCard, DeckState, DeckFormat } from "@/components/decks/editor/types";
 import type {
   ScryfallApiCard,
   DeckWithDetails,
@@ -80,16 +69,13 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
-  const [showBulkImportModal, setShowBulkImportModal] =
-    useState<boolean>(false);
+  const [showBulkImportModal, setShowBulkImportModal] = useState<boolean>(false);
 
   const [scryfallSearchTerm, setScryfallSearchTerm] = useState<string>("");
   const [scryfallResults, setScryfallResults] = useState<ScryfallApiCard[]>([]);
-  const [isScryfallSearching, setIsScryfallSearching] =
-    useState<boolean>(false);
+  const [isScryfallSearching, setIsScryfallSearching] = useState<boolean>(false);
   const [brewMode, setBrewMode] = useState<boolean>(false);
-  const [sendToMayeboardInBrew, setSendToMayeboardInBrew] =
-    useState<boolean>(false);
+  const [sendToMayeboardInBrew, setSendToMayeboardInBrew] = useState<boolean>(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
@@ -169,8 +155,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
             is_sideboard: false,
             cardDetails: c.card,
             canonicalName: c.card.name,
-            tempId:
-              c.card_scryfall_id + Math.random().toString(36).substring(2, 9),
+            tempId: c.card_scryfall_id + Math.random().toString(36).substring(2, 9),
           }));
 
         const sideboard: EditableDeckCard[] = data.cards
@@ -182,8 +167,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
             is_sideboard: true,
             cardDetails: c.card,
             canonicalName: c.card.name,
-            tempId:
-              c.card_scryfall_id + Math.random().toString(36).substring(2, 9),
+            tempId: c.card_scryfall_id + Math.random().toString(36).substring(2, 9),
           }));
 
         const maybeboard: EditableDeckCard[] = data.cards
@@ -195,8 +179,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
             is_sideboard: false,
             cardDetails: c.card,
             canonicalName: c.card.name,
-            tempId:
-              c.card_scryfall_id + Math.random().toString(36).substring(2, 9),
+            tempId: c.card_scryfall_id + Math.random().toString(36).substring(2, 9),
           }));
 
         const cmd = mainboard.find((x) => x.is_commander);
@@ -213,9 +196,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
         setMaybeboardEnabled(maybeboard.length > 0);
       } catch (err) {
         console.error("Error fetching deck:", err);
-        toast.error(
-          err instanceof Error ? err.message : `Could not load deck.`,
-        );
+        toast.error(err instanceof Error ? err.message : `Could not load deck.`);
         router.push("/edit/decks");
       } finally {
         setIsLoading(false);
@@ -238,9 +219,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
     };
   }, [loader]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setDeck((prev) => ({ ...prev, [name]: value }));
   };
@@ -306,26 +285,18 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
     setIsScryfallSearching(true);
     if (!brewMode) setIsPopoverOpen(true);
     try {
-      const query = brewMode
-        ? `!"${scryfallSearchTerm.trim()}" unique:prints`
-        : scryfallSearchTerm;
-      const response = await fetch(
-        `/api/scryfall/cards/search?q=${encodeURIComponent(query)}`,
-      );
-      if (!response.ok)
-        throw new Error(`Search failed: ${response.statusText}`);
+      const query = brewMode ? `!"${scryfallSearchTerm.trim()}" unique:prints` : scryfallSearchTerm;
+      const response = await fetch(`/api/scryfall/cards/search?q=${encodeURIComponent(query)}`);
+      if (!response.ok) throw new Error(`Search failed: ${response.statusText}`);
       const data: ScryfallListResponse<ScryfallApiCard> = await response.json();
 
       if (brewMode) {
         if (data.data?.length) {
           const exact = data.data.find(
-            (c) =>
-              c.name.toLowerCase() === scryfallSearchTerm.trim().toLowerCase(),
+            (c) => c.name.toLowerCase() === scryfallSearchTerm.trim().toLowerCase(),
           );
           const pick = exact ?? data.data[0];
-          const targetSection = sendToMayeboardInBrew
-            ? "maybeboard"
-            : "mainboard";
+          const targetSection = sendToMayeboardInBrew ? "maybeboard" : "mainboard";
           if (targetSection === "maybeboard" && !maybeboardEnabled) {
             setMaybeboardEnabled(true);
           }
@@ -347,13 +318,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
     } finally {
       setIsScryfallSearching(false);
     }
-  }, [
-    scryfallSearchTerm,
-    brewMode,
-    sendToMayeboardInBrew,
-    addCardToDeck,
-    maybeboardEnabled,
-  ]);
+  }, [scryfallSearchTerm, brewMode, sendToMayeboardInBrew, addCardToDeck, maybeboardEnabled]);
 
   const handleBulkImport = useCallback(
     (
@@ -366,13 +331,9 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
     ) => {
       setDeck((prev) => {
         const mainboard =
-          mode === "append"
-            ? [...prev.mainboard, ...imported.mainboard]
-            : imported.mainboard;
+          mode === "append" ? [...prev.mainboard, ...imported.mainboard] : imported.mainboard;
         const sideboard =
-          mode === "append"
-            ? [...prev.sideboard, ...imported.sideboard]
-            : imported.sideboard;
+          mode === "append" ? [...prev.sideboard, ...imported.sideboard] : imported.sideboard;
         return { ...prev, mainboard, sideboard };
       });
       if (mode === "append") {
@@ -497,15 +458,12 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
         if (!card) return;
 
         setDeck((prev) => {
-          const newSource = prev[sourceSection].filter(
-            (c) => c.tempId !== itemTempId,
-          );
+          const newSource = prev[sourceSection].filter((c) => c.tempId !== itemTempId);
           const newTarget = [...prev[targetSection]];
           newTarget.splice(hoverIndex, 0, {
             ...card,
             is_sideboard: targetSection === "sideboard",
-            is_commander:
-              targetSection === "mainboard" && card.tempId === commanderTempId,
+            is_commander: targetSection === "mainboard" && card.tempId === commanderTempId,
           });
           return {
             ...prev,
@@ -549,8 +507,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
         deckPayloadCards.push({
           scryfall_id: c.scryfall_id,
           quantity: qty,
-          is_commander:
-            c.tempId === commanderTempId && !isSideboard && !isMaybeboard,
+          is_commander: c.tempId === commanderTempId && !isSideboard && !isMaybeboard,
           is_sideboard: isSideboard,
           is_maybeboard: isMaybeboard,
         });
@@ -607,9 +564,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
         } catch {
           // ignore
         }
-        throw new Error(
-          apiErrorMessage ?? `Save failed: ${response.statusText}`,
-        );
+        throw new Error(apiErrorMessage ?? `Save failed: ${response.statusText}`);
       }
       const saved = (await response.json()) as DeckWithDetails;
       toast.success(`Deck "${saved.name}" saved!`);
@@ -760,18 +715,13 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
   }));
 
   const hasEnoughCards =
-    deck.mainboard.reduce(
-      (sum, c) => sum + (parseInt(c.quantity, 10) || 0),
-      0,
-    ) >= 7;
+    deck.mainboard.reduce((sum, c) => sum + (parseInt(c.quantity, 10) || 0), 0) >= 7;
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        <p className="ml-4 text-lg text-muted-foreground">
-          Loading deck editor...
-        </p>
+        <p className="ml-4 text-lg text-muted-foreground">Loading deck editor...</p>
       </div>
     );
   }
@@ -836,8 +786,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
           isLoading={isScryfallSearching}
           open={isPopoverOpen && scryfallSearchTerm.length >= 3}
           onSelectCard={(card) => {
-            const targetSection =
-              brewMode && sendToMayeboardInBrew ? "maybeboard" : "mainboard";
+            const targetSection = brewMode && sendToMayeboardInBrew ? "maybeboard" : "mainboard";
             if (targetSection === "maybeboard" && !maybeboardEnabled) {
               setMaybeboardEnabled(true);
             }
@@ -870,9 +819,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
           <div className="p-4 border rounded-lg bg-card space-y-1">
             <AccordionItem value="statistics">
               <AccordionTrigger className="text-base font-semibold">
-                <h2 className="text-xl font-semibold">
-                  Deck Statistics & Analysis
-                </h2>
+                <h2 className="text-xl font-semibold">Deck Statistics & Analysis</h2>
               </AccordionTrigger>
               <AccordionContent className="pt-4">
                 <DeckStatistics deck={deckPreviewData} />
@@ -888,9 +835,7 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
             section="mainboard"
             onQuantityChange={handleCardQuantityChange}
             onRemove={removeCardFromDeck}
-            onSetCommander={
-              deck.format === "commander" ? setCardAsCommander : undefined
-            }
+            onSetCommander={deck.format === "commander" ? setCardAsCommander : undefined}
             commanderTempId={commanderTempId}
             onMoveToOtherBoard={moveCardToOtherBoard}
             onViewDetails={setSelectedCardForDetailModal}
@@ -960,30 +905,23 @@ const DeckEditor: React.FC<DeckEditorProps> = ({ deckId }) => {
         {selectedCardForDetailModal && (
           <CardDetailModal
             open={!!selectedCardForDetailModal}
-            onOpenChange={(open) =>
-              !open && setSelectedCardForDetailModal(null)
-            }
+            onOpenChange={(open) => !open && setSelectedCardForDetailModal(null)}
             card={selectedCardForDetailModal}
           />
         )}
 
         {showDeleteConfirm && deckId && (
-          <AlertDialog
-            open={showDeleteConfirm}
-            onOpenChange={setShowDeleteConfirm}
-          >
+          <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete the deck "
-                  <strong>{deck.name}</strong>"? This action cannot be undone.
+                  Are you sure you want to delete the deck "<strong>{deck.name}</strong>"? This
+                  action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel disabled={isDeleting}>
-                  Cancel
-                </AlertDialogCancel>
+                <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDeleteDeck}
                   disabled={isDeleting}

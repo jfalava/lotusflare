@@ -55,16 +55,12 @@ const ActivityTab = ({
                 <XAxis
                   dataKey="date"
                   className="text-xs"
-                  tickFormatter={(value) =>
-                    new Date(value).toLocaleDateString()
-                  }
+                  tickFormatter={(value) => new Date(value).toLocaleDateString()}
                 />
                 <YAxis className="text-xs" />
                 <Tooltip
                   content={<CustomTooltip />}
-                  labelFormatter={(value) =>
-                    new Date(value).toLocaleDateString()
-                  }
+                  labelFormatter={(value) => new Date(value).toLocaleDateString()}
                 />
                 <Area
                   type="monotone"
@@ -85,9 +81,7 @@ const ActivityTab = ({
           <CardTitle>Complete Activity Feed</CardTitle>
         </CardHeader>
         <CardContent>
-          <ActivityFeed
-            activities={paginatedActivity ? paginatedActivity.data : []}
-          />
+          <ActivityFeed activities={paginatedActivity ? paginatedActivity.data : []} />
         </CardContent>
         {paginatedActivity && paginatedActivity.totalCount > 10 && (
           <Pagination className="p-4 border-t">

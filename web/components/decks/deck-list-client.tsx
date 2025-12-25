@@ -16,9 +16,7 @@ import { DECKS_PAGE_SIZE } from "@/lib/constants";
 
 const PAGE_SIZE = DECKS_PAGE_SIZE;
 
-const getDeckCoverImage = (
-  deck: DeckWithDetails,
-): string | null | undefined => {
+const getDeckCoverImage = (deck: DeckWithDetails): string | null | undefined => {
   if (deck.cards && deck.cards.length > 0) {
     const commander = deck.cards.find((c) => c.is_commander);
     if (commander?.card.image_uris?.art_crop) {
@@ -185,9 +183,7 @@ export default function DeckListClient({
           icon={<ArchiveX className="h-16 w-16 text-muted-foreground" />}
           className="mt-12"
         />
-      ) : currentDisplayedDecks.length === 0 &&
-        initialDecks.length > 0 &&
-        !searchTerm ? (
+      ) : currentDisplayedDecks.length === 0 && initialDecks.length > 0 && !searchTerm ? (
         <EmptyState
           title="No Decks to Display"
           message="Something went wrong, or all decks were filtered out unexpectedly."
@@ -205,8 +201,7 @@ export default function DeckListClient({
             {currentDisplayedDecks.map((deck) => {
               const coverImage = getDeckCoverImage(deck);
               const commanderName = getCommanderNames(deck);
-              const cardCount =
-                deck.cards?.reduce((sum, c) => sum + c.quantity, 0) ?? 0;
+              const cardCount = deck.cards?.reduce((sum, c) => sum + c.quantity, 0) ?? 0;
 
               return (
                 <Card
@@ -231,10 +226,7 @@ export default function DeckListClient({
                     )}
                   </Link>
                   <CardContent className="p-4 flex flex-col flex-grow">
-                    <Link
-                      href={`/decks/${deck.id}`}
-                      className="block cursor-pointer"
-                    >
+                    <Link href={`/decks/${deck.id}`} className="block cursor-pointer">
                       <CardTitle className="text-lg md:text-xl font-beleren leading-tight tracking-tight hover:text-primary transition-colors truncate">
                         {deck.name}
                       </CardTitle>

@@ -25,8 +25,7 @@ function getPlacesStats(places: PlaceDbo[]) {
   );
 
   const mostCommonType =
-    Object.entries(typeDistribution).sort(([, a], [, b]) => b - a)[0]?.[0] ||
-    "none";
+    Object.entries(typeDistribution).sort(([, a], [, b]) => b - a)[0]?.[0] || "none";
 
   const placesWithDescriptions = places.filter((p) => p.description).length;
 
@@ -99,10 +98,7 @@ export default async function ManagePlacesPage({ searchParams }: PageProps) {
 
   return (
     <Suspense fallback={<PlacesManageSkeleton />}>
-      <PlacesManageClient
-        initialPlaces={places}
-        initialSearch={initialSearch}
-      />
+      <PlacesManageClient initialPlaces={places} initialSearch={initialSearch} />
     </Suspense>
   );
 }

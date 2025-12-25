@@ -22,8 +22,7 @@ export const DeckViewControls: React.FC<DeckViewControlsProps> = ({
   const isGrid = viewMode === "grid";
   const nextViewMode: ViewMode = isGrid ? "list" : "grid";
   const ModeIcon = isGrid ? List : LayoutGrid;
-  const modeLabel: string =
-    nextViewMode.charAt(0).toUpperCase() + nextViewMode.slice(1);
+  const modeLabel: string = nextViewMode.charAt(0).toUpperCase() + nextViewMode.slice(1);
   const ariaLabel: string = `Switch to ${modeLabel} view`;
 
   // Alt+V → toggle

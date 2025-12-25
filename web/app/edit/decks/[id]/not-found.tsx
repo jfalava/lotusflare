@@ -8,8 +8,8 @@ export default function NotFound() {
       <ListChecks className="h-24 w-24 text-muted-foreground mx-auto mb-6" />
       <h1 className="text-4xl font-bold mb-4">Deck Not Found</h1>
       <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-        The deck you're looking for doesn't exist, has been deleted, or you
-        don't have permission to edit it.
+        The deck you're looking for doesn't exist, has been deleted, or you don't have permission to
+        edit it.
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Button asChild variant="outline">

@@ -20,14 +20,8 @@ export interface DeckCardRowProps {
     section: "mainboard" | "sideboard" | "maybeboard",
     newQuantity: string,
   ) => void;
-  onRemove: (
-    tempId: string,
-    section: "mainboard" | "sideboard" | "maybeboard",
-  ) => void;
-  onSetCommander?: (
-    tempId: string,
-    section: "mainboard" | "sideboard" | "maybeboard",
-  ) => void;
+  onRemove: (tempId: string, section: "mainboard" | "sideboard" | "maybeboard") => void;
+  onSetCommander?: (tempId: string, section: "mainboard" | "sideboard" | "maybeboard") => void;
   isCommander?: boolean;
   onMoveToOtherBoard: (
     tempId: string,
@@ -43,11 +37,7 @@ export interface DeckCardRowProps {
     itemTempId: string,
   ) => void;
   deckFormat: DeckFormat;
-  onHoverStart?: (
-    e: React.MouseEvent<HTMLSpanElement>,
-    src: string,
-    alt: string,
-  ) => void;
+  onHoverStart?: (e: React.MouseEvent<HTMLSpanElement>, src: string, alt: string) => void;
   onHoverMove?: (e: React.MouseEvent<HTMLSpanElement>) => void;
   onHoverEnd?: () => void;
 }
@@ -74,11 +64,7 @@ const DeckCardRow: React.FC<DeckCardRowProps> = ({
   const isMobile = useMediaQuery("(max-width: 767px)");
 
   // drop target for sorting
-  const [{ handlerId }, drop] = useDrop<
-    DragItem,
-    void,
-    { handlerId: symbol | string | null }
-  >({
+  const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: symbol | string | null }>({
     accept: "deckCard",
     collect: (m) => ({ handlerId: m.getHandlerId() }),
     hover(item, monitor) {
@@ -138,8 +124,7 @@ const DeckCardRow: React.FC<DeckCardRowProps> = ({
   };
   const imgUri = getCardImageUri(card);
   const manaCostString = card.mana_cost || "";
-  const isMoveToSideboardDisabled =
-    deckFormat === "commander" && section === "mainboard";
+  const isMoveToSideboardDisabled = deckFormat === "commander" && section === "mainboard";
   const moveToOtherBoardTitle = isMoveToSideboardDisabled
     ? "Sideboard not used in Commander"
     : `Move to ${section === "mainboard" ? "Sideboard" : "Mainboard"}`;
@@ -160,9 +145,7 @@ const DeckCardRow: React.FC<DeckCardRowProps> = ({
         <Input
           type="number"
           value={deckCard.quantity}
-          onChange={(e) =>
-            onQuantityChange(deckCard.tempId, section, e.target.value)
-          }
+          onChange={(e) => onQuantityChange(deckCard.tempId, section, e.target.value)}
           min="1"
           className="w-16 h-8 text-sm px-1.5 py-1"
           aria-label={`Quantity for ${card.name}`}
@@ -187,9 +170,7 @@ const DeckCardRow: React.FC<DeckCardRowProps> = ({
             >
               {card.name}
             </span>
-            {manaCostString && (
-              <ManaCost manaCost={manaCostString} size="xs" asImage />
-            )}
+            {manaCostString && <ManaCost manaCost={manaCostString} size="xs" asImage />}
           </div>
         </div>
       </div>
@@ -204,10 +185,7 @@ const DeckCardRow: React.FC<DeckCardRowProps> = ({
             onClick={() => onSetCommander(deckCard.tempId, section)}
             title={isCommander ? "Unset Commander" : "Set as Commander"}
           >
-            <Sparkles
-              size={14}
-              className={isCommander ? "" : "text-muted-foreground"}
-            />
+            <Sparkles size={14} className={isCommander ? "" : "text-muted-foreground"} />
           </Button>
         )}
         <Button
@@ -237,11 +215,7 @@ const DeckCardRow: React.FC<DeckCardRowProps> = ({
           className="h-7 w-7 md:hidden cursor-grab"
           title="Drag handle"
         >
-          <GripVertical
-            size={14}
-            className="text-muted-foreground"
-            aria-hidden="true"
-          />
+          <GripVertical size={14} className="text-muted-foreground" aria-hidden="true" />
         </Button>
       </div>
     </div>

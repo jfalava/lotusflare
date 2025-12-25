@@ -8,10 +8,7 @@ import React, {
   type ReactNode,
   useEffect,
 } from "react";
-import {
-  setCookieWithConsent,
-  getCookieWithConsent,
-} from "@/lib/cookies-with-consent";
+import { setCookieWithConsent, getCookieWithConsent } from "@/lib/cookies-with-consent";
 
 const COOKIE_KEY_INFINITE_SCROLL = "inventoryInfiniteScroll";
 const COOKIE_KEY_HIDE_KEYBINDS = "hideKeybinds";
@@ -23,13 +20,9 @@ export interface SettingsContextType {
   setHideKeybinds: (enabled: boolean) => void;
 }
 
-export const SettingsContext = createContext<SettingsContextType | undefined>(
-  undefined,
-);
+export const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
-export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [infiniteScroll, setInfiniteScrollState] = useState<boolean>(() => {
     if (typeof window === "undefined") return true;
     const savedValue = getCookieWithConsent(COOKIE_KEY_INFINITE_SCROLL);
@@ -48,9 +41,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
       expires: 365,
       path: "/",
     });
-    window.dispatchEvent(
-      new CustomEvent("infiniteScrollChange", { detail: enabled }),
-    );
+    window.dispatchEvent(new CustomEvent("infiniteScrollChange", { detail: enabled }));
   }, []);
 
   const setHideKeybinds = useCallback((enabled: boolean) => {
@@ -59,9 +50,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
       expires: 365,
       path: "/",
     });
-    window.dispatchEvent(
-      new CustomEvent("hideKeybindsChange", { detail: enabled }),
-    );
+    window.dispatchEvent(new CustomEvent("hideKeybindsChange", { detail: enabled }));
   }, []);
 
   useEffect(() => {
@@ -73,8 +62,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({
       }
     };
     window.addEventListener("cookieConsentChange", handleConsentChange);
-    return () =>
-      window.removeEventListener("cookieConsentChange", handleConsentChange);
+    return () => window.removeEventListener("cookieConsentChange", handleConsentChange);
   }, []);
 
   return (

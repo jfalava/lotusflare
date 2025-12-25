@@ -6,9 +6,7 @@ export default function EditHome() {
   return (
     <article className="max-w-2xl mx-auto py-10">
       <div className="mb-8 text-center">
-        <h2 className="text-3xl font-bold tracking-tight mb-2">
-          Edit & Manage
-        </h2>
+        <h2 className="text-3xl font-bold tracking-tight mb-2">Edit & Manage</h2>
       </div>
       <div className="space-y-8">
         {adminRoutes.map((section) => {
@@ -32,9 +30,7 @@ export default function EditHome() {
                     >
                       <Link href={action.path}>
                         {ActionIcon && <ActionIcon className="w-5 h-5" />}
-                        <span className="text-lg font-medium">
-                          {action.label}
-                        </span>
+                        <span className="text-lg font-medium">{action.label}</span>
                       </Link>
                     </Button>
                   );

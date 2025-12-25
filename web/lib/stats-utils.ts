@@ -20,10 +20,7 @@ export interface DeckStats {
 export function calculateDeckStats(decks: DeckWithDetails[]): DeckStats {
   const totalDecks = decks.length;
   const totalCards = decks.reduce((sum, deck) => {
-    return (
-      sum +
-      (deck.cards?.reduce((cardSum, card) => cardSum + card.quantity, 0) || 0)
-    );
+    return sum + (deck.cards?.reduce((cardSum, card) => cardSum + card.quantity, 0) || 0);
   }, 0);
 
   // Format distribution
@@ -35,16 +32,13 @@ export function calculateDeckStats(decks: DeckWithDetails[]): DeckStats {
     {} as Record<string, number>,
   );
 
-  const topFormat =
-    Object.entries(formatCounts).sort(([, a], [, b]) => b - a)[0]?.[0] ||
-    "unknown";
+  const topFormat = Object.entries(formatCounts).sort(([, a], [, b]) => b - a)[0]?.[0] || "unknown";
 
   // Most recent deck
   const mostRecentDeck =
     decks.length > 0
       ? [...decks].sort(
-          (a, b) =>
-            new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+          (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
         )[0]
       : undefined;
 
@@ -53,8 +47,7 @@ export function calculateDeckStats(decks: DeckWithDetails[]): DeckStats {
     totalCards,
     formatCounts,
     topFormat,
-    averageCardsPerDeck:
-      totalDecks > 0 ? Math.round(totalCards / totalDecks) : 0,
+    averageCardsPerDeck: totalDecks > 0 ? Math.round(totalCards / totalDecks) : 0,
     mostRecentDeck,
   };
 }
@@ -74,13 +67,10 @@ export interface SimpleDeckStats {
  * @param decks - Array of decks with details
  * @returns Simple deck statistics
  */
-export function calculateSimpleDeckStats(
-  decks: DeckWithDetails[],
-): SimpleDeckStats {
+export function calculateSimpleDeckStats(decks: DeckWithDetails[]): SimpleDeckStats {
   const totalDecks = decks.length;
   const totalCards = decks.reduce(
-    (sum, deck) =>
-      sum + deck.cards.reduce((deckSum, card) => deckSum + card.quantity, 0),
+    (sum, deck) => sum + deck.cards.reduce((deckSum, card) => deckSum + card.quantity, 0),
     0,
   );
 
@@ -97,8 +87,7 @@ export function calculateSimpleDeckStats(
   const mostRecentDeck =
     decks.length > 0
       ? [...decks].sort(
-          (a, b) =>
-            new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+          (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
         )[0]
       : undefined;
 

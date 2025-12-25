@@ -36,11 +36,7 @@ const OverviewTab = ({ analytics, setActiveTab }: OverviewTabProps) => {
                 <Activity className="h-5 w-5" />
                 <span>Recent Activity</span>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setActiveTab("activity")}
-              >
+              <Button variant="ghost" size="sm" onClick={() => setActiveTab("activity")}>
                 View All
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -62,16 +58,9 @@ const OverviewTab = ({ analytics, setActiveTab }: OverviewTabProps) => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {analytics.formatLegality.map((format) => (
-              <div
-                key={format.format}
-                className="text-center p-4 bg-muted/50 rounded-lg"
-              >
-                <p className="font-medium capitalize text-lg">
-                  {format.format}
-                </p>
-                <p className="text-3xl font-bold text-primary">
-                  {format.legal_cards}
-                </p>
+              <div key={format.format} className="text-center p-4 bg-muted/50 rounded-lg">
+                <p className="font-medium capitalize text-lg">{format.format}</p>
+                <p className="text-3xl font-bold text-primary">{format.legal_cards}</p>
                 <p className="text-sm text-muted-foreground">Legal cards</p>
               </div>
             ))}

@@ -79,9 +79,7 @@ interface MasterInventoryListItemProps {
   onPrintAdded: (detail: InventoryDetailWithCardDetails) => void;
 }
 
-export const MasterInventoryListItem: React.FC<
-  MasterInventoryListItemProps
-> = ({
+export const MasterInventoryListItem: React.FC<MasterInventoryListItemProps> = ({
   isExpanded,
   onToggleExpanded,
   onMouseEnter,
@@ -94,19 +92,13 @@ export const MasterInventoryListItem: React.FC<
   item,
 }) => {
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedCard, setSelectedCard] =
-    React.useState<ScryfallApiCard | null>(null);
-  const [editingDetail, setEditingDetail] =
-    useState<InventoryDetailWithCardDetails | null>(null);
-  const [detailToDelete, setDetailToDelete] =
-    useState<InventoryDetailWithCardDetails | null>(null);
+  const [selectedCard, setSelectedCard] = React.useState<ScryfallApiCard | null>(null);
+  const [editingDetail, setEditingDetail] = useState<InventoryDetailWithCardDetails | null>(null);
+  const [detailToDelete, setDetailToDelete] = useState<InventoryDetailWithCardDetails | null>(null);
   const [addPrintOpen, setAddPrintOpen] = useState(false);
   const loader = useTopLoader();
 
-  const totalQuantity = item.details.reduce(
-    (acc, detail) => acc + detail.quantity,
-    0,
-  );
+  const totalQuantity = item.details.reduce((acc, detail) => acc + detail.quantity, 0);
 
   const primaryCard = item.details[0]?.card;
   const imgUri = primaryCard ? getCardImageUri(primaryCard) : undefined;
@@ -154,9 +146,7 @@ export const MasterInventoryListItem: React.FC<
     }
   };
 
-  const handleEditSave = async (
-    updatedDetail: InventoryDetailWithCardDetails,
-  ) => {
+  const handleEditSave = async (updatedDetail: InventoryDetailWithCardDetails) => {
     await onDetailUpdate(updatedDetail.id, updatedDetail);
     setEditingDetail(null);
   };
@@ -272,15 +262,12 @@ export const MasterInventoryListItem: React.FC<
                       <div className="flex items-start justify-between">
                         <div className="space-y-2 min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-medium text-sm">
-                              {detail.card.set_name}
-                            </span>
+                            <span className="font-medium text-sm">{detail.card.set_name}</span>
                             <Badge
                               variant="outline"
                               className="text-xs font-mono whitespace-nowrap"
                             >
-                              {detail.card.set.toUpperCase()} #
-                              {detail.card.collector_number}
+                              {detail.card.set.toUpperCase()} #{detail.card.collector_number}
                             </Badge>
                             {detail.is_foil && (
                               <Badge
@@ -314,21 +301,14 @@ export const MasterInventoryListItem: React.FC<
 
                           <div className="flex items-center gap-4 flex-wrap text-sm">
                             <div className="flex items-center gap-1">
-                              <span className="text-muted-foreground">
-                                Qty:
-                              </span>
-                              <Badge
-                                variant="outline"
-                                className="font-semibold text-xs"
-                              >
+                              <span className="text-muted-foreground">Qty:</span>
+                              <Badge variant="outline" className="font-semibold text-xs">
                                 {detail.quantity}x
                               </Badge>
                             </div>
 
                             <div className="flex items-center gap-1">
-                              <span className="text-muted-foreground">
-                                Condition:
-                              </span>
+                              <span className="text-muted-foreground">Condition:</span>
                               <Badge
                                 className={clsx(
                                   "text-xs font-medium",
@@ -341,9 +321,7 @@ export const MasterInventoryListItem: React.FC<
 
                             {detail.language !== "en" && (
                               <div className="flex items-center gap-1">
-                                <span className="text-muted-foreground">
-                                  Lang:
-                                </span>
+                                <span className="text-muted-foreground">Lang:</span>
                                 <Badge variant="outline" className="text-xs">
                                   {detail.language.toUpperCase()}
                                 </Badge>
@@ -352,9 +330,7 @@ export const MasterInventoryListItem: React.FC<
 
                             {detail.place_name && (
                               <div className="flex items-center gap-1">
-                                <span className="text-muted-foreground">
-                                  Location:
-                                </span>
+                                <span className="text-muted-foreground">Location:</span>
                                 <Badge variant="secondary" className="text-xs">
                                   {detail.place_name}
                                 </Badge>
@@ -381,10 +357,7 @@ export const MasterInventoryListItem: React.FC<
                               <span className="sr-only">Open menu</span>
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent
-                            align="end"
-                            onClick={(e) => e.stopPropagation()}
-                          >
+                          <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
                             <DropdownMenuItem
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -416,11 +389,7 @@ export const MasterInventoryListItem: React.FC<
         </tr>
       )}
 
-      <CardDetailModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        card={selectedCard}
-      />
+      <CardDetailModal open={modalOpen} onOpenChange={setModalOpen} card={selectedCard} />
 
       <AddPrintModal
         open={addPrintOpen}
@@ -456,9 +425,8 @@ export const MasterInventoryListItem: React.FC<
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete this
-              entry for <strong>{detailToDelete?.card.name}</strong> (
-              {detailToDelete?.card.set_name}).
+              This action cannot be undone. This will permanently delete this entry for{" "}
+              <strong>{detailToDelete?.card.name}</strong> ({detailToDelete?.card.set_name}).
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -1,23 +1,13 @@
 "use client";
 
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useEffect,
-  useRef,
-  startTransition,
-} from "react";
+import React, { useState, useMemo, useCallback, useEffect, useRef, startTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTopLoader } from "nextjs-toploader";
 import { toast } from "sonner";
 
 import { useKeyPress } from "@/hooks/useKeyPress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import {
-  useViewMode,
-  type ViewMode,
-} from "@/components/context/view-mode-context";
+import { useViewMode, type ViewMode } from "@/components/context/view-mode-context";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,16 +18,10 @@ import { CardImage } from "@/components/ui/card-image";
 import SampleHandDrawer from "@/components/decks/sample-hand-drawer";
 import DeckStatistics from "@/components/decks/deck-statistics";
 import DeckLegalityNotice from "@/components/decks/legality-notice";
-import {
-  CardDetailModal,
-  type CardDetailModalProps,
-} from "@/components/card/card-detail-modal";
+import { CardDetailModal, type CardDetailModalProps } from "@/components/card/card-detail-modal";
 import dynamic from "next/dynamic";
 const DeckViewControls = dynamic(
-  () =>
-    import("@/components/decks/deck-view-controls").then(
-      (m) => m.DeckViewControls,
-    ),
+  () => import("@/components/decks/deck-view-controls").then((m) => m.DeckViewControls),
   { ssr: false },
 );
 
@@ -48,21 +32,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
-import {
-  ClipboardCopy,
-  BookOpen,
-  Users,
-  ArrowLeft,
-  BarChart3,
-  Download,
-} from "lucide-react";
+import { ClipboardCopy, BookOpen, Users, ArrowLeft, BarChart3, Download } from "lucide-react";
 
 import type { DeckWithDetails, DeckCardWithDetails } from "#/backend/src/types";
 import { getPrimaryCardType } from "@/utils/card-utils";
@@ -93,9 +65,7 @@ const getCommanders = (d: DeckWithDetails): DeckCardWithDetails[] =>
   d.cards?.filter((c) => c.is_commander) ?? [];
 
 const getMainboard = (d: DeckWithDetails): DeckCardWithDetails[] =>
-  d.cards?.filter(
-    (c) => !c.is_commander && !c.is_sideboard && !c.is_maybeboard,
-  ) ?? [];
+  d.cards?.filter((c) => !c.is_commander && !c.is_sideboard && !c.is_maybeboard) ?? [];
 
 const getSideboard = (d: DeckWithDetails): DeckCardWithDetails[] =>
   d.cards?.filter((c) => c.is_sideboard) ?? [];
@@ -133,12 +103,7 @@ const DeckCardListItem: React.FC<{
         </TooltipTrigger>
 
         {imgUri && (
-          <TooltipContent
-            side={tooltipSide}
-            align="start"
-            sideOffset={8}
-            className="p-0"
-          >
+          <TooltipContent side={tooltipSide} align="start" sideOffset={8} className="p-0">
             <CardImage
               src={imgUri}
               alt={deckCard.card.name}
@@ -158,12 +123,7 @@ interface CardGroupProps {
   onCardClick: (dc: DeckCardWithDetails) => void;
 }
 
-const CardGroup: React.FC<CardGroupProps> = ({
-  title,
-  cards,
-  viewMode,
-  onCardClick,
-}) => {
+const CardGroup: React.FC<CardGroupProps> = ({ title, cards, viewMode, onCardClick }) => {
   const grouped = useMemo(() => {
     return cards.reduce(
       (acc, dc) => {
@@ -238,11 +198,7 @@ const CardGroup: React.FC<CardGroupProps> = ({
                   {list
                     .sort((a, b) => a.card.name.localeCompare(b.card.name))
                     .map((dc) => (
-                      <DeckCardListItem
-                        key={dc.id}
-                        deckCard={dc}
-                        onClick={() => onCardClick(dc)}
-                      />
+                      <DeckCardListItem key={dc.id} deckCard={dc} onClick={() => onCardClick(dc)} />
                     ))}
                 </div>
               </div>
@@ -338,8 +294,7 @@ export default function DeckViewClient({ initialDeck }: Props) {
   const [activeTab, setActiveTab] = useState<"cards" | "stats">("cards");
   const [isCopyMenuOpen, setIsCopyMenuOpen] = useState(false);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
-  const [selectedCard, setSelectedCard] =
-    useState<CardDetailModalProps["card"]>(null);
+  const [selectedCard, setSelectedCard] = useState<CardDetailModalProps["card"]>(null);
 
   useKeyPress("c", () => setActiveTab("cards"), { alt: true });
   useKeyPress("s", () => setActiveTab("stats"), { alt: true });
@@ -357,10 +312,7 @@ export default function DeckViewClient({ initialDeck }: Props) {
       commanders.reduce((s, c) => s + c.quantity, 0),
     [mainboard, commanders],
   );
-  const totalSide = useMemo(
-    () => sideboard.reduce((s, c) => s + c.quantity, 0),
-    [sideboard],
-  );
+  const totalSide = useMemo(() => sideboard.reduce((s, c) => s + c.quantity, 0), [sideboard]);
 
   /* ---------- handlers ---------- */
   const openCardModal = useCallback((dc: DeckCardWithDetails) => {
@@ -377,9 +329,7 @@ export default function DeckViewClient({ initialDeck }: Props) {
   const copyToClipboard = useCallback(
     (mode: "text" | "arena") => {
       navigator.clipboard
-        .writeText(
-          formatDeckAsText(commanders, mainboard, sideboard, mode === "arena"),
-        )
+        .writeText(formatDeckAsText(commanders, mainboard, sideboard, mode === "arena"))
         .then(() => toast.success("Copied decklist"))
         .catch(() => toast.error("Copy failed"));
     },
@@ -392,12 +342,7 @@ export default function DeckViewClient({ initialDeck }: Props) {
       const ts = new Date().toISOString();
 
       if (type === "txt" || type === "arena") {
-        const data = formatDeckAsText(
-          commanders,
-          mainboard,
-          sideboard,
-          type === "arena",
-        );
+        const data = formatDeckAsText(commanders, mainboard, sideboard, type === "arena");
         downloadFile(data, `${name}-${type}-${ts}.txt`, "text/plain");
         return;
       }
@@ -428,10 +373,7 @@ export default function DeckViewClient({ initialDeck }: Props) {
             collector_number: dc.card.collector_number,
             set: dc.card.set,
             image_uris: {
-              front:
-                dc.card.image_uris?.large ??
-                dc.card.image_uris?.normal ??
-                undefined,
+              front: dc.card.image_uris?.large ?? dc.card.image_uris?.normal ?? undefined,
             },
           },
         });
@@ -458,11 +400,7 @@ export default function DeckViewClient({ initialDeck }: Props) {
           },
         };
 
-        downloadFile(
-          JSON.stringify(json, null, 2),
-          `${name}-${ts}.json`,
-          "application/json",
-        );
+        downloadFile(JSON.stringify(json, null, 2), `${name}-${ts}.json`, "application/json");
         return;
       }
 
@@ -512,11 +450,7 @@ export default function DeckViewClient({ initialDeck }: Props) {
           ...collect("maybeboard", maybeboard),
         ];
 
-        downloadFile(
-          [headers.join(","), ...rows].join("\n"),
-          `${name}-${ts}.csv`,
-          "text/csv",
-        );
+        downloadFile([headers.join(","), ...rows].join("\n"), `${name}-${ts}.csv`, "text/csv");
       }
     },
     [initialDeck, commanders, mainboard, sideboard, maybeboard],
@@ -565,9 +499,7 @@ export default function DeckViewClient({ initialDeck }: Props) {
             >
               <BookOpen className="h-4 w-4" /> {initialDeck.format}
             </Badge>
-            <span>
-              Updated: {new Date(initialDeck.updated_at).toLocaleDateString()}
-            </span>
+            <span>Updated: {new Date(initialDeck.updated_at).toLocaleDateString()}</span>
             <span>Total Cards: {totalMain + totalSide}</span>
           </div>
           {initialDeck.description && (
@@ -621,15 +553,9 @@ export default function DeckViewClient({ initialDeck }: Props) {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {commanders.map((dc) => (
-                <div
-                  key={dc.id}
-                  onClick={() => openCardModal(dc)}
-                  className="group cursor-pointer"
-                >
+                <div key={dc.id} onClick={() => openCardModal(dc)} className="group cursor-pointer">
                   <CardImage
-                    src={
-                      dc.card.image_uris?.art_crop ?? dc.card.image_uris?.normal
-                    }
+                    src={dc.card.image_uris?.art_crop ?? dc.card.image_uris?.normal}
                     alt={dc.card.name}
                     className="rounded-xl shadow-lg group-hover:scale-105 transition-transform duration-200 border-2 border-transparent group-hover:border-primary"
                     isCommander
@@ -647,10 +573,7 @@ export default function DeckViewClient({ initialDeck }: Props) {
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
           <div className="flex gap-2">
             {/* Export menu */}
-            <DropdownMenu
-              open={isCopyMenuOpen}
-              onOpenChange={setIsCopyMenuOpen}
-            >
+            <DropdownMenu open={isCopyMenuOpen} onOpenChange={setIsCopyMenuOpen}>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">
                   <Download className="mr-2 h-4 w-4" /> Export Deck
@@ -687,10 +610,7 @@ export default function DeckViewClient({ initialDeck }: Props) {
           </div>
 
           {/* Grid / list toggle */}
-          <DeckViewControls
-            viewMode={viewMode}
-            onViewModeChange={setViewMode}
-          />
+          <DeckViewControls viewMode={viewMode} onViewModeChange={setViewMode} />
         </div>
 
         {mounted && (

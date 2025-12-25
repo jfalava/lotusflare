@@ -89,22 +89,14 @@ export const mapScryfallCardToDbo: ScryfallToCardDboMappingFn = (
     keywords: JSON.stringify(scryfallCard.keywords || []),
     colors: scryfallCard.colors ? JSON.stringify(scryfallCard.colors) : null,
     color_identity: JSON.stringify(scryfallCard.color_identity || []),
-    image_uris: scryfallCard.image_uris
-      ? JSON.stringify(scryfallCard.image_uris)
-      : null,
+    image_uris: scryfallCard.image_uris ? JSON.stringify(scryfallCard.image_uris) : null,
     finishes: JSON.stringify(scryfallCard.finishes || []),
-    card_faces: scryfallCard.card_faces
-      ? JSON.stringify(scryfallCard.card_faces)
-      : null,
+    card_faces: scryfallCard.card_faces ? JSON.stringify(scryfallCard.card_faces) : null,
     artist: scryfallCard.artist ?? null,
     illustration_id: scryfallCard.illustration_id ?? null,
     scryfall_uri: scryfallCard.scryfall_uri || "",
-    legalities: scryfallCard.legalities
-      ? JSON.stringify(scryfallCard.legalities)
-      : null,
-    purchase_uris: scryfallCard.purchase_uris
-      ? JSON.stringify(scryfallCard.purchase_uris)
-      : null,
+    legalities: scryfallCard.legalities ? JSON.stringify(scryfallCard.legalities) : null,
+    purchase_uris: scryfallCard.purchase_uris ? JSON.stringify(scryfallCard.purchase_uris) : null,
   };
 };
 
@@ -186,17 +178,15 @@ export const mapDboToScryfallApiCard: DboToScryfallApiCardMappingFn = (
     colors: safeJsonParse<string[]>(cardDbo.colors),
     color_identity: safeJsonParseArray<string>(cardDbo.color_identity),
     image_uris: safeJsonParse<ScryfallImageUris>(cardDbo.image_uris),
-    finishes: safeJsonParseArray<"foil" | "nonfoil" | "etched" | "glossy">(
-      cardDbo.finishes,
-    ),
+    finishes: safeJsonParseArray<"foil" | "nonfoil" | "etched" | "glossy">(cardDbo.finishes),
     card_faces: faces,
     artist: cardDbo.artist,
     illustration_id: cardDbo.illustration_id,
     scryfall_uri: cardDbo.scryfall_uri || "",
     legalities:
-      safeJsonParse<
-        Record<string, "legal" | "not_legal" | "banned" | "restricted">
-      >(cardDbo.legalities) || {},
+      safeJsonParse<Record<string, "legal" | "not_legal" | "banned" | "restricted">>(
+        cardDbo.legalities,
+      ) || {},
     purchase_uris: safeJsonParse<Record<string, string>>(cardDbo.purchase_uris),
   };
 };

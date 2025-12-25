@@ -1,14 +1,7 @@
 // components/context/breadcrumb-context.tsx
 "use client";
 
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import { createContext, useContext, ReactNode, useState, useMemo, useCallback } from "react";
 
 export type BreadcrumbReplacements = Record<string, string>;
 
@@ -18,9 +11,7 @@ interface BreadcrumbContextType {
   removeReplacement: (key: string) => void;
 }
 
-const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(
-  undefined,
-);
+const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
 
 export function BreadcrumbProvider({ children }: { children: ReactNode }) {
   const [replacements, setReplacements] = useState<BreadcrumbReplacements>({});
@@ -31,9 +22,7 @@ export function BreadcrumbProvider({ children }: { children: ReactNode }) {
 
   const removeReplacement = useCallback((key: string) => {
     setReplacements((prev) => {
-      return Object.fromEntries(
-        Object.entries(prev).filter(([k]) => k !== key),
-      );
+      return Object.fromEntries(Object.entries(prev).filter(([k]) => k !== key));
     });
   }, []);
 
@@ -42,11 +31,7 @@ export function BreadcrumbProvider({ children }: { children: ReactNode }) {
     [replacements, addReplacement, removeReplacement],
   );
 
-  return (
-    <BreadcrumbContext.Provider value={value}>
-      {children}
-    </BreadcrumbContext.Provider>
-  );
+  return <BreadcrumbContext.Provider value={value}>{children}</BreadcrumbContext.Provider>;
 }
 
 export function useBreadcrumbReplacements(): BreadcrumbContextType {

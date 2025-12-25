@@ -4,12 +4,7 @@ import packageJson from "../../package.json";
 import { mapScryfallCardToDbo, mapDboToScryfallApiCard } from "../card-utils";
 import { batchInsertCards, prepareCardInsert } from "../helpers/db-helpers";
 import { fetchScryfall } from "../helpers/scryfall-helpers";
-import type {
-  ScryfallApiCard,
-  ScryfallListResponse,
-  Bindings,
-  CardDbo,
-} from "../types";
+import type { ScryfallApiCard, ScryfallListResponse, Bindings, CardDbo } from "../types";
 
 const app = new Hono<{ Bindings: Bindings }>();
 
@@ -82,10 +77,7 @@ app.get("/cards/search", async (c) => {
       return c.json(scryfallResponse);
     }
 
-    if (
-      scryfallResponse.object !== "list" ||
-      !Array.isArray(scryfallResponse.data)
-    ) {
+    if (scryfallResponse.object !== "list" || !Array.isArray(scryfallResponse.data)) {
       console.warn(
         `[WORKER] Scryfall response not a recognized list. Query: "${query}", Body: ${responseText.substring(0, 200)}...`,
       );
@@ -104,9 +96,7 @@ app.get("/cards/search", async (c) => {
       console.log(
         "RAW SCRYFALL DATA FOR SOL RING:",
         JSON.stringify(
-          scryfallResponse.data.find((c) =>
-            c.name.toLowerCase().includes("kumena speaker"),
-          ),
+          scryfallResponse.data.find((c) => c.name.toLowerCase().includes("kumena speaker")),
           null,
           2,
         ),
@@ -123,10 +113,7 @@ app.get("/cards/search", async (c) => {
       }
       const cardDbo = mapScryfallCardToDbo(cardData);
       if (cardData.name.toLowerCase().includes("kumena speaker")) {
-        console.log(
-          "cardToInsert for Sol Ring (after map):",
-          JSON.stringify(cardDbo, null, 2),
-        );
+        console.log("cardToInsert for Sol Ring (after map):", JSON.stringify(cardDbo, null, 2));
       }
       return cardDbo;
     });
@@ -159,9 +146,7 @@ app.get("/cards/:id", async (c) => {
 
   try {
     // 1) Try local DB first
-    const local = await c.env.DB.prepare(
-      "SELECT * FROM Cards WHERE scryfall_id = ?",
-    )
+    const local = await c.env.DB.prepare("SELECT * FROM Cards WHERE scryfall_id = ?")
       .bind(id)
       .first<CardDbo>();
     if (local) {
@@ -268,10 +253,7 @@ app.get("/cards/cardmarket/:cardmarket_id", async (c) => {
 
     return c.json(scryfallCard); // Return the ScryfallApiCard object
   } catch (error: unknown) {
-    console.error(
-      `[WORKER] Error in /scryfall/cards/cardmarket/${cardmarketId}:`,
-      error,
-    );
+    console.error(`[WORKER] Error in /scryfall/cards/cardmarket/${cardmarketId}:`, error);
     return c.json(
       {
         message: "Error fetching card by CardMarket ID.",

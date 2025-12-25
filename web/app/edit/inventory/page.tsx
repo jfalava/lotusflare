@@ -59,10 +59,7 @@ export default async function NewInventoryPage() {
 
   return (
     <Suspense fallback={<InventoryBrowseSkeleton />}>
-      <NewInventoryClient
-        initialInventory={inventoryData}
-        initialPlaces={places}
-      />
+      <NewInventoryClient initialInventory={inventoryData} initialPlaces={places} />
     </Suspense>
   );
 }

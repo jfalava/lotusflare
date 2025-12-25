@@ -23,15 +23,10 @@ export const OracleTextWithSymbols: React.FC<OracleTextWithSymbolsProps> = ({
   // Pre-process text to wrap loyalty abilities in a custom token.
   // This regex finds loyalty costs like "+1:", "−2:", "0:" at the start of a line.
   // It handles both standard hyphen (-) and unicode minus sign (−).
-  const processedText = text.replace(
-    /^([+-−]X|[+-−]\d+|0):/gm,
-    (match) => `LOYALTY[${match}]`,
-  );
+  const processedText = text.replace(/^([+-−]X|[+-−]\d+|0):/gm, (match) => `LOYALTY[${match}]`);
 
   // Regex to split the text by mana symbols AND our custom loyalty tokens.
-  const parts = processedText
-    .split(/(\{[^{}]+\}|LOYALTY\[.*?\])/g)
-    .filter(Boolean);
+  const parts = processedText.split(/(\{[^{}]+\}|LOYALTY\[.*?\])/g).filter(Boolean);
 
   return (
     <div className={cn("whitespace-pre-line leading-relaxed", className)}>

@@ -1,22 +1,12 @@
 import { Hono } from "hono";
 import { mapDboToScryfallApiCard } from "../card-utils";
 import { getPlaceName } from "../helpers/db-helpers";
-import {
-  buildColorGroupSubquery,
-  parseInventorySearchQuery,
-} from "../helpers/inventory-helpers";
-import {
-  getIntId,
-  getPaginationParams,
-  getStringId,
-} from "../helpers/param-helpers";
+import { buildColorGroupSubquery, parseInventorySearchQuery } from "../helpers/inventory-helpers";
+import { getIntId, getPaginationParams, getStringId } from "../helpers/param-helpers";
 import { ensureCardsExist } from "../helpers/scryfall-helpers";
 import { buildInventoryDetailResponse } from "../mappers/inventory-mappers";
 import { handleKnownErrors } from "../middlewares/error-handler";
-import {
-  getValidatedData,
-  validateRequest,
-} from "../middlewares/validate-request";
+import { getValidatedData, validateRequest } from "../middlewares/validate-request";
 import type {
   AddInventoryDetailPayload,
   Bindings,
@@ -85,8 +75,7 @@ app.get("/", async (c) => {
     const countBindings: (string | number)[] = [];
 
     if (searchQuery) {
-      const { searchConditions, generalSearchTerm } =
-        parseInventorySearchQuery(searchQuery);
+      const { searchConditions, generalSearchTerm } = parseInventorySearchQuery(searchQuery);
       const whereClauses: string[] = [];
       const queryBindings: (string | number)[] = [];
 
@@ -96,9 +85,7 @@ app.get("/", async (c) => {
       }
 
       if (searchConditions.length > 0) {
-        const cardConditions = searchConditions
-          .map((c) => `${c.field} LIKE ?`)
-          .join(" AND ");
+        const cardConditions = searchConditions.map((c) => `${c.field} LIKE ?`).join(" AND ");
         const cardBindings = searchConditions.map((c) => c.value);
 
         const subquery = `SELECT DISTINCT id.master_oracle_id FROM InventoryDetails id JOIN Cards cr ON id.card_scryfall_id = cr.scryfall_id WHERE ${cardConditions}`;
@@ -115,8 +102,7 @@ app.get("/", async (c) => {
         countBindings.push(...queryBindings);
       }
     } else if (colorGroup) {
-      const { sql, bindings: subqueryBindings } =
-        buildColorGroupSubquery(colorGroup);
+      const { sql, bindings: subqueryBindings } = buildColorGroupSubquery(colorGroup);
       if (sql) {
         const whereClause = ` WHERE oracle_id IN (${sql}) `;
         masterQuery += whereClause;
@@ -216,8 +202,7 @@ app.get("/", async (c) => {
 
 app.post("/", validateRequest(createMasterInventorySchema), async (c) => {
   try {
-    const { oracle_id, name, notes } =
-      getValidatedData<CreateMasterInventoryPayload>(c);
+    const { oracle_id, name, notes } = getValidatedData<CreateMasterInventoryPayload>(c);
 
     // Use INSERT OR IGNORE to avoid UNIQUE constraint errors
     const result = await c.env.DB.prepare(
@@ -231,9 +216,7 @@ app.post("/", validateRequest(createMasterInventorySchema), async (c) => {
       return c.json(result, 201);
     } else {
       // The row already existed and was ignored. Fetch the existing one to return it.
-      const existing = await c.env.DB.prepare(
-        "SELECT * FROM MasterInventory WHERE oracle_id = ?",
-      )
+      const existing = await c.env.DB.prepare("SELECT * FROM MasterInventory WHERE oracle_id = ?")
         .bind(oracle_id)
         .first<MasterInventoryDbo>();
 
@@ -242,10 +225,7 @@ app.post("/", validateRequest(createMasterInventorySchema), async (c) => {
       } else {
         // This case should be virtually impossible if the INSERT OR IGNORE failed
         // because of a constraint but the row can't be found.
-        return c.json(
-          { message: "Failed to create or find master inventory entry" },
-          500,
-        );
+        return c.json({ message: "Failed to create or find master inventory entry" }, 500);
       }
     }
   } catch (e: unknown) {
@@ -276,10 +256,7 @@ app.post("/details", validateRequest(addInventoryDetailSchema), async (c) => {
     try {
       await ensureCardsExist(c.env.DB, [data.scryfall_card_id]);
     } catch {
-      return c.json(
-        { message: `Card ${data.scryfall_card_id} not found on Scryfall.` },
-        404,
-      );
+      return c.json({ message: `Card ${data.scryfall_card_id} not found on Scryfall.` }, 404);
     }
 
     // verify place if provided
@@ -288,10 +265,7 @@ app.post("/details", validateRequest(addInventoryDetailSchema), async (c) => {
         .bind(data.place_id)
         .first();
       if (!place) {
-        return c.json(
-          { message: `Place with ID ${data.place_id} not found.` },
-          404,
-        );
+        return c.json({ message: `Place with ID ${data.place_id} not found.` }, 404);
       }
     }
 
@@ -315,16 +289,11 @@ app.post("/details", validateRequest(addInventoryDetailSchema), async (c) => {
       .first<InventoryDetailDbo>();
 
     if (!row) {
-      return c.json(
-        { message: "Failed to add item to inventory details" },
-        500,
-      );
+      return c.json({ message: "Failed to add item to inventory details" }, 500);
     }
 
     // load card & place_name
-    const card = await c.env.DB.prepare(
-      "SELECT * FROM Cards WHERE scryfall_id = ?",
-    )
+    const card = await c.env.DB.prepare("SELECT * FROM Cards WHERE scryfall_id = ?")
       .bind(row.card_scryfall_id)
       .first<CardDbo>();
 
@@ -342,100 +311,77 @@ app.post("/details", validateRequest(addInventoryDetailSchema), async (c) => {
 });
 
 // Update an inventory detail item
-app.put(
-  "/details/:id",
-  validateRequest(updateInventoryDetailSchema),
-  async (c) => {
-    try {
-      const id = getIntId(c);
-      const dataToUpdate = getValidatedData<UpdateInventoryDetailPayload>(c);
+app.put("/details/:id", validateRequest(updateInventoryDetailSchema), async (c) => {
+  try {
+    const id = getIntId(c);
+    const dataToUpdate = getValidatedData<UpdateInventoryDetailPayload>(c);
 
-      const existingItem = await c.env.DB.prepare(
-        "SELECT * FROM InventoryDetails WHERE id = ?",
-      )
-        .bind(id)
-        .first<InventoryDetailDbo>();
-      if (!existingItem) {
-        return c.json({ message: "Inventory detail item not found" }, 404);
-      }
-
-      if (dataToUpdate.place_id) {
-        const placeExists = await c.env.DB.prepare(
-          "SELECT id FROM Places WHERE id = ?",
-        )
-          .bind(dataToUpdate.place_id)
-          .first();
-        if (!placeExists) {
-          return c.json(
-            { message: `Place with ID ${dataToUpdate.place_id} not found.` },
-            404,
-          );
-        }
-      }
-
-      const fields: string[] = [];
-      const values: (string | number | null)[] = [];
-
-      (Object.keys(dataToUpdate) as Array<keyof typeof dataToUpdate>).forEach(
-        (key) => {
-          fields.push(`${key} = ?`);
-          if (key === "is_foil") {
-            values.push(dataToUpdate[key] ? 1 : 0);
-          } else {
-            values.push(
-              dataToUpdate[key] === undefined ? null : dataToUpdate[key],
-            );
-          }
-        },
-      );
-
-      if (fields.length === 0) {
-        return c.json({ message: "No fields to update" }, 400);
-      }
-
-      fields.push("updated_at = CURRENT_TIMESTAMP");
-      values.push(id);
-
-      const updatedItemDbo = await c.env.DB.prepare(
-        `UPDATE InventoryDetails SET ${fields.join(", ")} WHERE id = ? RETURNING *`,
-      )
-        .bind(...values)
-        .first<InventoryDetailDbo>();
-
-      if (!updatedItemDbo) {
-        return c.json({ message: "Failed to update inventory detail" }, 500);
-      }
-
-      // Fetch related data for full response
-      const cardDbo = await c.env.DB.prepare(
-        "SELECT * FROM Cards WHERE scryfall_id = ?",
-      )
-        .bind(updatedItemDbo.card_scryfall_id)
-        .first<CardDbo>();
-      if (!cardDbo) return c.json({ message: "Card not found" }, 500);
-
-      const placeName = await getPlaceName(c.env.DB, updatedItemDbo.place_id);
-      const responseItem = buildInventoryDetailResponse(
-        updatedItemDbo,
-        cardDbo,
-        placeName,
-      );
-
-      return c.json(responseItem);
-    } catch (e: unknown) {
-      return handleKnownErrors(e, c, "Failed to update inventory detail");
+    const existingItem = await c.env.DB.prepare("SELECT * FROM InventoryDetails WHERE id = ?")
+      .bind(id)
+      .first<InventoryDetailDbo>();
+    if (!existingItem) {
+      return c.json({ message: "Inventory detail item not found" }, 404);
     }
-  },
-);
+
+    if (dataToUpdate.place_id) {
+      const placeExists = await c.env.DB.prepare("SELECT id FROM Places WHERE id = ?")
+        .bind(dataToUpdate.place_id)
+        .first();
+      if (!placeExists) {
+        return c.json({ message: `Place with ID ${dataToUpdate.place_id} not found.` }, 404);
+      }
+    }
+
+    const fields: string[] = [];
+    const values: (string | number | null)[] = [];
+
+    (Object.keys(dataToUpdate) as Array<keyof typeof dataToUpdate>).forEach((key) => {
+      fields.push(`${key} = ?`);
+      if (key === "is_foil") {
+        values.push(dataToUpdate[key] ? 1 : 0);
+      } else {
+        values.push(dataToUpdate[key] === undefined ? null : dataToUpdate[key]);
+      }
+    });
+
+    if (fields.length === 0) {
+      return c.json({ message: "No fields to update" }, 400);
+    }
+
+    fields.push("updated_at = CURRENT_TIMESTAMP");
+    values.push(id);
+
+    const updatedItemDbo = await c.env.DB.prepare(
+      `UPDATE InventoryDetails SET ${fields.join(", ")} WHERE id = ? RETURNING *`,
+    )
+      .bind(...values)
+      .first<InventoryDetailDbo>();
+
+    if (!updatedItemDbo) {
+      return c.json({ message: "Failed to update inventory detail" }, 500);
+    }
+
+    // Fetch related data for full response
+    const cardDbo = await c.env.DB.prepare("SELECT * FROM Cards WHERE scryfall_id = ?")
+      .bind(updatedItemDbo.card_scryfall_id)
+      .first<CardDbo>();
+    if (!cardDbo) return c.json({ message: "Card not found" }, 500);
+
+    const placeName = await getPlaceName(c.env.DB, updatedItemDbo.place_id);
+    const responseItem = buildInventoryDetailResponse(updatedItemDbo, cardDbo, placeName);
+
+    return c.json(responseItem);
+  } catch (e: unknown) {
+    return handleKnownErrors(e, c, "Failed to update inventory detail");
+  }
+});
 
 // Delete an inventory detail item
 app.delete("/details/:id", async (c) => {
   try {
     const id = getIntId(c);
 
-    const { success, meta } = await c.env.DB.prepare(
-      "DELETE FROM InventoryDetails WHERE id = ?",
-    )
+    const { success, meta } = await c.env.DB.prepare("DELETE FROM InventoryDetails WHERE id = ?")
       .bind(id)
       .run();
 

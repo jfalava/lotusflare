@@ -23,11 +23,7 @@ export type CardDetailModalProps = {
     | null;
 };
 
-export function CardDetailModal({
-  open,
-  onOpenChange,
-  card,
-}: CardDetailModalProps) {
+export function CardDetailModal({ open, onOpenChange, card }: CardDetailModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-auto min-w-[360px] max-w-[95vw] sm:max-w-[90vw] md:max-w-[85vw] lg:max-w-[80vw] xl:max-w-[1200px] 2xl:max-w-[1400px] max-h-[90vh] flex flex-col p-0 overflow-hidden transition-opacity duration-200 data-[state=open]:opacity-100 data-[state=closed]:opacity-0">

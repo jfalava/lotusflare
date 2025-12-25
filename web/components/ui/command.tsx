@@ -17,10 +17,7 @@ const CommandContext = React.createContext<{
   onDismiss?: () => void;
 }>({});
 
-function Command({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive>) {
+function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
     <CommandPrimitive
       data-slot="command"
@@ -102,37 +99,31 @@ function CommandInput({
   }, [isMobile]);
 
   // when user hits ↑/↓ in the search box, jump focus into the list
-  const handleKeyDown = React.useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
-      e.preventDefault();
+  const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault();
 
-      // find our command root and list container
-      const cmdRoot = inputRef.current?.closest("[data-slot=command]");
-      const listEl = cmdRoot?.querySelector('[data-slot="command-list"]');
-      if (!listEl) return;
+    // find our command root and list container
+    const cmdRoot = inputRef.current?.closest("[data-slot=command]");
+    const listEl = cmdRoot?.querySelector('[data-slot="command-list"]');
+    if (!listEl) return;
 
-      // collect only the visible items
-      const items = Array.from(
-        listEl.querySelectorAll<HTMLElement>("[data-slot=command-item]"),
-      ).filter((el) => {
-        // filter out hidden items
-        return !el.hasAttribute("hidden");
-      });
-      if (items.length === 0) return;
+    // collect only the visible items
+    const items = Array.from(
+      listEl.querySelectorAll<HTMLElement>("[data-slot=command-item]"),
+    ).filter((el) => {
+      // filter out hidden items
+      return !el.hasAttribute("hidden");
+    });
+    if (items.length === 0) return;
 
-      // focus first (↓) or last (↑)
-      const target = e.key === "ArrowDown" ? items[0] : items[items.length - 1];
-      target.focus();
-    },
-    [],
-  );
+    // focus first (↓) or last (↑)
+    const target = e.key === "ArrowDown" ? items[0] : items[items.length - 1];
+    target.focus();
+  }, []);
 
   return (
-    <div
-      data-slot="command-input-wrapper"
-      className="flex h-9 items-center gap-2 border-b px-3"
-    >
+    <div data-slot="command-input-wrapper" className="flex h-9 items-center gap-2 border-b px-3">
       <SearchIcon className="size-4 shrink-0 opacity-50" />
       <CommandPrimitive.Input
         ref={inputRef}
@@ -152,10 +143,7 @@ function CommandInput({
   );
 }
 
-function CommandList({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.List>) {
+function CommandList({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.List>) {
   const handleWheel = React.useCallback((e: React.WheelEvent) => {
     // Ensure wheel events are handled properly
     e.stopPropagation();
@@ -163,19 +151,14 @@ function CommandList({
   return (
     <CommandPrimitive.List
       data-slot="command-list"
-      className={cn(
-        "max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto",
-        className,
-      )}
+      className={cn("max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto", className)}
       onWheel={handleWheel}
       {...props}
     />
   );
 }
 
-function CommandEmpty({
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.Empty>) {
+function CommandEmpty({ ...props }: React.ComponentProps<typeof CommandPrimitive.Empty>) {
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
@@ -229,9 +212,7 @@ function CommandItem({
       // Auto-close parent popover if it exists - multiple approaches for reliability
       if (itemRef.current) {
         // Method 1: Find popover content and dispatch escape
-        const popoverContent = itemRef.current.closest(
-          "[data-radix-popover-content]",
-        );
+        const popoverContent = itemRef.current.closest("[data-radix-popover-content]");
         if (popoverContent) {
           const escapeEvent = new KeyboardEvent("keydown", {
             key: "Escape",
@@ -243,16 +224,12 @@ function CommandItem({
           popoverContent.dispatchEvent(escapeEvent);
         } else {
           // Method 2: Look for open popover trigger and click it
-          const openTrigger = document.querySelector(
-            '[data-state="open"][aria-haspopup="dialog"]',
-          );
+          const openTrigger = document.querySelector('[data-state="open"][aria-haspopup="dialog"]');
           if (openTrigger && openTrigger instanceof HTMLElement) {
             openTrigger.click();
           } else {
             // Method 3: Try to find any open popover trigger
-            const anyOpenTrigger = document.querySelector(
-              '[aria-expanded="true"]',
-            );
+            const anyOpenTrigger = document.querySelector('[aria-expanded="true"]');
             if (anyOpenTrigger && anyOpenTrigger instanceof HTMLElement) {
               anyOpenTrigger.click();
             }
@@ -280,17 +257,11 @@ function CommandItem({
   );
 }
 
-function CommandShortcut({
-  className,
-  ...props
-}: React.ComponentProps<"span">) {
+function CommandShortcut({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
       data-slot="command-shortcut"
-      className={cn(
-        "text-muted-foreground ml-auto text-xs tracking-widest",
-        className,
-      )}
+      className={cn("text-muted-foreground ml-auto text-xs tracking-widest", className)}
       {...props}
     />
   );

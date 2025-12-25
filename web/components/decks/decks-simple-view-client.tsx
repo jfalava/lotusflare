@@ -15,10 +15,5 @@ export default function DecksSimpleViewClient({
   initialDecks,
   initialSearch,
 }: DecksSimpleViewClientProps) {
-  return (
-    <DeckListClient
-      initialDecks={initialDecks}
-      initialSearchTerm={initialSearch}
-    />
-  );
+  return <DeckListClient initialDecks={initialDecks} initialSearchTerm={initialSearch} />;
 }

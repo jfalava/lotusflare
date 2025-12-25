@@ -18,26 +18,11 @@ import {
 } from "@/components/ui/drawer";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  Shuffle,
-  Hand,
-  RotateCcw,
-  ArrowDown,
-  Info,
-  X,
-  Sparkles,
-} from "lucide-react";
+import { Shuffle, Hand, RotateCcw, ArrowDown, Info, X, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
-import type {
-  DeckWithDetails,
-  DeckCardWithDetails,
-  ScryfallApiCard,
-} from "#/backend/src/types";
-import {
-  CardDetailModal,
-  type CardDetailModalProps,
-} from "@/components/card/card-detail-modal";
+import type { DeckWithDetails, DeckCardWithDetails, ScryfallApiCard } from "#/backend/src/types";
+import { CardDetailModal, type CardDetailModalProps } from "@/components/card/card-detail-modal";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface SampleHandDrawerProps {
@@ -56,8 +41,7 @@ function createCardPool(deck: DeckWithDetails): DeckCardWithDetails[] {
 
   // filter out sideboard and commander cards
   const main = deck.cards.filter(
-    (c: DeckCardWithDetails) =>
-      !c.is_sideboard && !(deck.format === "commander" && c.is_commander),
+    (c: DeckCardWithDetails) => !c.is_sideboard && !(deck.format === "commander" && c.is_commander),
   );
 
   main.forEach((dc: DeckCardWithDetails) => {
@@ -112,13 +96,7 @@ function getCardImageUrl(card: ScryfallApiCard): string | null {
   return uris.normal || uris.large || uris.small || null;
 }
 
-function CardInHand({
-  handCard,
-  index,
-}: {
-  handCard: HandCard;
-  index: number;
-}) {
+function CardInHand({ handCard, index }: { handCard: HandCard; index: number }) {
   const img = getCardImageUrl(handCard.card);
   const name = handCard.card.name;
 
@@ -145,9 +123,7 @@ function CardInHand({
             {handCard.card.mana_cost && (
               <p className="mt-1 text-[10px]">{handCard.card.mana_cost}</p>
             )}
-            <p className="mt-1 text-[10px] opacity-75">
-              {handCard.card.type_line}
-            </p>
+            <p className="mt-1 text-[10px] opacity-75">{handCard.card.type_line}</p>
           </div>
         </div>
       )}
@@ -169,10 +145,7 @@ function CardInHand({
   );
 }
 
-export default function SampleHandDrawer({
-  deck,
-  children,
-}: SampleHandDrawerProps) {
+export default function SampleHandDrawer({ deck, children }: SampleHandDrawerProps) {
   // Alt+T opens the Sample Hand drawer
   const triggerRef = useRef<HTMLButtonElement>(null);
   useKeyPress("t", () => triggerRef.current?.click(), { alt: true });
@@ -180,8 +153,7 @@ export default function SampleHandDrawer({
   const [currentHand, setCurrentHand] = useState<HandCard[]>([]);
   const [mulliganCount, setMulliganCount] = useState(0);
   const [bottomedIndices, setBottomedIndices] = useState<number[]>([]);
-  const [modalCardData, setModalCardData] =
-    useState<CardDetailModalProps["card"]>(null);
+  const [modalCardData, setModalCardData] = useState<CardDetailModalProps["card"]>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const isClosingModalRef = useRef(false);
 
@@ -246,13 +218,9 @@ export default function SampleHandDrawer({
       toast.error(`Select exactly ${mulliganCount} card(s)`);
       return;
     }
-    const finalHand = currentHand.filter(
-      (_: HandCard, i: number) => !bottomedIndices.includes(i),
-    );
+    const finalHand = currentHand.filter((_: HandCard, i: number) => !bottomedIndices.includes(i));
     setCurrentHand(finalHand);
-    toast.success(
-      `Put ${mulliganCount} on bottom, final hand ${finalHand.length}`,
-    );
+    toast.success(`Put ${mulliganCount} on bottom, final hand ${finalHand.length}`);
     setMulliganCount(0);
     setBottomedIndices([]);
   };
@@ -285,9 +253,7 @@ export default function SampleHandDrawer({
   };
 
   const handleCardClick = (hc: HandCard) => {
-    const entry = deck.cards?.find(
-      (c: DeckCardWithDetails) => c.id === hc.deckCardId,
-    );
+    const entry = deck.cards?.find((c: DeckCardWithDetails) => c.id === hc.deckCardId);
     const data: CardDetailModalProps["card"] = {
       ...hc.card,
       is_commander: entry?.is_commander ?? false,
@@ -300,14 +266,11 @@ export default function SampleHandDrawer({
   const mainboardCount =
     deck.cards
       ?.filter((c: DeckCardWithDetails) => !c.is_sideboard && !c.is_commander)
-      .reduce((sum: number, c: DeckCardWithDetails) => sum + c.quantity, 0) ||
-    0;
+      .reduce((sum: number, c: DeckCardWithDetails) => sum + c.quantity, 0) || 0;
 
   const handStats = useMemo(() => {
     if (!currentHand.length) return null;
-    const spellCards = currentHand.filter(
-      (h) => !h.card.type_line.toLowerCase().includes("land"),
-    );
+    const spellCards = currentHand.filter((h) => !h.card.type_line.toLowerCase().includes("land"));
     const lands = currentHand.length - spellCards.length;
     const spells = spellCards.length;
 
@@ -385,9 +348,8 @@ export default function SampleHandDrawer({
               >
                 <Info className="h-4 w-4 shrink-0" />
                 <p className="whitespace-nowrap flex-shrink-0">
-                  <strong>London Mulligan:</strong> Each mulligan draws 7 cards,
-                  then at the end you put N cards (equal to mulligans taken) on
-                  the bottom of your library.
+                  <strong>London Mulligan:</strong> Each mulligan draws 7 cards, then at the end you
+                  put N cards (equal to mulligans taken) on the bottom of your library.
                 </p>
               </div>
             )}
@@ -438,13 +400,9 @@ export default function SampleHandDrawer({
                                   )}
                                 >
                                   <div className="text-center text-xs text-muted-foreground">
-                                    <p className="font-medium leading-tight">
-                                      {name}
-                                    </p>
+                                    <p className="font-medium leading-tight">{name}</p>
                                     {c.card.mana_cost && (
-                                      <p className="mt-1 text-[10px]">
-                                        {c.card.mana_cost}
-                                      </p>
+                                      <p className="mt-1 text-[10px]">{c.card.mana_cost}</p>
                                     )}
                                     <p className="mt-1 text-[10px] opacity-75">
                                       {c.card.type_line}
@@ -482,9 +440,7 @@ export default function SampleHandDrawer({
                             "focus-visible:ring-offset-2 rounded-lg",
                           )}
                           onClick={() =>
-                            mulliganCount > 0
-                              ? toggleBottom(i)
-                              : handleCardClick(hc)
+                            mulliganCount > 0 ? toggleBottom(i) : handleCardClick(hc)
                           }
                           aria-label={
                             mulliganCount > 0
@@ -517,29 +473,21 @@ export default function SampleHandDrawer({
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-muted/50 rounded-lg p-3 text-center">
                     <div className="text-xs text-muted-foreground">Cards</div>
-                    <div className="text-lg font-bold text-primary">
-                      {currentHand.length}
-                    </div>
+                    <div className="text-lg font-bold text-primary">{currentHand.length}</div>
                   </div>
                   <div className="bg-muted/50 rounded-lg p-3 text-center">
-                    <div className="text-xs text-muted-foreground">
-                      Avg Spell CMC
-                    </div>
+                    <div className="text-xs text-muted-foreground">Avg Spell CMC</div>
                     <div className="text-lg font-bold text-primary">
                       {handStats?.avgSpellCmc.toFixed(1) ?? "0"}
                     </div>
                   </div>
                   <div className="bg-muted/50 rounded-lg p-3 text-center">
                     <div className="text-xs text-muted-foreground">Lands</div>
-                    <div className="text-lg font-bold text-primary">
-                      {handStats?.lands ?? 0}
-                    </div>
+                    <div className="text-lg font-bold text-primary">{handStats?.lands ?? 0}</div>
                   </div>
                   <div className="bg-muted/50 rounded-lg p-3 text-center">
                     <div className="text-xs text-muted-foreground">Spells</div>
-                    <div className="text-lg font-bold text-primary">
-                      {handStats?.spells ?? 0}
-                    </div>
+                    <div className="text-lg font-bold text-primary">{handStats?.spells ?? 0}</div>
                   </div>
                 </div>
               </div>
@@ -547,9 +495,7 @@ export default function SampleHandDrawer({
               <div className="py-8 text-center text-muted-foreground">
                 <Hand className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="text-base mb-1">Ready to draw your hand?</p>
-                <p className="text-sm opacity-75">
-                  Tap “Draw Hand” to start testing.
-                </p>
+                <p className="text-sm opacity-75">Tap “Draw Hand” to start testing.</p>
               </div>
             )}
             {/* Next Draws */}
@@ -621,11 +567,7 @@ export default function SampleHandDrawer({
               </Button>
 
               {mulliganCount > 0 && (
-                <Button
-                  onClick={confirmBottom}
-                  variant="default"
-                  className="flex-1 gap-2"
-                >
+                <Button onClick={confirmBottom} variant="default" className="flex-1 gap-2">
                   Confirm
                 </Button>
               )}

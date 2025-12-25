@@ -6,9 +6,7 @@ interface CardImagePlaceholderProps {
   className?: string;
 }
 
-export const CardImagePlaceholder: React.FC<CardImagePlaceholderProps> = ({
-  className,
-}) => {
+export const CardImagePlaceholder: React.FC<CardImagePlaceholderProps> = ({ className }) => {
   return (
     <div
       className={clsx(

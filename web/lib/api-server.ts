@@ -27,9 +27,7 @@ interface ScryfallListResponse<T> {
 export async function fetchDecks(): Promise<DeckWithDetails[]> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const decks = await serverFetchJsonSafe<DeckWithDetails[]>(
-      `${apiBaseUrl}/api/decks`,
-    );
+    const decks = await serverFetchJsonSafe<DeckWithDetails[]>(`${apiBaseUrl}/api/decks`);
     return decks || [];
   } catch (error) {
     console.error("[Server] Failed to fetch decks:", error);
@@ -37,14 +35,10 @@ export async function fetchDecks(): Promise<DeckWithDetails[]> {
   }
 }
 
-export async function fetchDeckById(
-  id: string,
-): Promise<DeckWithDetails | null> {
+export async function fetchDeckById(id: string): Promise<DeckWithDetails | null> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    return await serverFetchJsonSafe<DeckWithDetails>(
-      `${apiBaseUrl}/api/decks/${id}`,
-    );
+    return await serverFetchJsonSafe<DeckWithDetails>(`${apiBaseUrl}/api/decks/${id}`);
   } catch (error) {
     console.error(`[Server] Failed to fetch deck ${id}:`, error);
     return null;
@@ -74,9 +68,7 @@ export async function fetchInventoryMeta(
       url.searchParams.set("colorGroup", colorGroup);
     }
 
-    return await serverFetchJson<PaginatedMasterInventoryResponse>(
-      url.toString(),
-    );
+    return await serverFetchJson<PaginatedMasterInventoryResponse>(url.toString());
   } catch (error) {
     console.error("[Server] Failed to fetch inventory metadata:", error);
     throw error;
@@ -100,13 +92,10 @@ export async function fetchInventoryCounts(): Promise<Record<string, number>> {
 export async function deleteInventoryDetail(detailId: number): Promise<void> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const response = await fetch(
-      `${apiBaseUrl}/api/v2/inventory/details/${detailId}`,
-      {
-        method: "DELETE",
-        headers: { ...getAuthHeaders() },
-      },
-    );
+    const response = await fetch(`${apiBaseUrl}/api/v2/inventory/details/${detailId}`, {
+      method: "DELETE",
+      headers: { ...getAuthHeaders() },
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to delete inventory detail: ${response.status}`);
@@ -166,9 +155,7 @@ export async function createInventoryDetail(payload: {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(
-        `Failed to create inventory detail: ${response.status} - ${errorText}`,
-      );
+      throw new Error(`Failed to create inventory detail: ${response.status} - ${errorText}`);
     }
 
     return await response.json();
@@ -196,14 +183,10 @@ export async function searchScryfallCards(
   }
 }
 
-export async function fetchScryfallCardById(
-  scryfallId: string,
-): Promise<ScryfallApiCard> {
+export async function fetchScryfallCardById(scryfallId: string): Promise<ScryfallApiCard> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    return await serverFetchJson<ScryfallApiCard>(
-      `${apiBaseUrl}/api/scryfall/cards/${scryfallId}`,
-    );
+    return await serverFetchJson<ScryfallApiCard>(`${apiBaseUrl}/api/scryfall/cards/${scryfallId}`);
   } catch (error) {
     console.error("[Server] Failed to fetch Scryfall card:", error);
     throw error;
@@ -217,9 +200,7 @@ export async function fetchScryfallCardById(
 export async function fetchPlaces(): Promise<PlaceDbo[]> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    return (
-      (await serverFetchJsonSafe<PlaceDbo[]>(`${apiBaseUrl}/api/places`)) || []
-    );
+    return (await serverFetchJsonSafe<PlaceDbo[]>(`${apiBaseUrl}/api/places`)) || [];
   } catch (error) {
     console.error("[Server] Failed to fetch places:", error);
     return [];

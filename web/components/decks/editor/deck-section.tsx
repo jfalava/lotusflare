@@ -19,14 +19,8 @@ interface DeckSectionProps {
     section: "mainboard" | "sideboard" | "maybeboard",
     newQuantity: string,
   ) => void;
-  onRemove: (
-    tempId: string,
-    section: "mainboard" | "sideboard" | "maybeboard",
-  ) => void;
-  onSetCommander?: (
-    tempId: string,
-    section: "mainboard" | "sideboard" | "maybeboard",
-  ) => void;
+  onRemove: (tempId: string, section: "mainboard" | "sideboard" | "maybeboard") => void;
+  onSetCommander?: (tempId: string, section: "mainboard" | "sideboard" | "maybeboard") => void;
   commanderTempId?: string | null;
   onMoveToOtherBoard: (
     tempId: string,
@@ -81,10 +75,7 @@ const DeckSection: React.FC<DeckSectionProps> = ({
   deckFormat,
   isDetailModalOpen,
 }) => {
-  const cardCount = cards.reduce(
-    (sum, c) => sum + (parseInt(c.quantity, 10) || 0),
-    0,
-  );
+  const cardCount = cards.reduce((sum, c) => sum + (parseInt(c.quantity, 10) || 0), 0);
 
   // DnD drop for moving between sections
   const dropRef = useRef<HTMLDivElement>(null);
@@ -128,11 +119,7 @@ const DeckSection: React.FC<DeckSectionProps> = ({
     }
   };
 
-  const handleHoverStart = (
-    e: React.MouseEvent<HTMLSpanElement>,
-    src: string,
-    alt: string,
-  ) => {
+  const handleHoverStart = (e: React.MouseEvent<HTMLSpanElement>, src: string, alt: string) => {
     if (hideTimeoutRef.current) {
       clearTimeout(hideTimeoutRef.current);
       hideTimeoutRef.current = null;
@@ -152,13 +139,7 @@ const DeckSection: React.FC<DeckSectionProps> = ({
   };
 
   const handleHoverMove = (e: React.MouseEvent<HTMLSpanElement>) => {
-    if (
-      !previewRef.current ||
-      isTouchDevice ||
-      isDetailModalOpen ||
-      !hoveredPreview
-    )
-      return;
+    if (!previewRef.current || isTouchDevice || isDetailModalOpen || !hoveredPreview) return;
     const previewWidth = 250;
     const previewHeight = previewRef.current.offsetHeight;
     let x = e.clientX + 12;
@@ -219,17 +200,12 @@ const DeckSection: React.FC<DeckSectionProps> = ({
         details.card_faces && details.card_faces.length > 0
           ? details.card_faces[0].type_line
           : details.type_line;
-      const found = TYPE_ORDER.find(
-        (t) => t !== "Other" && typeLineToUse.includes(t),
-      );
+      const found = TYPE_ORDER.find((t) => t !== "Other" && typeLineToUse.includes(t));
       bins[found ?? "Other"].push(c);
     });
     return TYPE_ORDER.map((t) => {
       const groupCards = bins[t];
-      const count = groupCards.reduce(
-        (sum, card) => sum + (parseInt(card.quantity, 10) || 0),
-        0,
-      );
+      const count = groupCards.reduce((sum, card) => sum + (parseInt(card.quantity, 10) || 0), 0);
       return { type: t, name: GROUP_LABELS[t], cards: groupCards, count };
     }).filter((g) => g.cards.length > 0);
   }, [cards]);
@@ -259,9 +235,7 @@ const DeckSection: React.FC<DeckSectionProps> = ({
 
       <div className="flex-grow overflow-auto p-2">
         {cards.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">
-            No cards yet.
-          </p>
+          <p className="text-sm text-muted-foreground text-center py-8">No cards yet.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {sortedGroups.map((group) => (
@@ -270,12 +244,7 @@ const DeckSection: React.FC<DeckSectionProps> = ({
                   <div className="flex items-center gap-x-1">
                     {group.type !== "Other" && (
                       <i
-                        className={cn(
-                          "ms",
-                          `ms-${group.type.toLowerCase()}`,
-                          "ms-shadow",
-                          "mr-1",
-                        )}
+                        className={cn("ms", `ms-${group.type.toLowerCase()}`, "ms-shadow", "mr-1")}
                         aria-hidden="true"
                         title={group.name}
                       />

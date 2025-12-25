@@ -62,11 +62,7 @@ const DecksTab = ({ recentDecks, quickStats }: DecksTabProps) => {
                       <p className="font-medium">{deck.name}</p>
                       <p className="text-sm text-muted-foreground capitalize">
                         {deck.format} •{" "}
-                        {deck.cards?.reduce(
-                          (sum, card) => sum + card.quantity,
-                          0,
-                        ) || 0}{" "}
-                        cards
+                        {deck.cards?.reduce((sum, card) => sum + card.quantity, 0) || 0} cards
                       </p>
                     </div>
                     <Badge variant="secondary">

@@ -1,9 +1,6 @@
 // components/card/modal-collection-list.tsx
 import React from "react";
-import type {
-  MasterInventoryWithDetails,
-  ScryfallApiCard,
-} from "#/backend/src/types";
+import type { MasterInventoryWithDetails, ScryfallApiCard } from "#/backend/src/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
@@ -50,9 +47,7 @@ export const ModalCollectionList: React.FC<ModalCollectionListProps> = ({
   const getFullCardImageUri = (card: ScryfallApiCard): string | undefined => {
     if (card.image_uris?.normal) return card.image_uris.normal;
     if (card.image_uris?.png) return card.image_uris.png;
-    const face = Array.isArray(card.card_faces)
-      ? card.card_faces[0]
-      : undefined;
+    const face = Array.isArray(card.card_faces) ? card.card_faces[0] : undefined;
     if (face?.image_uris?.normal) return face.image_uris.normal;
     if (face?.image_uris?.png) return face.image_uris.png;
     return undefined;
@@ -81,13 +76,7 @@ export const ModalCollectionList: React.FC<ModalCollectionListProps> = ({
             className="flex flex-col gap-2 p-4 bg-background rounded-lg border border-border hover:bg-muted/50 hover:shadow-md transition-all duration-150"
             onMouseEnter={(e) => {
               const base = getFullCardImageUri(detail.card);
-              onMouseEnter?.(
-                e,
-                base,
-                detail.card.name,
-                detail.language,
-                detail.card,
-              );
+              onMouseEnter?.(e, base, detail.card.name, detail.language, detail.card);
             }}
             onMouseMove={(e) => onMouseMove?.(e)}
             onMouseLeave={() => onMouseLeave?.()}
@@ -98,8 +87,7 @@ export const ModalCollectionList: React.FC<ModalCollectionListProps> = ({
                   {detail.quantity}×
                 </Badge>
                 <Badge variant="outline" className="text-xs">
-                  {detail.card.set.toUpperCase()} #
-                  {detail.card.collector_number}
+                  {detail.card.set.toUpperCase()} #{detail.card.collector_number}
                 </Badge>
                 {detail.is_foil && (
                   <Badge
@@ -111,12 +99,7 @@ export const ModalCollectionList: React.FC<ModalCollectionListProps> = ({
                 )}
               </div>
               {detail.card.purchase_uris?.cardmarket && (
-                <Button
-                  asChild
-                  variant="outline"
-                  size="sm"
-                  className="h-7 px-2"
-                >
+                <Button asChild variant="outline" size="sm" className="h-7 px-2">
                   <a
                     href={detail.card.purchase_uris.cardmarket}
                     target="_blank"
@@ -131,12 +114,7 @@ export const ModalCollectionList: React.FC<ModalCollectionListProps> = ({
             <div className="flex items-center gap-4 flex-wrap text-sm">
               <div className="flex items-center gap-1">
                 <span className="text-muted-foreground">Condition:</span>
-                <Badge
-                  className={clsx(
-                    "text-xs font-medium",
-                    getConditionColor(detail.condition),
-                  )}
-                >
+                <Badge className={clsx("text-xs font-medium", getConditionColor(detail.condition))}>
                   {detail.condition}
                 </Badge>
               </div>
