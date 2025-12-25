@@ -4,7 +4,6 @@ import packageJson from "../../package.json";
 import { mapScryfallCardToDbo, mapDboToScryfallApiCard } from "../card-utils";
 import { batchInsertCards, prepareCardInsert } from "../helpers/db-helpers";
 import { fetchScryfall } from "../helpers/scryfall-helpers";
-import { handleKnownErrors } from "../middlewares/error-handler";
 import type {
   ScryfallApiCard,
   ScryfallListResponse,
@@ -54,7 +53,7 @@ app.get("/cards/search", async (c) => {
         }
         c.status(directResponse.status as StatusCode);
         return c.json(errorJson); // Forward Scryfall's error
-      } catch (e) {
+      } catch {
         // If parsing errorJson fails, return a generic one
         return c.json({
           message: `Scryfall API request failed: ${directResponse.status}`,
@@ -246,7 +245,7 @@ app.get("/cards/cardmarket/:cardmarket_id", async (c) => {
         const errorJson = JSON.parse(responseText);
         c.status(directResponse.status as StatusCode);
         return c.json(errorJson); // Forward Scryfall's error
-      } catch (e) {
+      } catch {
         c.status(directResponse.status as StatusCode);
         return c.json({
           message: `Scryfall API request failed: ${directResponse.status}`,

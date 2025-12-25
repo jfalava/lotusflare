@@ -6,7 +6,7 @@ import { Context } from "hono";
  * @param errorMessage - Error message to return on failure
  * @returns Wrapped handler with error handling
  */
-export function withErrorHandling<T>(
+export function withErrorHandling(
   handler: (c: Context) => Promise<Response>,
   errorMessage: string,
 ) {

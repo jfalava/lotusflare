@@ -12,7 +12,7 @@ export function validateRequest<T>(schema: ZodSchema<T>) {
 
     try {
       body = await c.req.json();
-    } catch (e) {
+    } catch {
       return c.json({ message: "Invalid JSON in request body" }, 400);
     }
 
