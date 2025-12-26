@@ -45,6 +45,22 @@ export async function fetchDeckById(id: string): Promise<DeckWithDetails | null>
   }
 }
 
+export async function checkDeckLegality(
+  deckId: string,
+  format: string,
+): Promise<{ is_legal: boolean; illegal_cards: Array<{ name: string; scryfall_id: string; status: string }> } | null> {
+  try {
+    const apiBaseUrl = getApiBaseUrl();
+    return await serverFetchJsonSafe<{
+      is_legal: boolean;
+      illegal_cards: Array<{ name: string; scryfall_id: string; status: string }>;
+    }>(`${apiBaseUrl}/api/decks/${deckId}/legality?format=${encodeURIComponent(format)}`);
+  } catch (error) {
+    console.error(`[Server] Failed to check deck ${deckId} legality:`, error);
+    return null;
+  }
+}
+
 // =============================================================================
 // INVENTORY API FUNCTIONS
 // =============================================================================

@@ -9,6 +9,7 @@ import {
   checkCommanderRules,
   checkOathbreakerRules,
 } from "@/components/decks/legality-rules";
+import { checkDeckLegality } from "@/lib/api-server";
 
 interface DeckLegalityNoticeProps {
   deckId?: string;
@@ -75,41 +76,18 @@ export const DeckLegalityNotice: React.FC<DeckLegalityNoticeProps> = ({
     }
 
     if (deckId) {
-      try {
-        const response = await fetch(
-          `/api/decks/${deckId}/legality?format=${encodeURIComponent(deckFormat)}`,
-        );
-        if (response.ok) {
-          const apiResult = (await response.json()) as {
-            is_legal: boolean;
-            illegal_cards: Array<{
-              name: string;
-              scryfall_id: string;
-              status: string;
-            }>;
-          };
-          if (!apiResult.is_legal && Array.isArray(apiResult.illegal_cards)) {
-            apiResult.illegal_cards.forEach((ic) => {
-              currentIssues.push(
-                `${ic.name} is ${(ic.status ?? "illegal").toString().replace(/_/g, " ")} in ${deckFormat}.`,
-              );
-            });
-          }
-          setLegality((prev) => ({ ...prev, apiCheckedFormat: deckFormat }));
-        } else {
-          const errorData = (await response.json().catch(() => ({}))) as {
-            message?: string;
-            details?: string;
-          };
-          const apiErrorMessage =
-            errorData.message || errorData.details || `API Error: ${response.status}`;
-          currentIssues.push(`Server could not verify card restrictions: ${apiErrorMessage}.`);
+      const apiResult = await checkDeckLegality(deckId, deckFormat);
+      if (apiResult) {
+        if (!apiResult.is_legal && Array.isArray(apiResult.illegal_cards)) {
+          apiResult.illegal_cards.forEach((ic) => {
+            currentIssues.push(
+              `${ic.name} is ${(ic.status ?? "illegal").toString().replace(/_/g, " ")} in ${deckFormat}.`,
+            );
+          });
         }
-      } catch (error) {
-        let msg = "Network error: Failed to connect to server for legality check.";
-        if (error instanceof Error && error.message) msg += ` (${error.message})`;
-        else if (typeof error === "string" && error) msg += ` (${error})`;
-        currentIssues.push(msg);
+        setLegality((prev) => ({ ...prev, apiCheckedFormat: deckFormat }));
+      } else {
+        currentIssues.push("Server could not verify card restrictions. Please try again later.");
       }
     } else if (deckFormat !== "custom") {
       currentIssues.push(
