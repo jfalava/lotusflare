@@ -1,8 +1,9 @@
-import { getApiBaseUrl, getAuthHeaders } from "@/lib/server-fetch";
+import { serverFetch } from "@/lib/server-fetch";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
  * Proxy a request to the backend API with authentication headers
+ * Uses service binding in production, HTTP fetch in local dev
  * @param request - The incoming Next.js request
  * @param path - The backend API path (e.g., "/api/places")
  * @param options - Additional fetch options
@@ -14,9 +15,6 @@ export async function proxyToBackend(
   options?: RequestInit,
 ): Promise<NextResponse> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}${path}`;
-
     // Get the request body if present
     let body: string | undefined;
     if (request.method !== "GET" && request.method !== "HEAD") {
@@ -28,10 +26,8 @@ export async function proxyToBackend(
       }
     }
 
-    // Forward the request to the backend with auth headers
-    const headers: Record<string, string> = {
-      ...(getAuthHeaders() as Record<string, string>),
-    };
+    // Prepare headers
+    const headers: Record<string, string> = {};
 
     // Only set Content-Type if the client provided one, or if we have a body and need a default
     const clientContentType = request.headers.get("Content-Type");
@@ -42,7 +38,8 @@ export async function proxyToBackend(
       headers["Content-Type"] = "application/json";
     }
 
-    const response = await fetch(url, {
+    // Use serverFetch which automatically handles service binding
+    const response = await serverFetch(path, {
       method: request.method,
       headers,
       body,

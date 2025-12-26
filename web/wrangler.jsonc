@@ -17,6 +17,12 @@
       "custom_domain": true,
     },
   ],
+  "services": [
+    {
+      "binding": "LOTUSFLARE_API",
+      "service": "lotusflare-backend-dev",
+    },
+  ],
   "vars": {
     "PROD_APP_URL": "https://lotusflare-dev.jfa.dev",
     "NEXT_PUBLIC_BASE_URL": "https://lotusflare-dev.jfa.dev",
@@ -32,6 +38,12 @@
         {
           "pattern": "lotusflare.jfa.dev",
           "custom_domain": true,
+        },
+      ],
+      "services": [
+        {
+          "binding": "LOTUSFLARE_API",
+          "service": "lotusflare-backend-pro",
         },
       ],
       "vars": {

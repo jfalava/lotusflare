@@ -1,11 +1,6 @@
 "use server";
 
-import {
-  getApiBaseUrl,
-  getAuthHeaders,
-  serverFetchJson,
-  serverFetchJsonSafe,
-} from "@/lib/server-fetch";
+import { serverFetch, serverFetchJson, serverFetchJsonSafe } from "@/lib/server-fetch";
 import type {
   DeckWithDetails,
   PlaceDbo,
@@ -26,8 +21,7 @@ interface ScryfallListResponse<T> {
 
 export async function fetchDecks(): Promise<DeckWithDetails[]> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
-    const decks = await serverFetchJsonSafe<DeckWithDetails[]>(`${apiBaseUrl}/api/decks`);
+    const decks = await serverFetchJsonSafe<DeckWithDetails[]>("/api/decks");
     return decks || [];
   } catch (error) {
     console.error("[Server] Failed to fetch decks:", error);
@@ -37,8 +31,7 @@ export async function fetchDecks(): Promise<DeckWithDetails[]> {
 
 export async function fetchDeckById(id: string): Promise<DeckWithDetails | null> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
-    return await serverFetchJsonSafe<DeckWithDetails>(`${apiBaseUrl}/api/decks/${id}`);
+    return await serverFetchJsonSafe<DeckWithDetails>(`/api/decks/${id}`);
   } catch (error) {
     console.error(`[Server] Failed to fetch deck ${id}:`, error);
     return null;
@@ -48,13 +41,19 @@ export async function fetchDeckById(id: string): Promise<DeckWithDetails | null>
 export async function checkDeckLegality(
   deckId: string,
   format: string,
-): Promise<{ is_legal: boolean; illegal_cards: Array<{ name: string; scryfall_id: string; status: string }> } | null> {
+): Promise<{
+  is_legal: boolean;
+  illegal_cards: Array<{ name: string; scryfall_id: string; status: string }>;
+} | null> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
     return await serverFetchJsonSafe<{
       is_legal: boolean;
-      illegal_cards: Array<{ name: string; scryfall_id: string; status: string }>;
-    }>(`${apiBaseUrl}/api/decks/${deckId}/legality?format=${encodeURIComponent(format)}`);
+      illegal_cards: Array<{
+        name: string;
+        scryfall_id: string;
+        status: string;
+      }>;
+    }>(`/api/decks/${deckId}/legality?format=${encodeURIComponent(format)}`);
   } catch (error) {
     console.error(`[Server] Failed to check deck ${deckId} legality:`, error);
     return null;
@@ -72,19 +71,20 @@ export async function fetchInventoryMeta(
   colorGroup?: string,
 ): Promise<PaginatedMasterInventoryResponse> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
-    const url = new URL(`${apiBaseUrl}/api/v2/inventory`);
-    url.searchParams.set("page", page.toString());
-    url.searchParams.set("limit", limit.toString());
+    const params = new URLSearchParams();
+    params.set("page", page.toString());
+    params.set("limit", limit.toString());
 
     if (searchTerm) {
-      url.searchParams.set("q", searchTerm);
+      params.set("q", searchTerm);
     }
     if (colorGroup) {
-      url.searchParams.set("colorGroup", colorGroup);
+      params.set("colorGroup", colorGroup);
     }
 
-    return await serverFetchJson<PaginatedMasterInventoryResponse>(url.toString());
+    return await serverFetchJson<PaginatedMasterInventoryResponse>(
+      `/api/v2/inventory?${params.toString()}`,
+    );
   } catch (error) {
     console.error("[Server] Failed to fetch inventory metadata:", error);
     throw error;
@@ -93,12 +93,7 @@ export async function fetchInventoryMeta(
 
 export async function fetchInventoryCounts(): Promise<Record<string, number>> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
-    return (
-      (await serverFetchJsonSafe<Record<string, number>>(
-        `${apiBaseUrl}/api/v2/inventory/counts`,
-      )) || {}
-    );
+    return (await serverFetchJsonSafe<Record<string, number>>("/api/v2/inventory/counts")) || {};
   } catch (error) {
     console.error("[Server] Failed to fetch inventory counts:", error);
     return {};
@@ -107,10 +102,8 @@ export async function fetchInventoryCounts(): Promise<Record<string, number>> {
 
 export async function deleteInventoryDetail(detailId: number): Promise<void> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
-    const response = await fetch(`${apiBaseUrl}/api/v2/inventory/details/${detailId}`, {
+    const response = await serverFetch(`/api/v2/inventory/details/${detailId}`, {
       method: "DELETE",
-      headers: { ...getAuthHeaders() },
     });
 
     if (!response.ok) {
@@ -127,11 +120,9 @@ export async function createOrFindMasterInventory(
   name: string,
 ): Promise<{ oracle_id: string }> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
-    const response = await fetch(`${apiBaseUrl}/api/v2/inventory`, {
+    const response = await serverFetch(`/api/v2/inventory`, {
       method: "POST",
       headers: {
-        ...getAuthHeaders(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ oracle_id: oracleId, name }),
@@ -159,11 +150,9 @@ export async function createInventoryDetail(payload: {
   notes: string | null;
 }): Promise<InventoryDetailWithCardDetails> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
-    const response = await fetch(`${apiBaseUrl}/api/v2/inventory/details`, {
+    const response = await serverFetch(`/api/v2/inventory/details`, {
       method: "POST",
       headers: {
-        ...getAuthHeaders(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
@@ -189,9 +178,8 @@ export async function searchScryfallCards(
   query: string,
 ): Promise<ScryfallListResponse<ScryfallApiCard>> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
     return await serverFetchJson<ScryfallListResponse<ScryfallApiCard>>(
-      `${apiBaseUrl}/api/scryfall/cards/search?q=${encodeURIComponent(query)}`,
+      `/api/scryfall/cards/search?q=${encodeURIComponent(query)}`,
     );
   } catch (error) {
     console.error("[Server] Failed to search Scryfall cards:", error);
@@ -201,8 +189,7 @@ export async function searchScryfallCards(
 
 export async function fetchScryfallCardById(scryfallId: string): Promise<ScryfallApiCard> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
-    return await serverFetchJson<ScryfallApiCard>(`${apiBaseUrl}/api/scryfall/cards/${scryfallId}`);
+    return await serverFetchJson<ScryfallApiCard>(`/api/scryfall/cards/${scryfallId}`);
   } catch (error) {
     console.error("[Server] Failed to fetch Scryfall card:", error);
     throw error;
@@ -215,8 +202,7 @@ export async function fetchScryfallCardById(scryfallId: string): Promise<Scryfal
 
 export async function fetchPlaces(): Promise<PlaceDbo[]> {
   try {
-    const apiBaseUrl = getApiBaseUrl();
-    return (await serverFetchJsonSafe<PlaceDbo[]>(`${apiBaseUrl}/api/places`)) || [];
+    return (await serverFetchJsonSafe<PlaceDbo[]>("/api/places")) || [];
   } catch (error) {
     console.error("[Server] Failed to fetch places:", error);
     return [];

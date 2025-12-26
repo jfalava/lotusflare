@@ -1,4 +1,19 @@
 import packageJson from "@/package.json";
+import { getRequestContext } from "@cloudflare/next-on-pages";
+
+/**
+ * Get the Cloudflare service binding (if available)
+ * Returns undefined in local dev, returns Fetcher in production
+ */
+function getServiceBinding(): Fetcher | undefined {
+  try {
+    const { env } = getRequestContext() as unknown as { env: Cloudflare.Env };
+    return env.LOTUSFLARE_API;
+  } catch {
+    // Not in Cloudflare Workers context (local dev or build time)
+    return undefined;
+  }
+}
 
 /**
  * Get the API base URL based on the current environment
@@ -57,6 +72,7 @@ export interface ServerFetchOptions extends Omit<RequestInit, "signal"> {
 
 /**
  * Server-side fetch with timeout and standard headers
+ * Uses service binding in production, HTTP fetch in local dev
  * @param url - The URL to fetch
  * @param options - Fetch options with optional timeout
  * @returns Response object
@@ -66,15 +82,14 @@ export async function serverFetch(
   options: ServerFetchOptions = {},
 ): Promise<Response> {
   const { timeout = 15000, ...fetchOptions } = options;
-  const apiBaseUrl = getApiBaseUrl();
+  const apiBinding = getServiceBinding();
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
   try {
-    const headers: Record<string, string> = {
-      ...getServerFetchHeaders(apiBaseUrl),
-    };
+    const headers: Record<string, string> = {};
+
     if (fetchOptions.headers) {
       if (fetchOptions.headers instanceof Headers) {
         fetchOptions.headers.forEach((value, key) => {
@@ -88,12 +103,40 @@ export async function serverFetch(
         Object.assign(headers, fetchOptions.headers);
       }
     }
-    const response = await fetch(url, {
-      signal: controller.signal,
-      cache: "no-store",
-      headers,
-      ...fetchOptions,
-    });
+
+    // Add auth headers
+    Object.assign(headers, getAuthHeaders());
+
+    let response: Response;
+
+    if (apiBinding) {
+      // Use service binding (production) - worker-to-worker communication
+      // Service binding requires full URL with /api/ prefix
+      const fullUrl = `https://internal${url}`;
+      response = await apiBinding.fetch(fullUrl, {
+        signal: controller.signal,
+        method: fetchOptions.method || "GET",
+        headers,
+        body: fetchOptions.body,
+      });
+    } else {
+      // Fallback to HTTP fetch (local dev)
+      const apiBaseUrl = getApiBaseUrl();
+      const fullUrl = `${apiBaseUrl}${url}`;
+
+      Object.assign(headers, {
+        "User-Agent": `Lotusflare/WEB v${packageJson.version}`,
+        Accept: "application/json",
+        "X-Requested-With": "SSR",
+      });
+
+      response = await fetch(fullUrl, {
+        signal: controller.signal,
+        cache: "no-store",
+        headers,
+        ...fetchOptions,
+      });
+    }
 
     clearTimeout(timeoutId);
     return response;

@@ -46,18 +46,23 @@ app.use(
   "/api/*",
   cors({
     origin: (origin, c) => {
-      // Define all allowed origins
+      // Allow service binding calls (worker-to-worker communication has no origin)
+      if (!origin) {
+        return "*";
+      }
+
+      // Define all allowed origins for HTTP requests
       const allowedOrigins: string[] = [];
       const prodAppUrl = c.env.PROD_APP_URL;
       if (prodAppUrl) {
         allowedOrigins.push(prodAppUrl);
       }
-      // 2. If in the development environment, ALSO allow localhost.
+      // If in the development environment, ALSO allow localhost
       if (c.env.WORKER_ENV === "development") {
         allowedOrigins.push("http://localhost:3000");
       }
 
-      // 3. Check if the incoming request's origin is on the constructed whitelist.
+      // Check if the incoming request's origin is on the constructed whitelist
       return allowedOrigins.includes(origin) ? origin : null;
     },
     allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],

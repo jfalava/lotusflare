@@ -107,7 +107,7 @@ const DeckCardListItem: React.FC<{
             <CardImage
               src={imgUri}
               alt={deckCard.card.name}
-              className="w-[250px] max-h-[80vh] rounded shadow-lg"
+              className="w-62.5 max-h-[80vh] rounded shadow-lg"
             />
           </TooltipContent>
         )}
@@ -190,7 +190,7 @@ const CardGroup: React.FC<CardGroupProps> = ({ title, cards, viewMode, onCardCli
             const count = list.reduce((s, c) => s + c.quantity, 0);
 
             return (
-              <div key={type} className="min-w-[180px]">
+              <div key={type} className="min-w-45">
                 <h4 className="flex items-center text-sm font-semibold mb-1.5 text-muted-foreground uppercase tracking-wider">
                   {type} ({count})
                 </h4>
