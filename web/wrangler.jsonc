@@ -20,6 +20,7 @@
   "vars": {
     "PROD_APP_URL": "https://lotusflare-dev.jfa.dev",
     "NEXT_PUBLIC_BASE_URL": "https://lotusflare-dev.jfa.dev",
+    "NEXT_PUBLIC_SITE_URL": "https://lotusflare-dev.jfa.dev",
   },
   "env": {
     "production": {
@@ -36,6 +37,7 @@
       "vars": {
         "PROD_APP_URL": "https://lotusflare.jfa.dev",
         "NEXT_PUBLIC_BASE_URL": "https://lotusflare.jfa.dev",
+        "NEXT_PUBLIC_SITE_URL": "https://lotusflare.jfa.dev",
       },
     },
   },
